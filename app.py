@@ -18,68 +18,88 @@ st.set_page_config(
 )
 
 # ==========================================
-# 1. CSS 樣式（含修復圖標問題）
+# 1. CSS 樣式（完整修復圖標問題）
 # ==========================================
 st.markdown("""
 <style>
 /* ══════════════════════════════════════════
-   修復 Material Icons 顯示問題
+   完整修復 Material Icons 顯示問題
    ══════════════════════════════════════════ */
 
-/* 載入 Material Icons 字型 */
-@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
-
-/* 修復側邊欄展開/收合按鈕 */
-[data-testid="collapsedControl"] {
-    color: transparent !important;
-    position: relative;
-}
-
-[data-testid="collapsedControl"]::after {
-    content: "☰";
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 1.5rem;
-    color: #7ec98a;
-}
-
-/* 隱藏側邊欄頂部的關閉按鈕文字問題 */
-[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"] {
-    color: transparent !important;
-    position: relative;
-}
-
-[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"]::after {
-    content: "✕";
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 1.2rem;
-    color: #7ec98a;
-}
-
-/* 修復所有 Material Icon 相關的按鈕 */
+/* 隱藏所有顯示為文字的圖標 */
+[data-testid="collapsedControl"],
+[data-testid="stSidebarCollapseButton"],
 button[kind="header"],
-[data-testid="baseButton-header"] {
-    font-size: 0 !important;
-}
-
-button[kind="header"]::before,
-[data-testid="baseButton-header"]::before {
-    content: "✕";
-    font-size: 1.2rem;
-    color: #7ec98a;
-}
-
-/* 隱藏顯示為文字的圖標 */
-.stIcon, 
-[data-testid="stIconMaterial"] {
+[data-testid="baseButton-header"],
+[data-testid="baseButton-headerNoPadding"] {
     font-size: 0 !important;
     color: transparent !important;
+}
+
+/* 側邊欄展開按鈕（左上角漢堡按鈕） */
+[data-testid="collapsedControl"] {
+    background: #1a3020 !important;
+    border: 1px solid #2d5c3a !important;
+    border-radius: 8px !important;
+    width: 40px !important;
+    height: 40px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+[data-testid="collapsedControl"] svg {
+    display: none !important;
+}
+
+[data-testid="collapsedControl"]::before {
+    content: "≡";
+    font-size: 1.8rem !important;
+    color: #7ec98a !important;
+    font-weight: bold;
+}
+
+/* 側邊欄關閉按鈕（側邊欄頂部 X 按鈕） */
+[data-testid="stSidebarCollapseButton"] {
+    background: transparent !important;
+    border: none !important;
+    width: 36px !important;
+    height: 36px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+}
+
+[data-testid="stSidebarCollapseButton"] svg {
+    display: none !important;
+}
+
+[data-testid="stSidebarCollapseButton"]::before {
+    content: "✕";
+    font-size: 1.4rem !important;
+    color: #7ec98a !important;
+}
+
+[data-testid="stSidebarCollapseButton"]:hover::before {
+    color: #a8e0b4 !important;
+}
+
+/* 隱藏所有 span 內的圖標文字 */
+[data-testid="collapsedControl"] span,
+[data-testid="stSidebarCollapseButton"] span,
+button[kind="header"] span,
+[data-testid="baseButton-header"] span {
+    font-size: 0 !important;
+    color: transparent !important;
+    display: none !important;
+}
+
+/* 修復任何其他可能顯示為文字的圖標 */
+.material-icons,
+.material-symbols-rounded,
+[class*="icon"] {
+    font-family: inherit !important;
 }
 
 /* ══════════════════════════════════════════
@@ -293,6 +313,10 @@ hr {
     color: #7aab82 !important;
 }
 
+[data-testid="stSidebar"] > div:first-child {
+    padding-top: 1rem;
+}
+
 .stSpinner > div {
     border-top-color: #4a9e5f !important;
 }
@@ -466,6 +490,8 @@ if "identification_results" not in st.session_state:
     st.session_state.identification_results = None
 if "show_results" not in st.session_state:
     st.session_state.show_results = False
+if "just_identified" not in st.session_state:
+    st.session_state.just_identified = False
 
 def validate_history():
     valid = []
@@ -496,7 +522,7 @@ def has_chinese(text):
 @st.cache_data(ttl=3600, show_spinner=False)
 def search_wikipedia(scientific_name):
     url = "https://zh.wikipedia.org/w/api.php"
-    headers = {"User-Agent": "PlantExplorer/2.3"}
+    headers = {"User-Agent": "PlantExplorer/2.4"}
     try:
         res = requests.get(url, params={
             "action": "query", "list": "search",
@@ -560,7 +586,7 @@ def get_wiki_extract(title):
                 "exsentences": 3, "titles": title,
                 "format": "json", "utf8": 1, "redirects": 1
             },
-            headers={"User-Agent": "PlantExplorer/2.3"},
+            headers={"User-Agent": "PlantExplorer/2.4"},
             timeout=5
         ).json()
         for pid, page in res.get("query", {}).get("pages", {}).items():
@@ -640,6 +666,14 @@ def get_care(family):
 # 5. 側邊欄
 # ==========================================
 with st.sidebar:
+    # 自訂側邊欄標題（替代預設的關閉按鈕區域）
+    st.markdown("""
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+        <span style="font-size:1.5rem;">🌿</span>
+        <span style="color:#5a9a68;font-size:0.8rem;">生態探索</span>
+    </div>
+    """, unsafe_allow_html=True)
+    
     st.markdown("## 📋 辨識歷史")
     
     if not st.session_state.history:
@@ -680,7 +714,7 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("""
     <div style="color:#3a6a48;font-size:0.78rem;line-height:1.8;">
-    🌿 <strong style="color:#5a9a68;">生態探索 v2.3</strong><br>
+    🌿 <strong style="color:#5a9a68;">生態探索 v2.4</strong><br>
     PlantNet + 維基百科 + GBIF
     </div>
     """, unsafe_allow_html=True)
@@ -806,7 +840,7 @@ if start_btn and uploaded and image:
 if st.session_state.get('show_results') and st.session_state.get('identification_results'):
     st.markdown("---")
     st.markdown("## 🎯 辨識結果")
-    st.markdown('<p style="color:#4a7a56;font-size:0.85rem;text-align:center;">點擊「查看詳情」展開分類階層與照護指南</p>', unsafe_allow_html=True)
+    st.markdown('<p style="color:#4a7a56;font-size:0.85rem;text-align:center;">點擊下方按鈕展開分類階層與照護指南</p>', unsafe_allow_html=True)
     
     top_results = st.session_state.identification_results
     
@@ -836,7 +870,6 @@ if st.session_state.get('show_results') and st.session_state.get('identification
         
         display = cn_list[0] if cn_list else "資料不足"
         
-        # 加入歷史
         if idx == 0 and st.session_state.get('just_identified'):
             st.session_state.history.append({
                 'name': display, 'sci': sci, 'score': score,
@@ -845,7 +878,6 @@ if st.session_state.get('show_results') and st.session_state.get('identification
             st.session_state.total_identifications += 1
             st.session_state.just_identified = False
         
-        # 卡片
         card = "result-card-best" if idx == 0 else "result-card"
         badge = '<span class="badge badge-gold">✨ 最佳匹配</span>' if idx == 0 else f'<span class="badge">候選 #{idx+1}</span>'
         
@@ -867,22 +899,16 @@ if st.session_state.get('show_results') and st.session_state.get('identification
         st.markdown(f"**信心指標** {score:.2f}%")
         render_bar(score, color)
         
-        # 展開按鈕
         card_key = idx
         is_expanded = st.session_state.expanded_cards.get(card_key, idx == 0)
         
         col_btn1, col_btn2, col_btn3 = st.columns([1, 1, 1])
         with col_btn2:
-            if is_expanded:
-                if st.button(f"🔼 收合詳情", key=f"collapse_{idx}", use_container_width=True):
-                    st.session_state.expanded_cards[card_key] = False
-                    st.rerun()
-            else:
-                if st.button(f"🔽 查看詳情", key=f"expand_{idx}", use_container_width=True):
-                    st.session_state.expanded_cards[card_key] = True
-                    st.rerun()
+            btn_text = "🔼 收合詳情" if is_expanded else "🔽 查看詳情"
+            if st.button(btn_text, key=f"toggle_{idx}", use_container_width=True):
+                st.session_state.expanded_cards[card_key] = not is_expanded
+                st.rerun()
         
-        # 詳細資訊
         if is_expanded:
             st.markdown('<div class="detail-section">', unsafe_allow_html=True)
             
@@ -968,7 +994,6 @@ if st.session_state.get('show_results') and st.session_state.get('identification
         
         st.markdown("")
     
-    # 匯出
     st.markdown("---")
     st.markdown("### 📤 匯出報告")
     
@@ -1019,7 +1044,7 @@ if st.session_state.get('show_results') and st.session_state.get('identification
     with c2:
         st.markdown(f'<a href="https://www.facebook.com/sharer/sharer.php?quote={quote(share)}" target="_blank" class="share-btn" style="background:#4267B2;color:white;">📘 Facebook</a>', unsafe_allow_html=True)
     with c3:
-        if st.button("📋 複製", use_container_width=True):
+        if st.button("📋 複製", use_container_width=True, key="copy_share"):
             st.code(share)
 
 # ==========================================
@@ -1028,7 +1053,7 @@ if st.session_state.get('show_results') and st.session_state.get('identification
 st.markdown("---")
 st.markdown("""
 <div style="text-align:center;color:#2d5c3a;font-size:0.8rem;padding:1rem 0;line-height:2;">
-    🌿 <strong style="color:#4a7a56;">生態探索</strong> v2.3<br>
+    🌿 <strong style="color:#4a7a56;">生態探索</strong> v2.4<br>
     PlantNet AI + 維基百科 + GBIF<br>
     <span style="font-size:0.72rem;">僅供參考，鑑定請諮詢專家</span>
 </div>
