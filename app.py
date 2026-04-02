@@ -6,7 +6,6 @@ import io
 import json
 from datetime import datetime
 from urllib.parse import quote
-import calendar
 
 # ==========================================
 # 0. 頁面設定
@@ -23,7 +22,9 @@ st.set_page_config(
 # ==========================================
 st.markdown("""
 <style>
-/* 側邊欄展開按鈕 */
+/* ══════════════════════════════════════════
+   側邊欄展開按鈕（左上角漢堡按鈕）
+   ══════════════════════════════════════════ */
 [data-testid="collapsedControl"] {
     position: fixed !important;
     top: 14px !important;
@@ -37,17 +38,21 @@ st.markdown("""
     min-width: 48px !important;
     min-height: 48px !important;
     padding: 0 !important;
+    margin: 0 !important;
     cursor: pointer !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     box-shadow: 0 4px 15px rgba(0,0,0,0.4), 0 0 20px rgba(74,158,95,0.3) !important;
+    transition: all 0.2s ease !important;
+    overflow: visible !important;
 }
 
 [data-testid="collapsedControl"]:hover {
     background: linear-gradient(135deg, #3a8a56, #245c38) !important;
     border-color: #7ec98a !important;
     transform: scale(1.08) !important;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5), 0 0 25px rgba(74,158,95,0.4) !important;
 }
 
 [data-testid="collapsedControl"] svg,
@@ -56,6 +61,9 @@ st.markdown("""
 [data-testid="collapsedControl"] p {
     display: none !important;
     visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
     font-size: 0 !important;
 }
 
@@ -65,16 +73,22 @@ st.markdown("""
     color: #c8f0cc !important;
     display: block !important;
     visibility: visible !important;
+    opacity: 1 !important;
     position: absolute !important;
     top: 50% !important;
     left: 50% !important;
     transform: translate(-50%, -50%) !important;
+    line-height: 1 !important;
+    font-weight: bold !important;
     text-shadow: 0 2px 4px rgba(0,0,0,0.3) !important;
 }
 
-/* 側邊欄關閉按鈕 */
+/* ══════════════════════════════════════════
+   側邊欄關閉按鈕
+   ══════════════════════════════════════════ */
 [data-testid="stSidebar"] button[kind="header"],
-[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"] {
+[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"],
+[data-testid="stSidebar"] [data-testid="baseButton-header"] {
     position: absolute !important;
     top: 10px !important;
     right: 10px !important;
@@ -88,6 +102,15 @@ st.markdown("""
     min-height: 36px !important;
     padding: 0 !important;
     cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+[data-testid="stSidebar"] button[kind="header"]:hover,
+[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"]:hover {
+    background: #243828 !important;
+    border-color: #4a9e5f !important;
 }
 
 [data-testid="stSidebar"] button[kind="header"] svg,
@@ -114,7 +137,9 @@ st.markdown("""
     transform: translate(-50%, -50%) !important;
 }
 
-/* 主要樣式 */
+/* ══════════════════════════════════════════
+   主要樣式
+   ══════════════════════════════════════════ */
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500&display=swap');
 
 html, body, [class*="css"] {
@@ -123,7 +148,10 @@ html, body, [class*="css"] {
     color: #d4e8d0;
 }
 
-.main .block-container { padding: 2rem 3rem 4rem; max-width: 1100px; }
+.main .block-container {
+    padding: 2rem 3rem 4rem;
+    max-width: 1100px;
+}
 
 h1 {
     font-family: 'Noto Serif TC', serif !important;
@@ -133,51 +161,214 @@ h1 {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.2rem !important;
 }
 
-h2, h3 { font-family: 'Noto Serif TC', serif !important; color: #a8d8a8 !important; }
+h2, h3 {
+    font-family: 'Noto Serif TC', serif !important;
+    color: #a8d8a8 !important;
+}
 
-.subtitle { color: #6a9b72; font-size: 0.95rem; letter-spacing: 0.12em; margin-bottom: 2rem; }
+.subtitle {
+    color: #6a9b72;
+    font-size: 0.95rem;
+    letter-spacing: 0.12em;
+    margin-bottom: 2rem;
+    font-weight: 300;
+}
 
 /* 上傳區 */
-[data-testid="stFileUploader"] { border: 2px dashed #2d5c3a !important; border-radius: 16px !important; background: #111f16 !important; padding: 1.5rem !important; }
-[data-testid="stFileUploader"]:hover { border-color: #4a9e5f !important; }
-[data-testid="stFileUploaderDropzone"] button { background: transparent !important; border: 1px solid #2d5c3a !important; border-radius: 8px !important; font-size: 0 !important; color: transparent !important; padding: 0.3rem 1.2rem !important; }
-[data-testid="stFileUploaderDropzone"] button::after { content: "📂 選擇檔案"; font-family: 'Noto Sans TC', sans-serif; font-size: 0.85rem; color: #5a9a6a; }
-[data-testid="stFileUploader"] small, [data-testid="stFileUploader"] label { display: none !important; }
+[data-testid="stFileUploader"] {
+    border: 2px dashed #2d5c3a !important;
+    border-radius: 16px !important;
+    background: #111f16 !important;
+    padding: 1.5rem !important;
+}
 
-/* 按鈕 */
-.main .stButton > button { background: linear-gradient(135deg, #2d6e45, #1a4a2e) !important; color: #c8f0cc !important; border: 1px solid #3a7a50 !important; border-radius: 12px !important; font-family: 'Noto Sans TC', sans-serif !important; font-size: 1rem !important; padding: 0.6rem 2.4rem !important; transition: all 0.25s ease !important; box-shadow: 0 4px 20px rgba(58,158,95,0.25) !important; }
-.main .stButton > button:hover { background: linear-gradient(135deg, #3a8a56, #245c38) !important; transform: translateY(-2px) !important; }
-.main .stButton > button:disabled { opacity: 0.5 !important; }
-[data-testid="stSidebar"] .stButton > button { background: linear-gradient(135deg, #2d6e45, #1a4a2e) !important; color: #c8f0cc !important; border: 1px solid #3a7a50 !important; border-radius: 10px !important; font-size: 0.9rem !important; padding: 0.5rem 1rem !important; }
+[data-testid="stFileUploader"]:hover {
+    border-color: #4a9e5f !important;
+}
 
-/* 卡片 */
-.result-card { background: linear-gradient(145deg, #112018, #0e1a12); border: 1px solid #2d5c3a; border-radius: 20px; padding: 1.8rem 2rem; margin: 1rem 0; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
-.result-card-best { background: linear-gradient(145deg, #141f12, #0e1a0c); border: 1.5px solid #4a9e5f; border-radius: 20px; padding: 2rem 2.2rem; margin: 1rem 0; box-shadow: 0 8px 40px rgba(74,158,95,0.2); position: relative; }
-.result-card-best::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #3a9e5f, #7ec98a, #3a9e5f); }
+[data-testid="stFileUploaderDropzone"] button {
+    background: transparent !important;
+    border: 1px solid #2d5c3a !important;
+    border-radius: 8px !important;
+    padding: 0.3rem 1.2rem !important;
+    font-size: 0 !important;
+    color: transparent !important;
+}
 
-.plant-name { font-family: 'Noto Serif TC', serif; font-size: 2rem; font-weight: 700; color: #8fd4a0; margin-bottom: 0.3rem; }
-.scientific-name { font-style: italic; color: #5a8a6a; font-size: 1.05rem; margin-bottom: 1rem; }
+[data-testid="stFileUploaderDropzone"] button::after {
+    content: "📂 選擇檔案";
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 0.85rem;
+    color: #5a9a6a;
+}
 
-.confidence-bar-wrap { background: #1a2e20; border-radius: 8px; height: 10px; margin: 0.5rem 0 0.2rem; overflow: hidden; border: 1px solid #2d4a35; }
-.confidence-bar { height: 100%; border-radius: 8px; }
+[data-testid="stFileUploader"] small,
+[data-testid="stFileUploader"] label {
+    display: none !important;
+}
 
-.badge { display: inline-block; background: #1d3d28; color: #7ec98a; border: 1px solid #2d5c3a; border-radius: 20px; padding: 0.22rem 0.85rem; font-size: 0.78rem; margin: 0.2rem; }
-.badge-gold { background: #2a2a10; color: #c8b864; border-color: #5a5020; }
+/* 主要按鈕 */
+.main .stButton > button {
+    background: linear-gradient(135deg, #2d6e45, #1a4a2e) !important;
+    color: #c8f0cc !important;
+    border: 1px solid #3a7a50 !important;
+    border-radius: 12px !important;
+    font-family: 'Noto Sans TC', sans-serif !important;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+    padding: 0.6rem 2.4rem !important;
+    transition: all 0.25s ease !important;
+    box-shadow: 0 4px 20px rgba(58,158,95,0.25) !important;
+}
 
-.detail-section { background: #0a1410; border: 1px solid #1e3824; border-radius: 12px; padding: 1.5rem; margin-top: 1rem; }
-.history-item { background: #111a14; border: 1px solid #1e3824; border-radius: 12px; padding: 0.8rem 1.1rem; margin: 0.4rem 0; display: flex; align-items: center; gap: 0.8rem; }
+.main .stButton > button:hover {
+    background: linear-gradient(135deg, #3a8a56, #245c38) !important;
+    transform: translateY(-2px) !important;
+}
 
-hr { border: none; border-top: 1px solid #1e3824 !important; margin: 1.5rem 0 !important; }
+.main .stButton > button:disabled {
+    opacity: 0.5 !important;
+}
 
-[data-testid="stSidebar"] { background: #0b1510 !important; border-right: 1px solid #1a3020 !important; padding-top: 3rem !important; }
-[data-testid="stSidebar"] .stMarkdown { color: #7aab82 !important; }
-.stSpinner > div { border-top-color: #4a9e5f !important; }
-[data-testid="stImage"] img { border-radius: 16px; border: 1px solid #2d5c3a; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
-[data-testid="stMetricValue"] { color: #7ec98a !important; font-family: 'Noto Serif TC', serif !important; }
+/* 側邊欄按鈕 */
+[data-testid="stSidebar"] .stButton > button {
+    background: linear-gradient(135deg, #2d6e45, #1a4a2e) !important;
+    color: #c8f0cc !important;
+    border: 1px solid #3a7a50 !important;
+    border-radius: 10px !important;
+    font-family: 'Noto Sans TC', sans-serif !important;
+    font-size: 0.9rem !important;
+    padding: 0.5rem 1rem !important;
+}
 
-/* 表格 */
+/* 結果卡片 */
+.result-card {
+    background: linear-gradient(145deg, #112018, #0e1a12);
+    border: 1px solid #2d5c3a;
+    border-radius: 20px;
+    padding: 1.8rem 2rem;
+    margin: 1rem 0;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+
+.result-card-best {
+    background: linear-gradient(145deg, #141f12, #0e1a0c);
+    border: 1.5px solid #4a9e5f;
+    border-radius: 20px;
+    padding: 2rem 2.2rem;
+    margin: 1rem 0;
+    box-shadow: 0 8px 40px rgba(74,158,95,0.2);
+    position: relative;
+}
+
+.result-card-best::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #3a9e5f, #7ec98a, #3a9e5f);
+}
+
+.plant-name {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #8fd4a0;
+    margin-bottom: 0.3rem;
+}
+
+.scientific-name {
+    font-style: italic;
+    color: #5a8a6a;
+    font-size: 1.05rem;
+    margin-bottom: 1rem;
+}
+
+.confidence-bar-wrap {
+    background: #1a2e20;
+    border-radius: 8px;
+    height: 10px;
+    margin: 0.5rem 0 0.2rem;
+    overflow: hidden;
+    border: 1px solid #2d4a35;
+}
+
+.confidence-bar {
+    height: 100%;
+    border-radius: 8px;
+}
+
+.badge {
+    display: inline-block;
+    background: #1d3d28;
+    color: #7ec98a;
+    border: 1px solid #2d5c3a;
+    border-radius: 20px;
+    padding: 0.22rem 0.85rem;
+    font-size: 0.78rem;
+    margin: 0.2rem;
+}
+
+.badge-gold {
+    background: #2a2a10;
+    color: #c8b864;
+    border-color: #5a5020;
+}
+
+.detail-section {
+    background: #0a1410;
+    border: 1px solid #1e3824;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+}
+
+.history-item {
+    background: #111a14;
+    border: 1px solid #1e3824;
+    border-radius: 12px;
+    padding: 0.8rem 1.1rem;
+    margin: 0.4rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #1e3824 !important;
+    margin: 1.5rem 0 !important;
+}
+
+[data-testid="stSidebar"] {
+    background: #0b1510 !important;
+    border-right: 1px solid #1a3020 !important;
+    padding-top: 3rem !important;
+}
+
+[data-testid="stSidebar"] .stMarkdown {
+    color: #7aab82 !important;
+}
+
+.stSpinner > div {
+    border-top-color: #4a9e5f !important;
+}
+
+[data-testid="stImage"] img {
+    border-radius: 16px;
+    border: 1px solid #2d5c3a;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+
+[data-testid="stMetricValue"] {
+    color: #7ec98a !important;
+    font-family: 'Noto Serif TC', serif !important;
+}
+
 .taxon-table { width: 100%; border-collapse: collapse; margin: 0.5rem 0; }
 .taxon-table tr { border-bottom: 1px solid #1a3020; }
 .taxon-table tr:last-child { border-bottom: none; }
@@ -186,136 +377,79 @@ hr { border: none; border-top: 1px solid #1e3824 !important; margin: 1.5rem 0 !i
 .taxon-value { color: #c0e0c8; font-style: italic; }
 .taxon-cn { color: #7ec98a; font-style: normal; margin-left: 0.5rem; font-size: 0.82rem; }
 
-/* 照護 */
 .char-card { background: #0e1a12; border: 1px solid #1e3824; border-radius: 14px; padding: 1.2rem 1.4rem; margin: 0.8rem 0; }
 .char-row { display: flex; justify-content: space-between; align-items: center; padding: 0.55rem 0; border-bottom: 1px solid #1a2e1e; font-size: 0.87rem; }
 .char-row:last-child { border-bottom: none; }
 .char-key { color: #5a8a6a; }
 .char-val { color: #b0d8b8; font-weight: 500; }
+
 .care-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin: 0.8rem 0; }
 .care-item { background: #0e1a12; border: 1px solid #1e3824; border-radius: 12px; padding: 1rem 1.1rem; }
 .care-icon { font-size: 1.4rem; margin-bottom: 0.3rem; }
 .care-title { color: #7ec98a; font-size: 0.82rem; font-weight: 600; margin-bottom: 0.2rem; }
 .care-desc { color: #90b898; font-size: 0.85rem; }
+
 .wiki-extract { background: #0c1810; border-left: 3px solid #2d6a40; border-radius: 0 10px 10px 0; padding: 0.9rem 1.2rem; color: #8ab898; font-size: 0.85rem; line-height: 1.8; margin: 0.8rem 0; }
-
-/* 新增：安全警告卡片 */
-.safety-card { border-radius: 12px; padding: 1rem 1.2rem; margin: 0.8rem 0; }
-.safety-safe { background: #0e2016; border: 1px solid #2d6a40; }
-.safety-caution { background: #1e1a08; border: 1px solid #8a7a20; }
-.safety-danger { background: #1e0c0c; border: 1px solid #8a2020; }
-
-/* 新增：花語卡片 */
-.flower-lang-card { background: linear-gradient(135deg, #1a1020, #120a1a); border: 1px solid #4a3060; border-radius: 14px; padding: 1.2rem 1.4rem; margin: 0.8rem 0; }
-
-/* 新增：月份條 */
-.month-bar { display: flex; gap: 2px; margin: 0.5rem 0; }
-.month-item { flex: 1; height: 24px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; color: #8ab898; }
-.month-active { background: #2d6a40; color: #c8f0cc; font-weight: 600; }
-.month-inactive { background: #1a2e1e; }
-
-/* 新增：圖鑑項目 */
-.collection-item { background: #111a14; border: 1px solid #1e3824; border-radius: 12px; padding: 1rem; margin: 0.5rem 0; display: flex; justify-content: space-between; align-items: center; }
 
 .share-btn { display: block; padding: 0.6rem 1rem; border-radius: 8px; text-align: center; text-decoration: none; font-weight: 500; margin-bottom: 0.5rem; }
 
+/* 手機響應式 */
 @media (max-width: 768px) {
     .care-grid { grid-template-columns: 1fr; }
     .plant-name { font-size: 1.6rem; }
     h1 { font-size: 2rem !important; }
     .main .block-container { padding: 1.5rem 1rem 3rem; }
-    [data-testid="collapsedControl"] { top: 10px !important; left: 10px !important; width: 42px !important; height: 42px !important; }
+    
+    [data-testid="collapsedControl"] {
+        top: 10px !important;
+        left: 10px !important;
+        width: 42px !important;
+        height: 42px !important;
+    }
+    
+    [data-testid="collapsedControl"]::after {
+        font-size: 1.5rem !important;
+    }
 }
 </style>
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 2. API 與資料庫
+# 2. API 設定
 # ==========================================
 API_KEY = st.secrets.get("PLANTNET_API_KEY", "2b1004UqTrbWJn4mj5hqcaZN")
 API_ENDPOINT = f"https://my-api.plantnet.org/v2/identify/all?api-key={API_KEY}&lang=zh"
 
-# ── 毒性資料庫（依科別） ──
-TOXICITY_DATA = {
-    "Apocynaceae": {"level": "danger", "icon": "☠️", "text": "高度危險", "detail": "全株有毒，乳汁含強心苷，誤食可致命。請遠離兒童與寵物。"},
-    "Solanaceae": {"level": "caution", "icon": "⚠️", "text": "需注意", "detail": "部分品種含生物鹼，未成熟果實或葉片可能有毒。"},
-    "Euphorbiaceae": {"level": "caution", "icon": "⚠️", "text": "需注意", "detail": "乳汁可能刺激皮膚與眼睛，誤食可能引起不適。"},
-    "Araceae": {"level": "caution", "icon": "⚠️", "text": "需注意", "detail": "含草酸鈣結晶，誤食會刺激口腔與喉嚨。對貓狗有毒。"},
-    "Oleaceae": {"level": "safe", "icon": "✅", "text": "一般安全", "detail": "大部分品種無毒，但仍不建議食用非食用品種。"},
-    "Rosaceae": {"level": "safe", "icon": "✅", "text": "一般安全", "detail": "花朵通常安全，但部分品種的種子含微量氰化物。"},
-    "DEFAULT": {"level": "caution", "icon": "ℹ️", "text": "資料不足", "detail": "無法確認毒性，建議不要隨意食用，遠離幼童與寵物。"},
-}
-
-# ── 花語資料庫（依科別） ──
-FLOWER_LANG = {
-    "Rosaceae": {"flower": "🌹", "meanings": ["愛情", "美麗", "熱情", "勇氣"], "best_for": "情人節、告白、婚禮"},
-    "Asteraceae": {"flower": "🌻", "meanings": ["陽光", "希望", "忠誠", "長壽"], "best_for": "生日、探病、喬遷"},
-    "Orchidaceae": {"flower": "🌸", "meanings": ["高雅", "純潔", "堅韌", "智慧"], "best_for": "祝賀、感恩、開業"},
-    "Liliaceae": {"flower": "🌷", "meanings": ["純潔", "幸福", "祝福", "高貴"], "best_for": "母親節、祝福、婚禮"},
-    "Fabaceae": {"flower": "🌼", "meanings": ["謙遜", "生命力", "幸福", "感恩"], "best_for": "日常贈禮、感謝"},
-    "Lamiaceae": {"flower": "💜", "meanings": ["寧靜", "信任", "療癒", "忠貞"], "best_for": "探訪、安慰、友誼"},
-    "DEFAULT": {"flower": "🌿", "meanings": ["生命力", "希望", "自然", "成長"], "best_for": "各種場合"},
-}
-
-# ── 季節照護資料 ──
-SEASONAL_TIPS = {
-    1: {"season": "冬季", "icon": "❄️", "tips": ["減少澆水頻率", "停止施肥", "注意防寒保暖", "室內植物遠離暖氣出風口"]},
-    2: {"season": "冬季", "icon": "❄️", "tips": ["準備春季換盆", "檢查根系健康", "開始規劃春播", "修剪枯枝"]},
-    3: {"season": "春季", "icon": "🌱", "tips": ["開始春季施肥", "逐步增加澆水", "播種一年生花卉", "換盆分株好時機"]},
-    4: {"season": "春季", "icon": "🌸", "tips": ["多數植物進入生長期", "注意病蟲害防治", "可以開始扦插繁殖", "戶外植物逐步移出"]},
-    5: {"season": "春末", "icon": "🌺", "tips": ["規律澆水與施肥", "修剪促進分枝", "注意蚜蟲與紅蜘蛛", "遮陽準備"]},
-    6: {"season": "夏季", "icon": "☀️", "tips": ["增加澆水頻率", "避免正午直射", "薄肥勤施", "注意通風散熱"]},
-    7: {"season": "盛夏", "icon": "🔥", "tips": ["早晚澆水避免灼傷", "遮陽網保護", "高溫期暫停施肥", "注意排水防爛根"]},
-    8: {"season": "夏末", "icon": "🌤️", "tips": ["準備秋季修剪", "減少施肥", "留意颱風保護", "收集種子"]},
-    9: {"season": "秋季", "icon": "🍂", "tips": ["秋播好時機", "施磷鉀肥促進根系", "開始減少澆水", "耐寒植物可定植"]},
-    10: {"season": "秋季", "icon": "🍁", "tips": ["準備過冬", "最後一次施肥", "收集落葉堆肥", "不耐寒植物移入室內"]},
-    11: {"season": "初冬", "icon": "🌾", "tips": ["大幅減少澆水", "停止施肥", "整理花園", "種植球根花卉"]},
-    12: {"season": "冬季", "icon": "⛄", "tips": ["最低限度澆水", "檢查室內植物光照", "規劃明年花園", "享受室內綠意"]},
-}
-
-# ── 常見問題資料庫 ──
-PLANT_PROBLEMS = [
-    {"symptom": "葉片發黃", "icon": "🟡", "causes": "澆水過多、缺氮肥、光照不足", "solution": "調整澆水頻率，施含氮液肥，移至明亮處"},
-    {"symptom": "葉尖焦枯", "icon": "🟤", "causes": "空氣太乾、肥傷、水質問題", "solution": "增加噴霧加濕，降低肥料濃度，使用靜置過的水"},
-    {"symptom": "徒長瘦弱", "icon": "📏", "causes": "光照不足、氮肥過多", "solution": "移至光照充足處，減少氮肥施用"},
-    {"symptom": "不開花", "icon": "😔", "causes": "光照不足、缺磷鉀肥、未經春化", "solution": "增加光照時間，施磷鉀肥，部分品種需低溫春化"},
-    {"symptom": "葉片有斑點", "icon": "🔴", "causes": "真菌感染、細菌感染、蟲害", "solution": "剪除病葉，噴灑殺菌劑，改善通風"},
-    {"symptom": "根部腐爛", "icon": "💀", "causes": "澆水過多、排水不良", "solution": "立即脫盆，剪除爛根，換疏鬆介質，減少澆水"},
-]
-
-TAXON_ZH = {
-    "Tracheophyta": "維管束植物門", "Magnoliopsida": "木蘭綱", "Liliopsida": "百合綱",
-    "Lamiales": "唇形目", "Rosales": "薔薇目", "Fabales": "豆目", "Asterales": "菊目", "Poales": "禾本目",
-    "Lamiaceae": "唇形科", "Rosaceae": "薔薇科", "Fabaceae": "豆科", "Asteraceae": "菊科",
-    "Poaceae": "禾本科", "Moraceae": "桑科", "Orchidaceae": "蘭科", "Araceae": "天南星科",
-}
-
-CARE_DATA = {
-    "Lamiaceae": {"diff": "容易", "diff_c": "#3fcf6e", "temp": "-5~41°C", "zone": "8-10", "water": "中等", "fert": "每月一次", "prune": "冬季", "prop": "扦插", "sun": "全日照", "bloom": [4,5,6,7,8,9], "sow": [3,4,9,10]},
-    "Rosaceae": {"diff": "中等", "diff_c": "#c8b864", "temp": "-15~35°C", "zone": "5-9", "water": "規律", "fert": "每2週", "prune": "早春", "prop": "扦插嫁接", "sun": "全日照", "bloom": [4,5,6,10,11], "sow": [2,3,10,11]},
-    "Fabaceae": {"diff": "容易", "diff_c": "#3fcf6e", "temp": "5~40°C", "zone": "7-11", "water": "少量", "fert": "少量", "prune": "花後", "prop": "播種", "sun": "全日照", "bloom": [3,4,5,6], "sow": [3,4,5]},
-    "Asteraceae": {"diff": "容易", "diff_c": "#3fcf6e", "temp": "0~35°C", "zone": "6-10", "water": "中等", "fert": "每2-4週", "prune": "花後", "prop": "播種分株", "sun": "全日照", "bloom": [6,7,8,9,10], "sow": [3,4,5]},
-    "Orchidaceae": {"diff": "困難", "diff_c": "#c86464", "temp": "15~30°C", "zone": "10-12", "water": "少量", "fert": "蘭花肥", "prune": "花後", "prop": "分株", "sun": "散射光", "bloom": [1,2,3,4,11,12], "sow": []},
-    "DEFAULT": {"diff": "中等", "diff_c": "#c8b864", "temp": "5~35°C", "zone": "7-10", "water": "中等", "fert": "每月一次", "prune": "春季", "prop": "扦插播種", "sun": "全日照", "bloom": [4,5,6,7,8], "sow": [3,4,5]},
-}
-
-def get_care(family):
-    return CARE_DATA.get(family, CARE_DATA["DEFAULT"])
-
 # ==========================================
 # 3. Session State
 # ==========================================
-for key, default in [("history", []), ("total_identifications", 0), ("expanded_cards", {}), ("identification_results", None), ("show_results", False), ("just_identified", False), ("my_collection", [])]:
-    if key not in st.session_state:
-        st.session_state[key] = default
+if "history" not in st.session_state:
+    st.session_state.history = []
+if "total_identifications" not in st.session_state:
+    st.session_state.total_identifications = 0
+if "expanded_cards" not in st.session_state:
+    st.session_state.expanded_cards = {}
+if "identification_results" not in st.session_state:
+    st.session_state.identification_results = None
+if "show_results" not in st.session_state:
+    st.session_state.show_results = False
+if "just_identified" not in st.session_state:
+    st.session_state.just_identified = False
 
 def validate_history():
     valid = []
     for r in st.session_state.history:
         if isinstance(r, dict):
             try:
-                valid.append({'name': r.get('name', '未知'), 'sci': r.get('sci', ''), 'score': float(r.get('score', 0)), 'time': r.get('time', ''), 'emoji': r.get('emoji', '🌿')})
-            except: continue
+                valid.append({
+                    'name': r.get('name', '未知'),
+                    'sci': r.get('sci', ''),
+                    'score': float(r.get('score', 0)),
+                    'time': r.get('time', ''),
+                    'emoji': r.get('emoji', '🌿')
+                })
+            except:
+                continue
     st.session_state.history = valid
 
 validate_history()
@@ -324,57 +458,104 @@ validate_history()
 # 4. 工具函數
 # ==========================================
 def has_chinese(text):
-    if not isinstance(text, str): return False
+    if not isinstance(text, str):
+        return False
     return bool(re.search(r'[\u4e00-\u9fff]', text))
 
 @st.cache_data(ttl=3600, show_spinner=False)
 def search_wikipedia(scientific_name):
     url = "https://zh.wikipedia.org/w/api.php"
+    headers = {"User-Agent": "PlantExplorer/2.7"}
     try:
-        res = requests.get(url, params={"action": "query", "list": "search", "srsearch": scientific_name, "format": "json", "utf8": 1}, headers={"User-Agent": "PlantExplorer/3.0"}, timeout=5).json()
+        res = requests.get(url, params={
+            "action": "query", "list": "search",
+            "srsearch": scientific_name, "format": "json", "utf8": 1
+        }, headers=headers, timeout=5).json()
         results = res.get("query", {}).get("search", [])
-        if not results: return None, None
+        if not results:
+            return None, None
         title = results[0].get("title", "")
-        if not has_chinese(title): return None, None
-        rd = requests.get(url, params={"action": "query", "titles": title, "prop": "redirects", "rdlimit": "50", "format": "json", "utf8": 1}, headers={"User-Agent": "PlantExplorer/3.0"}, timeout=5).json()
+        if not has_chinese(title):
+            return None, None
+        rd = requests.get(url, params={
+            "action": "query", "titles": title,
+            "prop": "redirects", "rdlimit": "50",
+            "format": "json", "utf8": 1
+        }, headers=headers, timeout=5).json()
+        pages = rd.get("query", {}).get("pages", {})
         aliases = [title]
-        for _, info in rd.get("query", {}).get("pages", {}).items():
+        for _, info in pages.items():
             for r in info.get("redirects", []):
                 t = r.get("title", "")
-                if ":" not in t and has_chinese(t): aliases.append(t)
+                if ":" not in t and has_chinese(t):
+                    aliases.append(t)
         return list(dict.fromkeys(aliases)), f"https://zh.wikipedia.org/wiki/{quote(title)}"
-    except: return None, None
+    except:
+        return None, None
 
 @st.cache_data(ttl=3600, show_spinner=False)
 def get_gbif(scientific_name):
     try:
-        res = requests.get("https://api.gbif.org/v1/species/match", params={"name": scientific_name}, timeout=6).json()
-        return {k: res.get(k, "") for k in ["phylum", "class", "order", "family", "genus", "species"]}
-    except: return {}
+        res = requests.get(
+            "https://api.gbif.org/v1/species/match",
+            params={"name": scientific_name},
+            timeout=6
+        ).json()
+        return {
+            "phylum": res.get("phylum", ""),
+            "class": res.get("class", ""),
+            "order": res.get("order", ""),
+            "family": res.get("family", ""),
+            "genus": res.get("genus", ""),
+            "species": res.get("species", scientific_name),
+        }
+    except:
+        return {}
 
 @st.cache_data(ttl=3600, show_spinner=False)
 def get_wiki_extract(title):
     try:
-        res = requests.get("https://zh.wikipedia.org/w/api.php", params={"action": "query", "prop": "extracts", "exintro": True, "explaintext": True, "exsentences": 3, "titles": title, "format": "json", "utf8": 1, "redirects": 1}, headers={"User-Agent": "PlantExplorer/3.0"}, timeout=5).json()
+        res = requests.get(
+            "https://zh.wikipedia.org/w/api.php",
+            params={
+                "action": "query", "prop": "extracts",
+                "exintro": True, "explaintext": True,
+                "exsentences": 3, "titles": title,
+                "format": "json", "utf8": 1, "redirects": 1
+            },
+            headers={"User-Agent": "PlantExplorer/2.7"},
+            timeout=5
+        ).json()
         for pid, page in res.get("query", {}).get("pages", {}).items():
             if pid != "-1":
                 txt = page.get("extract", "").strip()
-                if txt and len(txt) > 30: return txt[:350]
-    except: pass
+                if txt and len(txt) > 30:
+                    return txt[:350]
+    except:
+        pass
     return None
 
 def get_color(score):
-    if score >= 80: return "#3fcf6e"
-    elif score >= 50: return "#c8b864"
+    if score >= 80:
+        return "#3fcf6e"
+    elif score >= 50:
+        return "#c8b864"
     return "#c86464"
 
 def get_label(score):
-    if score >= 80: return "高度吻合", "🟢"
-    elif score >= 50: return "中度吻合", "🟡"
+    if score >= 80:
+        return "高度吻合", "🟢"
+    elif score >= 50:
+        return "中度吻合", "🟡"
     return "低度吻合", "🔴"
 
 def render_bar(score, color):
-    st.markdown(f'<div class="confidence-bar-wrap"><div class="confidence-bar" style="width:{score:.1f}%;background:linear-gradient(90deg,{color}88,{color});"></div></div><p style="color:{color};font-size:0.82rem;margin:0;text-align:right;">{score:.2f}%</p>', unsafe_allow_html=True)
+    st.markdown(f'''
+    <div class="confidence-bar-wrap">
+        <div class="confidence-bar" style="width:{score:.1f}%;background:linear-gradient(90deg,{color}88,{color});"></div>
+    </div>
+    <p style="color:{color};font-size:0.82rem;margin:0;text-align:right;">{score:.2f}%</p>
+    ''', unsafe_allow_html=True)
 
 def compress_image(img, max_w=1920):
     try:
@@ -383,69 +564,102 @@ def compress_image(img, max_w=1920):
             img = img.resize((max_w, int(img.height * ratio)), Image.Resampling.LANCZOS)
         if img.mode in ('RGBA', 'LA', 'P'):
             bg = Image.new('RGB', img.size, (255, 255, 255))
-            if img.mode == 'RGBA': bg.paste(img, mask=img.split()[-1])
-            else: bg.paste(img)
-            return bg
-        elif img.mode != 'RGB': return img.convert('RGB')
+            if img.mode == 'RGBA':
+                bg.paste(img, mask=img.split()[-1])
+            else:
+                bg.paste(img)
+            img = bg
+        elif img.mode != 'RGB':
+            img = img.convert('RGB')
         return img
-    except: return img
+    except:
+        return img
 
-def render_month_bar(active_months, label):
-    months_html = ""
-    month_names = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
-    for i, name in enumerate(month_names, 1):
-        cls = "month-active" if i in active_months else "month-inactive"
-        months_html += f'<div class="month-item {cls}">{name}</div>'
-    st.markdown(f'<div style="color:#5a8a6a;font-size:0.78rem;margin-bottom:0.3rem;">{label}</div><div class="month-bar">{months_html}</div>', unsafe_allow_html=True)
+TAXON_ZH = {
+    "Tracheophyta": "維管束植物門",
+    "Magnoliopsida": "木蘭綱",
+    "Liliopsida": "百合綱",
+    "Pinopsida": "松綱",
+    "Lamiales": "唇形目",
+    "Rosales": "薔薇目",
+    "Fabales": "豆目",
+    "Asterales": "菊目",
+    "Poales": "禾本目",
+    "Malpighiales": "金虎尾目",
+    "Sapindales": "無患子目",
+    "Malvales": "錦葵目",
+    "Lamiaceae": "唇形科",
+    "Rosaceae": "薔薇科",
+    "Fabaceae": "豆科",
+    "Asteraceae": "菊科",
+    "Poaceae": "禾本科",
+    "Moraceae": "桑科",
+    "Euphorbiaceae": "大戟科",
+    "Rutaceae": "芸香科",
+    "Orchidaceae": "蘭科",
+    "Araceae": "天南星科",
+}
+
+CARE_DATA = {
+    "Lamiaceae": {"diff": "容易", "diff_c": "#3fcf6e", "temp": "-5~41°C", "zone": "8-10", "water": "中等", "fert": "每月一次", "prune": "冬季", "prop": "扦插", "sun": "全日照"},
+    "Rosaceae": {"diff": "中等", "diff_c": "#c8b864", "temp": "-15~35°C", "zone": "5-9", "water": "規律", "fert": "每2週", "prune": "早春", "prop": "扦插嫁接", "sun": "全日照"},
+    "Fabaceae": {"diff": "容易", "diff_c": "#3fcf6e", "temp": "5~40°C", "zone": "7-11", "water": "少量", "fert": "少量", "prune": "花後", "prop": "播種", "sun": "全日照"},
+    "Asteraceae": {"diff": "容易", "diff_c": "#3fcf6e", "temp": "0~35°C", "zone": "6-10", "water": "中等", "fert": "每2-4週", "prune": "花後", "prop": "播種分株", "sun": "全日照"},
+    "Orchidaceae": {"diff": "困難", "diff_c": "#c86464", "temp": "15~30°C", "zone": "10-12", "water": "少量", "fert": "蘭花肥", "prune": "花後", "prop": "分株", "sun": "散射光"},
+    "DEFAULT": {"diff": "中等", "diff_c": "#c8b864", "temp": "5~35°C", "zone": "7-10", "water": "中等", "fert": "每月一次", "prune": "春季", "prop": "扦插播種", "sun": "全日照"},
+}
+
+def get_care(family):
+    return CARE_DATA.get(family, CARE_DATA["DEFAULT"])
 
 # ==========================================
 # 5. 側邊欄
 # ==========================================
 with st.sidebar:
     st.markdown("## 📋 辨識歷史")
+    
     if not st.session_state.history:
         st.markdown('<p style="color:#3a6a48;font-size:0.85rem;">尚無紀錄</p>', unsafe_allow_html=True)
     else:
         for r in reversed(st.session_state.history[-10:]):
             try:
+                emoji = r.get('emoji', '🌿')
+                name = r.get('name', '未知')
+                time_str = r.get('time', '')
                 score = r.get('score', 0)
-                if not isinstance(score, (int, float)): score = 0
-                st.markdown(f'<div class="history-item"><span style="font-size:1.5rem;">{r.get("emoji", "🌿")}</span><div><div style="font-size:0.88rem;color:#a0d0a8;font-weight:500;">{r.get("name", "未知")}</div><div style="font-size:0.72rem;color:#4a7a56;">{r.get("time", "")} | {score:.1f}%</div></div></div>', unsafe_allow_html=True)
-            except: continue
+                if not isinstance(score, (int, float)):
+                    score = 0
+                st.markdown(f'''
+                <div class="history-item">
+                    <span style="font-size:1.5rem;">{emoji}</span>
+                    <div>
+                        <div style="font-size:0.88rem;color:#a0d0a8;font-weight:500;">{name}</div>
+                        <div style="font-size:0.72rem;color:#4a7a56;">{time_str} | {score:.1f}%</div>
+                    </div>
+                </div>
+                ''', unsafe_allow_html=True)
+            except:
+                continue
     
     st.markdown("---")
+    
     if st.session_state.history:
         if st.button("🗑️ 清除歷史", use_container_width=True):
             st.session_state.history = []
             st.session_state.total_identifications = 0
             st.rerun()
     
-    # 我的植物圖鑑
-    st.markdown("---")
-    st.markdown("## 📚 我的圖鑑")
-    if st.session_state.my_collection:
-        for item in st.session_state.my_collection:
-            st.markdown(f'<div class="collection-item"><span>🌿 {item.get("name", "")}</span><span style="color:#4a7a56;font-size:0.75rem;">{item.get("date", "")}</span></div>', unsafe_allow_html=True)
-        if st.button("🗑️ 清除圖鑑", use_container_width=True):
-            st.session_state.my_collection = []
-            st.rerun()
-    else:
-        st.markdown('<p style="color:#3a6a48;font-size:0.85rem;">辨識後點擊收藏</p>', unsafe_allow_html=True)
-    
-    # 當季提醒
-    st.markdown("---")
-    current_month = datetime.now().month
-    seasonal = SEASONAL_TIPS[current_month]
-    st.markdown(f"## {seasonal['icon']} {seasonal['season']}照護")
-    for tip in seasonal["tips"]:
-        st.markdown(f'<p style="color:#8ab898;font-size:0.82rem;">- {tip}</p>', unsafe_allow_html=True)
-    
     st.markdown("---")
     st.markdown("### ⚙️ 設定")
     top_n = st.slider("顯示候選數", 1, 5, 3)
     
     st.markdown("---")
-    st.markdown('<div style="color:#3a6a48;font-size:0.78rem;">🌿 <strong style="color:#5a9a68;">生態探索 v3.0</strong><br>PlantNet + 維基百科 + GBIF</div>', unsafe_allow_html=True)
+    st.markdown('''
+    <div style="color:#3a6a48;font-size:0.78rem;line-height:1.8;">
+    🌿 <strong style="color:#5a9a68;">生態探索 v2.7</strong><br>
+    PlantNet + 維基百科 + GBIF
+    </div>
+    ''', unsafe_allow_html=True)
 
 # ==========================================
 # 6. 主頁面
@@ -453,13 +667,18 @@ with st.sidebar:
 st.markdown("# 🌿 生態探索")
 st.markdown('<p class="subtitle">植物智能辨識系統 Powered by PlantNet AI</p>', unsafe_allow_html=True)
 
-col1, col2, col3, col4 = st.columns(4)
-with col1: st.metric("已辨識", f"{st.session_state.total_identifications} 種")
+col1, col2, col3 = st.columns(3)
+with col1:
+    st.metric("已辨識", f"{st.session_state.total_identifications} 種")
 with col2:
-    scores = [r.get('score', 0) for r in st.session_state.history if isinstance(r.get('score'), (int, float))]
-    st.metric("平均信心", f"{sum(scores)/len(scores):.1f}%" if scores else "—")
-with col3: st.metric("圖鑑收藏", f"{len(st.session_state.my_collection)} 種")
-with col4: st.metric("資料庫", "30,000+")
+    if st.session_state.history:
+        scores = [r.get('score', 0) for r in st.session_state.history if isinstance(r.get('score'), (int, float))]
+        avg = sum(scores) / len(scores) if scores else 0
+        st.metric("平均信心度", f"{avg:.1f}%")
+    else:
+        st.metric("平均信心度", "—")
+with col3:
+    st.metric("資料庫", "30,000+ 種")
 
 st.markdown("---")
 
@@ -474,7 +693,9 @@ with col_up:
     uploaded = st.file_uploader("選擇檔案", type=["jpg", "jpeg", "png", "webp"], label_visibility="collapsed")
     if uploaded:
         kb = uploaded.size // 1024
-        st.markdown(f'<div class="badge">📁 {uploaded.name}</div><div class="badge">📦 {kb} KB</div>', unsafe_allow_html=True)
+        mb = kb / 1024
+        size_str = f"{mb:.1f} MB" if mb >= 1 else f"{kb} KB"
+        st.markdown(f'<div class="badge">📁 {uploaded.name}</div><div class="badge">📦 {size_str}</div>', unsafe_allow_html=True)
 
 with col_prev:
     if uploaded:
@@ -482,11 +703,18 @@ with col_prev:
             image = Image.open(uploaded)
             image = compress_image(image)
             st.image(image, caption="📸 預覽", use_container_width=True)
-        except:
-            st.error("圖片載入失敗")
+        except Exception as e:
+            st.error(f"圖片載入失敗：{e}")
             image = None
     else:
-        st.markdown('<div style="background:#0a1410;border:1px dashed #1e3820;border-radius:16px;height:280px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem;"><span style="font-size:4rem;">🍃</span><p style="color:#2d5c3a;font-size:0.9rem;text-align:center;">上傳照片後<br>預覽顯示於此</p></div>', unsafe_allow_html=True)
+        st.markdown('''
+        <div style="background:#0a1410;border:1px dashed #1e3820;border-radius:16px;
+                    height:280px;display:flex;align-items:center;justify-content:center;
+                    flex-direction:column;gap:1rem;">
+            <span style="font-size:4rem;">🍃</span>
+            <p style="color:#2d5c3a;font-size:0.9rem;text-align:center;">上傳照片後<br>預覽顯示於此</p>
+        </div>
+        ''', unsafe_allow_html=True)
         image = None
 
 st.markdown("")
@@ -503,16 +731,37 @@ if start_btn and uploaded and image:
         buf = io.BytesIO()
         image.save(buf, format='JPEG', quality=85)
         try:
-            resp = requests.post(API_ENDPOINT, files={'images': ('image.jpg', buf.getvalue(), 'image/jpeg')}, data={'organs': ['auto']}, timeout=30)
+            resp = requests.post(
+                API_ENDPOINT,
+                files={'images': ('image.jpg', buf.getvalue(), 'image/jpeg')},
+                data={'organs': ['auto']},
+                timeout=30
+            )
             resp.raise_for_status()
-        except requests.exceptions.Timeout: st.error("請求逾時"); st.stop()
-        except requests.exceptions.ConnectionError: st.error("無法連接"); st.stop()
-        except requests.exceptions.HTTPError: st.error(f"HTTP {resp.status_code}"); st.stop()
-        except Exception as e: st.error(f"錯誤：{e}"); st.stop()
-        try: result = resp.json()
-        except: st.error("回應格式錯誤"); st.stop()
+        except requests.exceptions.Timeout:
+            st.error("請求逾時，請檢查網路")
+            st.stop()
+        except requests.exceptions.ConnectionError:
+            st.error("無法連接伺服器")
+            st.stop()
+        except requests.exceptions.HTTPError:
+            st.error(f"HTTP 錯誤：{resp.status_code}")
+            st.stop()
+        except Exception as e:
+            st.error(f"錯誤：{e}")
+            st.stop()
+        
+        try:
+            result = resp.json()
+        except:
+            st.error("回應格式錯誤")
+            st.stop()
+        
         all_results = result.get('results', [])
-        if not all_results: st.warning("未能辨識"); st.stop()
+        if not all_results:
+            st.warning("未能辨識，請嘗試更清晰的照片")
+            st.stop()
+        
         st.session_state.identification_results = all_results[:top_n]
         st.session_state.show_results = True
         st.session_state.just_identified = True
@@ -523,6 +772,7 @@ if start_btn and uploaded and image:
 if st.session_state.get('show_results') and st.session_state.get('identification_results'):
     st.markdown("---")
     st.markdown("## 🎯 辨識結果")
+    st.markdown('<p style="color:#4a7a56;font-size:0.85rem;text-align:center;">點擊按鈕展開詳細資訊</p>', unsafe_allow_html=True)
     
     top_results = st.session_state.identification_results
     
@@ -538,10 +788,14 @@ if st.session_state.get('show_results') and st.session_state.get('identification
         
         cn_list = list(dict.fromkeys([n for n in common if has_chinese(n)]))
         wiki_link = None
+        
         if not cn_list:
             wiki_names, wiki_link = search_wikipedia(sci)
-            if wiki_names: cn_list, source = wiki_names, f"維基百科({len(wiki_names)}筆)"
-            else: source = "無中文資料"
+            if wiki_names:
+                cn_list = wiki_names
+                source = f"維基百科({len(cn_list)}筆)"
+            else:
+                source = "無中文資料"
         else:
             source = f"PlantNet({len(cn_list)}筆)"
             _, wiki_link = search_wikipedia(sci)
@@ -549,53 +803,77 @@ if st.session_state.get('show_results') and st.session_state.get('identification
         display = cn_list[0] if cn_list else "資料不足"
         
         if idx == 0 and st.session_state.get('just_identified'):
-            st.session_state.history.append({'name': display, 'sci': sci, 'score': score, 'time': datetime.now().strftime("%H:%M"), 'emoji': '🌿'})
+            st.session_state.history.append({
+                'name': display,
+                'sci': sci,
+                'score': score,
+                'time': datetime.now().strftime("%H:%M"),
+                'emoji': '🌿'
+            })
             st.session_state.total_identifications += 1
             st.session_state.just_identified = False
         
         card = "result-card-best" if idx == 0 else "result-card"
-        badge_html = '<span class="badge badge-gold">✨ 最佳匹配</span>' if idx == 0 else f'<span class="badge">候選 #{idx+1}</span>'
+        badge = '<span class="badge badge-gold">✨ 最佳匹配</span>' if idx == 0 else f'<span class="badge">候選 #{idx+1}</span>'
+        genus_html = f"<span style='color:#4a7a56;font-size:0.85rem;'>🌱 屬：{genus}</span>" if genus else ""
+        family_html = f"<span style='color:#4a7a56;font-size:0.85rem;'>🌾 科：{family}</span>" if family else ""
         
-        st.markdown(f'<div class="{card}"><div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;"><div>{badge_html} <span class="badge">{emoji_label} {label}</span></div><span style="color:#3a6a48;font-size:0.8rem;">{source}</span></div><div class="plant-name">{display}</div><div class="scientific-name">{sci}</div><div style="display:flex;gap:1.5rem;flex-wrap:wrap;">{"<span style=color:#4a7a56;font-size:0.85rem>🌱 屬："+genus+"</span>" if genus else ""} {"<span style=color:#4a7a56;font-size:0.85rem>🌾 科："+family+"</span>" if family else ""}</div></div>', unsafe_allow_html=True)
+        st.markdown(f'''
+        <div class="{card}">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.5rem;">
+                <div>{badge} <span class="badge">{emoji_label} {label}</span></div>
+                <span style="color:#3a6a48;font-size:0.8rem;">{source}</span>
+            </div>
+            <div class="plant-name">{display}</div>
+            <div class="scientific-name">{sci}</div>
+            <div style="display:flex;gap:1.5rem;flex-wrap:wrap;">{genus_html} {family_html}</div>
+        </div>
+        ''', unsafe_allow_html=True)
         
         st.markdown(f"**信心指標** {score:.2f}%")
         render_bar(score, color)
         
-        # 收藏 + 展開按鈕
-        col_a, col_b, col_c = st.columns([1, 1, 1])
-        with col_a:
-            already = any(c.get('sci') == sci for c in st.session_state.my_collection)
-            if already:
-                st.markdown('<p style="color:#4a7a56;font-size:0.85rem;text-align:center;">✅ 已收藏</p>', unsafe_allow_html=True)
-            else:
-                if st.button(f"⭐ 加入圖鑑", key=f"collect_{idx}", use_container_width=True):
-                    st.session_state.my_collection.append({'name': display, 'sci': sci, 'family': family, 'date': datetime.now().strftime("%m/%d")})
-                    st.rerun()
-        with col_b:
-            is_expanded = st.session_state.expanded_cards.get(idx, idx == 0)
-            btn_text = "🔼 收合" if is_expanded else "🔽 詳情"
-            if st.button(btn_text, key=f"toggle_{idx}", use_container_width=True):
-                st.session_state.expanded_cards[idx] = not is_expanded
-                st.rerun()
-        with col_c:
-            if wiki_link:
-                st.markdown(f'<a href="{wiki_link}" target="_blank" style="display:block;text-align:center;color:#4a9e6f;font-size:0.85rem;padding:0.6rem;">📚 維基百科</a>', unsafe_allow_html=True)
+        card_key = idx
+        is_expanded = st.session_state.expanded_cards.get(card_key, idx == 0)
         
-        # 展開詳情
-        if st.session_state.expanded_cards.get(idx, idx == 0):
+        col_btn1, col_btn2, col_btn3 = st.columns([1, 1, 1])
+        with col_btn2:
+            btn_text = "🔼 收合詳情" if is_expanded else "🔽 查看詳情"
+            if st.button(btn_text, key=f"toggle_{idx}", use_container_width=True):
+                st.session_state.expanded_cards[card_key] = not is_expanded
+                st.rerun()
+        
+        if is_expanded:
             st.markdown('<div class="detail-section">', unsafe_allow_html=True)
             
-            gbif = get_gbif(sci)
-            fam = gbif.get("family", family) or family or "DEFAULT"
-            care = get_care(fam)
+            if len(cn_list) > 1:
+                st.markdown("**📖 所有別名**")
+                cols = st.columns(3)
+                for i, a in enumerate(cn_list):
+                    cols[i % 3].markdown(f'<span class="badge">{"⭐ " if i==0 else ""}{a}</span>', unsafe_allow_html=True)
             
-            # ═══ Tab 式分頁 ═══
-            tab1, tab2, tab3, tab4 = st.tabs(["🌳 分類與簡介", "🌱 照護指南", "⚠️ 安全與花語", "🔧 常見問題"])
+            eng = [n for n in common if not has_chinese(n)][:3]
+            if eng:
+                st.markdown(f'<p style="color:#3a6058;font-size:0.82rem;">英文：{" · ".join(eng)}</p>', unsafe_allow_html=True)
             
-            with tab1:
-                # 分類階層
+            if wiki_link:
+                st.markdown(f"[📚 查看維基百科]({wiki_link})")
+            
+            st.markdown("---")
+            
+            c1, c2 = st.columns(2, gap="medium")
+            
+            with c1:
                 st.markdown("#### 🌳 分類階層")
-                rows = [("門", gbif.get("phylum", "—")), ("綱", gbif.get("class", "—")), ("目", gbif.get("order", "—")), ("科", gbif.get("family", "—")), ("屬", gbif.get("genus", "—")), ("種", gbif.get("species", sci))]
+                gbif = get_gbif(sci)
+                rows = [
+                    ("門", gbif.get("phylum", "—")),
+                    ("綱", gbif.get("class", "—")),
+                    ("目", gbif.get("order", "—")),
+                    ("科", gbif.get("family", "—")),
+                    ("屬", gbif.get("genus", "—")),
+                    ("種", gbif.get("species", sci)),
+                ]
                 html = ""
                 for lbl, val in rows:
                     zh = TAXON_ZH.get(val, "")
@@ -603,93 +881,117 @@ if st.session_state.get('show_results') and st.session_state.get('identification
                     html += f'<tr><td class="taxon-label">{lbl}</td><td class="taxon-value">{val}{zh_span}</td></tr>'
                 st.markdown(f'<table class="taxon-table">{html}</table>', unsafe_allow_html=True)
                 
-                # 別名
-                if len(cn_list) > 1:
-                    st.markdown("**📖 所有別名**")
-                    cols = st.columns(3)
-                    for i, a in enumerate(cn_list):
-                        cols[i % 3].markdown(f'<span class="badge">{"⭐ " if i==0 else ""}{a}</span>', unsafe_allow_html=True)
-                
-                # 維基摘要
                 wiki_title = cn_list[0] if cn_list else sci
                 extract = get_wiki_extract(wiki_title) or get_wiki_extract(sci)
                 if extract:
                     st.markdown("#### 📖 植物簡介")
                     st.markdown(f'<div class="wiki-extract">{extract}</div>', unsafe_allow_html=True)
             
-            with tab2:
+            with c2:
+                st.markdown("#### 🌱 照護指南")
+                fam = gbif.get("family", family) or family or "DEFAULT"
+                care = get_care(fam)
                 dc = care.get("diff_c", "#c8b864")
-                st.markdown(f'<div style="margin-bottom:1rem;"><span style="background:{dc}22;color:{dc};border:1px solid {dc}66;border-radius:20px;padding:0.35rem 1.1rem;font-weight:600;">{care.get("diff", "中等")}</span><span style="color:#3a6a48;font-size:0.8rem;margin-left:0.5rem;">照護難度</span></div>', unsafe_allow_html=True)
                 
-                # 花期與播種月份
-                render_month_bar(care.get("bloom", []), "🌸 花期月份")
-                render_month_bar(care.get("sow", []), "🌱 適合播種")
+                st.markdown(f'''
+                <div style="margin-bottom:1rem;">
+                    <span style="background:{dc}22;color:{dc};border:1px solid {dc}66;border-radius:20px;padding:0.35rem 1.1rem;font-weight:600;">
+                        {care.get("diff", "中等")}
+                    </span>
+                    <span style="color:#3a6a48;font-size:0.8rem;margin-left:0.5rem;">照護難度</span>
+                </div>
+                ''', unsafe_allow_html=True)
                 
-                st.markdown(f'<div class="char-card"><div style="color:#5a8a6a;font-size:0.78rem;margin-bottom:0.5rem;">🌡️ 氣候條件</div><div class="char-row"><span class="char-key">適合氣溫</span><span class="char-val">{care.get("temp", "—")}</span></div><div class="char-row"><span class="char-key">耐寒區間</span><span class="char-val">Zone {care.get("zone", "—")}</span></div><div class="char-row"><span class="char-key">光照需求</span><span class="char-val">{care.get("sun", "—")}</span></div></div>', unsafe_allow_html=True)
+                st.markdown(f'''
+                <div class="char-card">
+                    <div style="color:#5a8a6a;font-size:0.78rem;margin-bottom:0.5rem;">🌡️ 氣候條件</div>
+                    <div class="char-row"><span class="char-key">適合氣溫</span><span class="char-val">{care.get("temp", "—")}</span></div>
+                    <div class="char-row"><span class="char-key">耐寒區間</span><span class="char-val">Zone {care.get("zone", "—")}</span></div>
+                    <div class="char-row"><span class="char-key">光照需求</span><span class="char-val">{care.get("sun", "—")}</span></div>
+                </div>
+                ''', unsafe_allow_html=True)
                 
-                st.markdown(f'<div class="care-grid"><div class="care-item"><div class="care-icon">💧</div><div class="care-title">澆水</div><div class="care-desc">{care.get("water", "—")}</div></div><div class="care-item"><div class="care-icon">🌿</div><div class="care-title">肥料</div><div class="care-desc">{care.get("fert", "—")}</div></div><div class="care-item"><div class="care-icon">✂️</div><div class="care-title">修剪</div><div class="care-desc">{care.get("prune", "—")}</div></div><div class="care-item"><div class="care-icon">🌱</div><div class="care-title">繁殖</div><div class="care-desc">{care.get("prop", "—")}</div></div></div>', unsafe_allow_html=True)
-                
-                # 當季建議
-                current_month = datetime.now().month
-                seasonal = SEASONAL_TIPS[current_month]
-                st.markdown(f"#### {seasonal['icon']} 本月照護重點（{current_month}月）")
-                for tip in seasonal["tips"]:
-                    st.markdown(f"- {tip}")
-            
-            with tab3:
-                # 毒性警告
-                tox = TOXICITY_DATA.get(fam, TOXICITY_DATA["DEFAULT"])
-                safety_class = f"safety-{tox['level']}"
-                st.markdown(f'<div class="safety-card {safety_class}"><div style="font-size:1.5rem;margin-bottom:0.5rem;">{tox["icon"]} {tox["text"]}</div><p style="font-size:0.85rem;color:#b0b8a8;margin:0;">{tox["detail"]}</p></div>', unsafe_allow_html=True)
-                
-                if tox["level"] == "danger":
-                    st.error("🚨 此植物對人類和寵物高度危險，請務必小心處理！")
-                elif tox["level"] == "caution":
-                    st.warning("⚠️ 接觸或誤食可能造成不適，請留意兒童與寵物。")
-                
-                st.markdown("---")
-                
-                # 花語
-                fl = FLOWER_LANG.get(fam, FLOWER_LANG["DEFAULT"])
-                meanings = " · ".join(fl["meanings"])
-                st.markdown(f'<div class="flower-lang-card"><div style="font-size:2rem;margin-bottom:0.5rem;">{fl["flower"]}</div><div style="color:#c0a0d8;font-size:1rem;font-weight:600;margin-bottom:0.5rem;">花語：{meanings}</div><div style="color:#8a7aaa;font-size:0.85rem;">適合場合：{fl["best_for"]}</div></div>', unsafe_allow_html=True)
-            
-            with tab4:
-                st.markdown("#### 🔧 常見問題排解")
-                for prob in PLANT_PROBLEMS:
-                    st.markdown(f'''
-                    <div class="char-card">
-                        <div style="font-size:1.1rem;margin-bottom:0.3rem;">{prob["icon"]} <strong style="color:#a8d8a8;">{prob["symptom"]}</strong></div>
-                        <div class="char-row"><span class="char-key">可能原因</span><span class="char-val">{prob["causes"]}</span></div>
-                        <div class="char-row"><span class="char-key">解決方法</span><span class="char-val">{prob["solution"]}</span></div>
-                    </div>
-                    ''', unsafe_allow_html=True)
+                st.markdown(f'''
+                <div class="care-grid">
+                    <div class="care-item"><div class="care-icon">💧</div><div class="care-title">澆水</div><div class="care-desc">{care.get("water", "—")}</div></div>
+                    <div class="care-item"><div class="care-icon">🌿</div><div class="care-title">肥料</div><div class="care-desc">{care.get("fert", "—")}</div></div>
+                    <div class="care-item"><div class="care-icon">✂️</div><div class="care-title">修剪</div><div class="care-desc">{care.get("prune", "—")}</div></div>
+                    <div class="care-item"><div class="care-icon">🌱</div><div class="care-title">繁殖</div><div class="care-desc">{care.get("prop", "—")}</div></div>
+                </div>
+                ''', unsafe_allow_html=True)
             
             st.markdown('</div>', unsafe_allow_html=True)
+        
         st.markdown("")
     
     # 匯出
     st.markdown("---")
     st.markdown("### 📤 匯出報告")
+    
     best = top_results[0]
     best_sci = best.get('species', {}).get('scientificNameWithoutAuthor', '')
     best_score = best.get('score', 0) * 100
     best_cn = [n for n in best.get('species', {}).get('commonNames', []) if has_chinese(n)]
     best_name = best_cn[0] if best_cn else best_sci
     
-    report = f"🌿 植物辨識報告\n{'='*40}\n時間：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n最佳匹配：{best_name}\n學名：{best_sci}\n信心：{best_score:.2f}%\n\n候選結果：\n"
+    report = f"""🌿 植物辨識報告
+{'='*40}
+時間：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+{'='*40}
+
+最佳匹配：{best_name}
+學名：{best_sci}
+信心：{best_score:.2f}%
+
+候選結果：
+"""
     for i, m in enumerate(top_results):
         sn = m.get('species', {}).get('scientificNameWithoutAuthor', '')
         sc = m.get('score', 0) * 100
         cn = [n for n in m.get('species', {}).get('commonNames', []) if has_chinese(n)]
-        report += f"{i+1}. {cn[0] if cn else sn}（{sn}）{sc:.2f}%\n"
+        nm = cn[0] if cn else sn
+        report += f"{i+1}. {nm}（{sn}）{sc:.2f}%\n"
+    
+    report += f"\n{'='*40}\nPlantNet + 維基百科 + GBIF"
+    
+    json_str = json.dumps({
+        "time": datetime.now().isoformat(),
+        "results": [
+            {
+                "rank": i+1,
+                "name": m.get('species', {}).get('scientificNameWithoutAuthor', ''),
+                "score": m.get('score', 0)
+            }
+            for i, m in enumerate(top_results)
+        ]
+    }, ensure_ascii=False, indent=2)
     
     c1, c2 = st.columns(2)
-    with c1: st.download_button("📄 下載報告", report.encode("utf-8"), f"植物辨識_{datetime.now().strftime('%Y%m%d_%H%M')}.txt", "text/plain", use_container_width=True)
-    with c2: st.download_button("📊 下載 JSON", json.dumps({"time": datetime.now().isoformat(), "results": [{"rank": i+1, "name": m.get('species', {}).get('scientificNameWithoutAuthor', ''), "score": m.get('score', 0)} for i, m in enumerate(top_results)]}, ensure_ascii=False, indent=2).encode("utf-8"), f"plant_{datetime.now().strftime('%Y%m%d_%H%M')}.json", "application/json", use_container_width=True)
+    with c1:
+        st.download_button(
+            "📄 下載文字報告",
+            report.encode("utf-8"),
+            f"植物辨識_{datetime.now().strftime('%Y%m%d_%H%M')}.txt",
+            "text/plain",
+            use_container_width=True
+        )
+    with c2:
+        st.download_button(
+            "📊 下載 JSON",
+            json_str.encode("utf-8"),
+            f"plant_{datetime.now().strftime('%Y%m%d_%H%M')}.json",
+            "application/json",
+            use_container_width=True
+        )
 
 # ==========================================
 # 10. 頁尾
 # ==========================================
 st.markdown("---")
-st.markdown('<div style="text-align:center;color:#2d5c3a;font-size:0.8rem;padding:1rem 0;line-height:2;">🌿 <strong style="color:#4a7a56;">生態探索</strong> v3.0<br>PlantNet AI + 維基百科 + GBIF<br><span style="font-size:0.72rem;">僅供參考，鑑定請諮詢專家</span></div>', unsafe_allow_html=True)
+st.markdown('''
+<div style="text-align:center;color:#2d5c3a;font-size:0.8rem;padding:1rem 0;line-height:2;">
+    🌿 <strong style="color:#4a7a56;">生態探索</strong> v2.7<br>
+    PlantNet AI + 維基百科 + GBIF<br>
+    <span style="font-size:0.72rem;">僅供參考，鑑定請諮詢專家</span>
+</div>
+''', unsafe_allow_html=True)
