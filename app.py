@@ -6,7 +6,6 @@ from PIL import Image
 # ==========================================
 # 1. 系統與 API 設定區塊
 # ==========================================
-# 請將下方的金鑰替換為你在 PlantNet 申請的真實 API Key
 API_KEY = "2b1004UqTrbWJn4mj5hqcaZN"
 API_ENDPOINT = f"https://my-api.plantnet.org/v2/identify/all?api-key={API_KEY}&lang=zh"
 
@@ -19,31 +18,62 @@ def has_chinese(text):
 
 def search_wikipedia_for_chinese(scientific_name):
     """
-    透過維基百科 API 進行模糊搜尋，尋找該學名對應的中文條目。
-    具備 User-Agent 標頭，以符合伺服器安全政策，防止 403 阻擋。
+    透過維基百科 API 進行模糊搜尋，並利用「重新導向 (Redirects)」功能抓取所有別名。
     """
     wiki_url = "https://zh.wikipedia.org/w/api.php"
-    params = {
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    }
+    
+    # 階段一：搜尋主條目名稱
+    search_params = {
         "action": "query",
         "list": "search",
         "srsearch": scientific_name,
         "format": "json",
         "utf8": 1
     }
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-    }
     
     try:
-        res = requests.get(wiki_url, params=params, headers=headers).json()
-        search_results = res.get("query", {}).get("search", [])
-        if search_results:
-            first_title = search_results[0].get("title", "")
-            if has_chinese(first_title):
-                return first_title
+        search_res = requests.get(wiki_url, params=search_params, headers=headers).json()
+        search_results = search_res.get("query", {}).get("search", [])
+        if not search_results:
+            return None
+            
+        main_title = search_results[0].get("title", "")
+        if not has_chinese(main_title):
+            return None
+            
+        # 階段二：抓取該條目的所有重新導向 (鄉土俗名或別名)
+        redirect_params = {
+            "action": "query",
+            "titles": main_title,
+            "prop": "redirects",
+            "rdlimit": "50", # 最多抓取 50 個別名
+            "format": "json",
+            "utf8": 1
+        }
+        
+        rd_res = requests.get(wiki_url, params=redirect_params, headers=headers).json()
+        pages = rd_res.get("query", {}).get("pages", {})
+        
+        aliases = [main_title] # 將主名稱先放入清單
+        
+        # 解析回傳的重新導向名單
+        for page_id, page_info in pages.items():
+            if "redirects" in page_info:
+                for rd in page_info["redirects"]:
+                    title = rd["title"]
+                    # 排除維基百科內部系統頁面(如含冒號的分類頁)並確保名稱含有中文
+                    if ":" not in title and has_chinese(title):
+                        aliases.append(title)
+                        
+        # 移除重複的名稱，並保持原始排序
+        unique_aliases = list(dict.fromkeys(aliases))
+        return unique_aliases
+        
     except Exception as e:
         return None
-    return None
 
 # ==========================================
 # 3. 前端 UI 介面區塊
@@ -61,7 +91,7 @@ if uploaded_file is not None:
     st.image(image, caption='已上傳照片', use_container_width=True)
     
     if st.button("開始辨識"):
-        with st.spinner("AI 辨識中，並同步檢索文獻與別名..."):
+        with st.spinner("AI 辨識中，並同步深度檢索文獻與別名..."):
             
             img_bytes = uploaded_file.getvalue()
             files = {'images': ('image.jpg', img_bytes, 'image/jpeg')}
@@ -80,21 +110,19 @@ if uploaded_file is not None:
                 display_name = ""
                 source = ""
                 
-                # 第一層檢索：獲取所有包含中文的俗名，並轉為小寫(以防英文大小寫差異影響)後去重疊
-                # 使用 dict.fromkeys 來保持原有排序並去除重複項
+                # 第一層檢索：PlantNet 內建圖鑑
                 chinese_names_list = [name for name in common_names if has_chinese(name)]
                 unique_chinese_names = list(dict.fromkeys(chinese_names_list))
                 
                 if unique_chinese_names:
-                    # 將所有找到的別名用「、」串接起來
                     display_name = "、".join(unique_chinese_names)
                     source = f"內建圖鑑 ({len(unique_chinese_names)}筆名稱)"
                 else:
-                    # 第二層檢索：啟動維基百科備援搜尋 (維基百科通常只會回傳一個主要條目名稱)
-                    wiki_name = search_wikipedia_for_chinese(scientific_name)
-                    if wiki_name:
-                        display_name = wiki_name
-                        source = "維基百科擴充"
+                    # 第二層檢索：觸發升級版的維基百科深度搜尋
+                    wiki_names_list = search_wikipedia_for_chinese(scientific_name)
+                    if wiki_names_list:
+                        display_name = "、".join(wiki_names_list)
+                        source = f"維基百科擴充 ({len(wiki_names_list)}筆名稱)"
                     else:
                         display_name = "【資料不足，無法確認】"
                         source = "無資料"
