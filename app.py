@@ -18,112 +18,128 @@ st.set_page_config(
 )
 
 # ==========================================
-# 1. CSS 樣式（強力修復圖標問題）
+# 1. CSS 樣式
 # ==========================================
 st.markdown("""
 <style>
 /* ══════════════════════════════════════════
-   強力修復所有 Material Icons 文字顯示問題
+   側邊欄展開按鈕（左上角漢堡按鈕）
    ══════════════════════════════════════════ */
-
-/* 方法1: 隱藏所有可能顯示圖標文字的元素 */
-[data-testid="collapsedControl"] span,
-[data-testid="stSidebarCollapseButton"] span,
-[data-testid="stSidebarNav"] button span,
-button[kind="header"] span,
-button[kind="headerNoPadding"] span,
-[data-testid="baseButton-header"] span,
-[data-testid="baseButton-headerNoPadding"] span {
-    font-size: 0 !important;
-    visibility: hidden !important;
-    width: 0 !important;
-    height: 0 !important;
-    display: none !important;
-}
-
-/* 方法2: 針對側邊欄頂部區域，完全隱藏問題文字 */
-[data-testid="stSidebar"] > div:first-child > div:first-child {
-    font-size: 0 !important;
-}
-
-[data-testid="stSidebar"] button {
-    font-size: 0 !important;
-    color: transparent !important;
-    background: #1a3020 !important;
-    border: 1px solid #2d5c3a !important;
-    border-radius: 6px !important;
-    width: 32px !important;
-    height: 32px !important;
-    min-width: 32px !important;
-    min-height: 32px !important;
+[data-testid="collapsedControl"] {
+    position: fixed !important;
+    top: 14px !important;
+    left: 14px !important;
+    z-index: 999999 !important;
+    background: linear-gradient(135deg, #2d6e45, #1a4a2e) !important;
+    border: 2px solid #4a9e5f !important;
+    border-radius: 10px !important;
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    min-height: 48px !important;
     padding: 0 !important;
+    margin: 0 !important;
+    cursor: pointer !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    cursor: pointer !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4), 0 0 20px rgba(74,158,95,0.3) !important;
+    transition: all 0.2s ease !important;
+    overflow: visible !important;
 }
 
-[data-testid="stSidebar"] button::before {
-    content: "✕" !important;
-    font-size: 1rem !important;
-    color: #7ec98a !important;
-    visibility: visible !important;
+[data-testid="collapsedControl"]:hover {
+    background: linear-gradient(135deg, #3a8a56, #245c38) !important;
+    border-color: #7ec98a !important;
+    transform: scale(1.08) !important;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5), 0 0 25px rgba(74,158,95,0.4) !important;
+}
+
+[data-testid="collapsedControl"] svg,
+[data-testid="collapsedControl"] span,
+[data-testid="collapsedControl"] div,
+[data-testid="collapsedControl"] p {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    font-size: 0 !important;
+}
+
+[data-testid="collapsedControl"]::after {
+    content: "☰" !important;
+    font-size: 1.8rem !important;
+    color: #c8f0cc !important;
     display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    line-height: 1 !important;
+    font-weight: bold !important;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3) !important;
 }
 
-[data-testid="stSidebar"] button:hover {
+/* ══════════════════════════════════════════
+   側邊欄關閉按鈕
+   ══════════════════════════════════════════ */
+[data-testid="stSidebar"] button[kind="header"],
+[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"],
+[data-testid="stSidebar"] [data-testid="baseButton-header"] {
+    position: absolute !important;
+    top: 10px !important;
+    right: 10px !important;
+    z-index: 9999 !important;
+    background: #1a3020 !important;
+    border: 1px solid #3a7a50 !important;
+    border-radius: 8px !important;
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
+    padding: 0 !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+[data-testid="stSidebar"] button[kind="header"]:hover,
+[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"]:hover {
     background: #243828 !important;
     border-color: #4a9e5f !important;
 }
 
-[data-testid="stSidebar"] button:hover::before {
-    color: #a8e0b4 !important;
-}
-
-/* 方法3: 側邊欄展開按鈕（收合時左上角） */
-[data-testid="collapsedControl"] {
-    font-size: 0 !important;
-    color: transparent !important;
-    background: #1a3020 !important;
-    border: 1px solid #2d5c3a !important;
-    border-radius: 8px !important;
-    width: 40px !important;
-    height: 40px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-}
-
-[data-testid="collapsedControl"] svg {
+[data-testid="stSidebar"] button[kind="header"] svg,
+[data-testid="stSidebar"] button[kind="header"] span,
+[data-testid="stSidebar"] button[kind="header"] div,
+[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"] svg,
+[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"] span,
+[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"] div {
     display: none !important;
-}
-
-[data-testid="collapsedControl"]::before {
-    content: "☰" !important;
-    font-size: 1.5rem !important;
-    color: #7ec98a !important;
-    visibility: visible !important;
-}
-
-[data-testid="collapsedControl"]:hover {
-    background: #243828 !important;
-}
-
-/* 方法4: 隱藏任何包含特定文字的元素 */
-*:not(script):not(style) {
-    /* 這會被更具體的選擇器覆蓋 */
-}
-
-/* 隱藏側邊欄頂部的整個按鈕區域的文字內容 */
-[data-testid="stSidebarHeader"],
-[data-testid="stSidebarUserContent"] > div:first-child button {
+    visibility: hidden !important;
     font-size: 0 !important;
+}
+
+[data-testid="stSidebar"] button[kind="header"]::after,
+[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"]::after {
+    content: "✕" !important;
+    font-size: 1.2rem !important;
+    color: #7ec98a !important;
+    display: block !important;
+    visibility: visible !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
 }
 
 /* ══════════════════════════════════════════
    主要樣式
    ══════════════════════════════════════════ */
-
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500&display=swap');
 
 html, body, [class*="css"] {
@@ -195,7 +211,7 @@ h2, h3 {
     display: none !important;
 }
 
-/* 主要按鈕（非側邊欄） */
+/* 主要按鈕 */
 .main .stButton > button {
     background: linear-gradient(135deg, #2d6e45, #1a4a2e) !important;
     color: #c8f0cc !important;
@@ -207,14 +223,6 @@ h2, h3 {
     padding: 0.6rem 2.4rem !important;
     transition: all 0.25s ease !important;
     box-shadow: 0 4px 20px rgba(58,158,95,0.25) !important;
-    width: auto !important;
-    height: auto !important;
-    min-width: auto !important;
-    min-height: auto !important;
-}
-
-.main .stButton > button::before {
-    content: none !important;
 }
 
 .main .stButton > button:hover {
@@ -226,7 +234,7 @@ h2, h3 {
     opacity: 0.5 !important;
 }
 
-/* 側邊欄內的按鈕 */
+/* 側邊欄按鈕 */
 [data-testid="stSidebar"] .stButton > button {
     background: linear-gradient(135deg, #2d6e45, #1a4a2e) !important;
     color: #c8f0cc !important;
@@ -235,13 +243,6 @@ h2, h3 {
     font-family: 'Noto Sans TC', sans-serif !important;
     font-size: 0.9rem !important;
     padding: 0.5rem 1rem !important;
-    width: 100% !important;
-    height: auto !important;
-    min-height: auto !important;
-}
-
-[data-testid="stSidebar"] .stButton > button::before {
-    content: none !important;
 }
 
 /* 結果卡片 */
@@ -346,6 +347,7 @@ hr {
 [data-testid="stSidebar"] {
     background: #0b1510 !important;
     border-right: 1px solid #1a3020 !important;
+    padding-top: 3rem !important;
 }
 
 [data-testid="stSidebar"] .stMarkdown {
@@ -391,11 +393,23 @@ hr {
 
 .share-btn { display: block; padding: 0.6rem 1rem; border-radius: 8px; text-align: center; text-decoration: none; font-weight: 500; margin-bottom: 0.5rem; }
 
+/* 手機響應式 */
 @media (max-width: 768px) {
     .care-grid { grid-template-columns: 1fr; }
     .plant-name { font-size: 1.6rem; }
     h1 { font-size: 2rem !important; }
     .main .block-container { padding: 1.5rem 1rem 3rem; }
+    
+    [data-testid="collapsedControl"] {
+        top: 10px !important;
+        left: 10px !important;
+        width: 42px !important;
+        height: 42px !important;
+    }
+    
+    [data-testid="collapsedControl"]::after {
+        font-size: 1.5rem !important;
+    }
 }
 </style>
 """, unsafe_allow_html=True)
@@ -451,7 +465,7 @@ def has_chinese(text):
 @st.cache_data(ttl=3600, show_spinner=False)
 def search_wikipedia(scientific_name):
     url = "https://zh.wikipedia.org/w/api.php"
-    headers = {"User-Agent": "PlantExplorer/2.5"}
+    headers = {"User-Agent": "PlantExplorer/2.7"}
     try:
         res = requests.get(url, params={
             "action": "query", "list": "search",
@@ -475,23 +489,43 @@ def search_wikipedia(scientific_name):
                 t = r.get("title", "")
                 if ":" not in t and has_chinese(t):
                     aliases.append(t)
-        link = f"https://zh.wikipedia.org/wiki/{quote(title)}"
-        return list(dict.fromkeys(aliases)), link
+        return list(dict.fromkeys(aliases)), f"https://zh.wikipedia.org/wiki/{quote(title)}"
     except:
         return None, None
 
 @st.cache_data(ttl=3600, show_spinner=False)
 def get_gbif(scientific_name):
     try:
-        res = requests.get("https://api.gbif.org/v1/species/match", params={"name": scientific_name}, timeout=6).json()
-        return {"phylum": res.get("phylum", ""), "class": res.get("class", ""), "order": res.get("order", ""), "family": res.get("family", ""), "genus": res.get("genus", ""), "species": res.get("species", scientific_name)}
+        res = requests.get(
+            "https://api.gbif.org/v1/species/match",
+            params={"name": scientific_name},
+            timeout=6
+        ).json()
+        return {
+            "phylum": res.get("phylum", ""),
+            "class": res.get("class", ""),
+            "order": res.get("order", ""),
+            "family": res.get("family", ""),
+            "genus": res.get("genus", ""),
+            "species": res.get("species", scientific_name),
+        }
     except:
         return {}
 
 @st.cache_data(ttl=3600, show_spinner=False)
 def get_wiki_extract(title):
     try:
-        res = requests.get("https://zh.wikipedia.org/w/api.php", params={"action": "query", "prop": "extracts", "exintro": True, "explaintext": True, "exsentences": 3, "titles": title, "format": "json", "utf8": 1, "redirects": 1}, headers={"User-Agent": "PlantExplorer/2.5"}, timeout=5).json()
+        res = requests.get(
+            "https://zh.wikipedia.org/w/api.php",
+            params={
+                "action": "query", "prop": "extracts",
+                "exintro": True, "explaintext": True,
+                "exsentences": 3, "titles": title,
+                "format": "json", "utf8": 1, "redirects": 1
+            },
+            headers={"User-Agent": "PlantExplorer/2.7"},
+            timeout=5
+        ).json()
         for pid, page in res.get("query", {}).get("pages", {}).items():
             if pid != "-1":
                 txt = page.get("extract", "").strip()
@@ -502,17 +536,26 @@ def get_wiki_extract(title):
     return None
 
 def get_color(score):
-    if score >= 80: return "#3fcf6e"
-    elif score >= 50: return "#c8b864"
+    if score >= 80:
+        return "#3fcf6e"
+    elif score >= 50:
+        return "#c8b864"
     return "#c86464"
 
 def get_label(score):
-    if score >= 80: return "高度吻合", "🟢"
-    elif score >= 50: return "中度吻合", "🟡"
+    if score >= 80:
+        return "高度吻合", "🟢"
+    elif score >= 50:
+        return "中度吻合", "🟡"
     return "低度吻合", "🔴"
 
 def render_bar(score, color):
-    st.markdown(f'<div class="confidence-bar-wrap"><div class="confidence-bar" style="width:{score:.1f}%;background:linear-gradient(90deg,{color}88,{color});"></div></div><p style="color:{color};font-size:0.82rem;margin:0;text-align:right;">{score:.2f}%</p>', unsafe_allow_html=True)
+    st.markdown(f'''
+    <div class="confidence-bar-wrap">
+        <div class="confidence-bar" style="width:{score:.1f}%;background:linear-gradient(90deg,{color}88,{color});"></div>
+    </div>
+    <p style="color:{color};font-size:0.82rem;margin:0;text-align:right;">{score:.2f}%</p>
+    ''', unsafe_allow_html=True)
 
 def compress_image(img, max_w=1920):
     try:
@@ -521,8 +564,10 @@ def compress_image(img, max_w=1920):
             img = img.resize((max_w, int(img.height * ratio)), Image.Resampling.LANCZOS)
         if img.mode in ('RGBA', 'LA', 'P'):
             bg = Image.new('RGB', img.size, (255, 255, 255))
-            if img.mode == 'RGBA': bg.paste(img, mask=img.split()[-1])
-            else: bg.paste(img)
+            if img.mode == 'RGBA':
+                bg.paste(img, mask=img.split()[-1])
+            else:
+                bg.paste(img)
             img = bg
         elif img.mode != 'RGB':
             img = img.convert('RGB')
@@ -530,12 +575,36 @@ def compress_image(img, max_w=1920):
     except:
         return img
 
-TAXON_ZH = {"Tracheophyta": "維管束植物門", "Magnoliopsida": "木蘭綱", "Liliopsida": "百合綱", "Lamiales": "唇形目", "Rosales": "薔薇目", "Fabales": "豆目", "Asterales": "菊目", "Poales": "禾本目", "Lamiaceae": "唇形科", "Rosaceae": "薔薇科", "Fabaceae": "豆科", "Asteraceae": "菊科", "Poaceae": "禾本科", "Moraceae": "桑科", "Orchidaceae": "蘭科", "Araceae": "天南星科"}
+TAXON_ZH = {
+    "Tracheophyta": "維管束植物門",
+    "Magnoliopsida": "木蘭綱",
+    "Liliopsida": "百合綱",
+    "Pinopsida": "松綱",
+    "Lamiales": "唇形目",
+    "Rosales": "薔薇目",
+    "Fabales": "豆目",
+    "Asterales": "菊目",
+    "Poales": "禾本目",
+    "Malpighiales": "金虎尾目",
+    "Sapindales": "無患子目",
+    "Malvales": "錦葵目",
+    "Lamiaceae": "唇形科",
+    "Rosaceae": "薔薇科",
+    "Fabaceae": "豆科",
+    "Asteraceae": "菊科",
+    "Poaceae": "禾本科",
+    "Moraceae": "桑科",
+    "Euphorbiaceae": "大戟科",
+    "Rutaceae": "芸香科",
+    "Orchidaceae": "蘭科",
+    "Araceae": "天南星科",
+}
 
 CARE_DATA = {
     "Lamiaceae": {"diff": "容易", "diff_c": "#3fcf6e", "temp": "-5~41°C", "zone": "8-10", "water": "中等", "fert": "每月一次", "prune": "冬季", "prop": "扦插", "sun": "全日照"},
     "Rosaceae": {"diff": "中等", "diff_c": "#c8b864", "temp": "-15~35°C", "zone": "5-9", "water": "規律", "fert": "每2週", "prune": "早春", "prop": "扦插嫁接", "sun": "全日照"},
     "Fabaceae": {"diff": "容易", "diff_c": "#3fcf6e", "temp": "5~40°C", "zone": "7-11", "water": "少量", "fert": "少量", "prune": "花後", "prop": "播種", "sun": "全日照"},
+    "Asteraceae": {"diff": "容易", "diff_c": "#3fcf6e", "temp": "0~35°C", "zone": "6-10", "water": "中等", "fert": "每2-4週", "prune": "花後", "prop": "播種分株", "sun": "全日照"},
     "Orchidaceae": {"diff": "困難", "diff_c": "#c86464", "temp": "15~30°C", "zone": "10-12", "water": "少量", "fert": "蘭花肥", "prune": "花後", "prop": "分株", "sun": "散射光"},
     "DEFAULT": {"diff": "中等", "diff_c": "#c8b864", "temp": "5~35°C", "zone": "7-10", "water": "中等", "fert": "每月一次", "prune": "春季", "prop": "扦插播種", "sun": "全日照"},
 }
@@ -558,8 +627,17 @@ with st.sidebar:
                 name = r.get('name', '未知')
                 time_str = r.get('time', '')
                 score = r.get('score', 0)
-                if not isinstance(score, (int, float)): score = 0
-                st.markdown(f'<div class="history-item"><span style="font-size:1.5rem;">{emoji}</span><div><div style="font-size:0.88rem;color:#a0d0a8;font-weight:500;">{name}</div><div style="font-size:0.72rem;color:#4a7a56;">{time_str} | {score:.1f}%</div></div></div>', unsafe_allow_html=True)
+                if not isinstance(score, (int, float)):
+                    score = 0
+                st.markdown(f'''
+                <div class="history-item">
+                    <span style="font-size:1.5rem;">{emoji}</span>
+                    <div>
+                        <div style="font-size:0.88rem;color:#a0d0a8;font-weight:500;">{name}</div>
+                        <div style="font-size:0.72rem;color:#4a7a56;">{time_str} | {score:.1f}%</div>
+                    </div>
+                </div>
+                ''', unsafe_allow_html=True)
             except:
                 continue
     
@@ -576,7 +654,12 @@ with st.sidebar:
     top_n = st.slider("顯示候選數", 1, 5, 3)
     
     st.markdown("---")
-    st.markdown('<div style="color:#3a6a48;font-size:0.78rem;line-height:1.8;">🌿 <strong style="color:#5a9a68;">生態探索 v2.5</strong><br>PlantNet + 維基百科 + GBIF</div>', unsafe_allow_html=True)
+    st.markdown('''
+    <div style="color:#3a6a48;font-size:0.78rem;line-height:1.8;">
+    🌿 <strong style="color:#5a9a68;">生態探索 v2.7</strong><br>
+    PlantNet + 維基百科 + GBIF
+    </div>
+    ''', unsafe_allow_html=True)
 
 # ==========================================
 # 6. 主頁面
@@ -624,7 +707,14 @@ with col_prev:
             st.error(f"圖片載入失敗：{e}")
             image = None
     else:
-        st.markdown('<div style="background:#0a1410;border:1px dashed #1e3820;border-radius:16px;height:280px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem;"><span style="font-size:4rem;">🍃</span><p style="color:#2d5c3a;font-size:0.9rem;text-align:center;">上傳照片後<br>預覽顯示於此</p></div>', unsafe_allow_html=True)
+        st.markdown('''
+        <div style="background:#0a1410;border:1px dashed #1e3820;border-radius:16px;
+                    height:280px;display:flex;align-items:center;justify-content:center;
+                    flex-direction:column;gap:1rem;">
+            <span style="font-size:4rem;">🍃</span>
+            <p style="color:#2d5c3a;font-size:0.9rem;text-align:center;">上傳照片後<br>預覽顯示於此</p>
+        </div>
+        ''', unsafe_allow_html=True)
         image = None
 
 st.markdown("")
@@ -641,23 +731,37 @@ if start_btn and uploaded and image:
         buf = io.BytesIO()
         image.save(buf, format='JPEG', quality=85)
         try:
-            resp = requests.post(API_ENDPOINT, files={'images': ('image.jpg', buf.getvalue(), 'image/jpeg')}, data={'organs': ['auto']}, timeout=30)
+            resp = requests.post(
+                API_ENDPOINT,
+                files={'images': ('image.jpg', buf.getvalue(), 'image/jpeg')},
+                data={'organs': ['auto']},
+                timeout=30
+            )
             resp.raise_for_status()
         except requests.exceptions.Timeout:
-            st.error("請求逾時"); st.stop()
+            st.error("請求逾時，請檢查網路")
+            st.stop()
         except requests.exceptions.ConnectionError:
-            st.error("無法連接伺服器"); st.stop()
+            st.error("無法連接伺服器")
+            st.stop()
         except requests.exceptions.HTTPError:
-            st.error(f"HTTP 錯誤：{resp.status_code}"); st.stop()
+            st.error(f"HTTP 錯誤：{resp.status_code}")
+            st.stop()
         except Exception as e:
-            st.error(f"錯誤：{e}"); st.stop()
+            st.error(f"錯誤：{e}")
+            st.stop()
+        
         try:
             result = resp.json()
         except:
-            st.error("回應格式錯誤"); st.stop()
+            st.error("回應格式錯誤")
+            st.stop()
+        
         all_results = result.get('results', [])
         if not all_results:
-            st.warning("未能辨識，請嘗試更清晰的照片"); st.stop()
+            st.warning("未能辨識，請嘗試更清晰的照片")
+            st.stop()
+        
         st.session_state.identification_results = all_results[:top_n]
         st.session_state.show_results = True
         st.session_state.just_identified = True
@@ -699,7 +803,13 @@ if st.session_state.get('show_results') and st.session_state.get('identification
         display = cn_list[0] if cn_list else "資料不足"
         
         if idx == 0 and st.session_state.get('just_identified'):
-            st.session_state.history.append({'name': display, 'sci': sci, 'score': score, 'time': datetime.now().strftime("%H:%M"), 'emoji': '🌿'})
+            st.session_state.history.append({
+                'name': display,
+                'sci': sci,
+                'score': score,
+                'time': datetime.now().strftime("%H:%M"),
+                'emoji': '🌿'
+            })
             st.session_state.total_identifications += 1
             st.session_state.just_identified = False
         
@@ -708,7 +818,17 @@ if st.session_state.get('show_results') and st.session_state.get('identification
         genus_html = f"<span style='color:#4a7a56;font-size:0.85rem;'>🌱 屬：{genus}</span>" if genus else ""
         family_html = f"<span style='color:#4a7a56;font-size:0.85rem;'>🌾 科：{family}</span>" if family else ""
         
-        st.markdown(f'<div class="{card}"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.5rem;"><div>{badge} <span class="badge">{emoji_label} {label}</span></div><span style="color:#3a6a48;font-size:0.8rem;">{source}</span></div><div class="plant-name">{display}</div><div class="scientific-name">{sci}</div><div style="display:flex;gap:1.5rem;flex-wrap:wrap;">{genus_html} {family_html}</div></div>', unsafe_allow_html=True)
+        st.markdown(f'''
+        <div class="{card}">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.5rem;">
+                <div>{badge} <span class="badge">{emoji_label} {label}</span></div>
+                <span style="color:#3a6a48;font-size:0.8rem;">{source}</span>
+            </div>
+            <div class="plant-name">{display}</div>
+            <div class="scientific-name">{sci}</div>
+            <div style="display:flex;gap:1.5rem;flex-wrap:wrap;">{genus_html} {family_html}</div>
+        </div>
+        ''', unsafe_allow_html=True)
         
         st.markdown(f"**信心指標** {score:.2f}%")
         render_bar(score, color)
@@ -746,7 +866,14 @@ if st.session_state.get('show_results') and st.session_state.get('identification
             with c1:
                 st.markdown("#### 🌳 分類階層")
                 gbif = get_gbif(sci)
-                rows = [("門", gbif.get("phylum", "—")), ("綱", gbif.get("class", "—")), ("目", gbif.get("order", "—")), ("科", gbif.get("family", "—")), ("屬", gbif.get("genus", "—")), ("種", gbif.get("species", sci))]
+                rows = [
+                    ("門", gbif.get("phylum", "—")),
+                    ("綱", gbif.get("class", "—")),
+                    ("目", gbif.get("order", "—")),
+                    ("科", gbif.get("family", "—")),
+                    ("屬", gbif.get("genus", "—")),
+                    ("種", gbif.get("species", sci)),
+                ]
                 html = ""
                 for lbl, val in rows:
                     zh = TAXON_ZH.get(val, "")
@@ -766,11 +893,32 @@ if st.session_state.get('show_results') and st.session_state.get('identification
                 care = get_care(fam)
                 dc = care.get("diff_c", "#c8b864")
                 
-                st.markdown(f'<div style="margin-bottom:1rem;"><span style="background:{dc}22;color:{dc};border:1px solid {dc}66;border-radius:20px;padding:0.35rem 1.1rem;font-weight:600;">{care.get("diff", "中等")}</span><span style="color:#3a6a48;font-size:0.8rem;margin-left:0.5rem;">照護難度</span></div>', unsafe_allow_html=True)
+                st.markdown(f'''
+                <div style="margin-bottom:1rem;">
+                    <span style="background:{dc}22;color:{dc};border:1px solid {dc}66;border-radius:20px;padding:0.35rem 1.1rem;font-weight:600;">
+                        {care.get("diff", "中等")}
+                    </span>
+                    <span style="color:#3a6a48;font-size:0.8rem;margin-left:0.5rem;">照護難度</span>
+                </div>
+                ''', unsafe_allow_html=True)
                 
-                st.markdown(f'<div class="char-card"><div style="color:#5a8a6a;font-size:0.78rem;margin-bottom:0.5rem;">🌡️ 氣候條件</div><div class="char-row"><span class="char-key">適合氣溫</span><span class="char-val">{care.get("temp", "—")}</span></div><div class="char-row"><span class="char-key">耐寒區間</span><span class="char-val">Zone {care.get("zone", "—")}</span></div><div class="char-row"><span class="char-key">光照需求</span><span class="char-val">{care.get("sun", "—")}</span></div></div>', unsafe_allow_html=True)
+                st.markdown(f'''
+                <div class="char-card">
+                    <div style="color:#5a8a6a;font-size:0.78rem;margin-bottom:0.5rem;">🌡️ 氣候條件</div>
+                    <div class="char-row"><span class="char-key">適合氣溫</span><span class="char-val">{care.get("temp", "—")}</span></div>
+                    <div class="char-row"><span class="char-key">耐寒區間</span><span class="char-val">Zone {care.get("zone", "—")}</span></div>
+                    <div class="char-row"><span class="char-key">光照需求</span><span class="char-val">{care.get("sun", "—")}</span></div>
+                </div>
+                ''', unsafe_allow_html=True)
                 
-                st.markdown(f'<div class="care-grid"><div class="care-item"><div class="care-icon">💧</div><div class="care-title">澆水</div><div class="care-desc">{care.get("water", "—")}</div></div><div class="care-item"><div class="care-icon">🌿</div><div class="care-title">肥料</div><div class="care-desc">{care.get("fert", "—")}</div></div><div class="care-item"><div class="care-icon">✂️</div><div class="care-title">修剪</div><div class="care-desc">{care.get("prune", "—")}</div></div><div class="care-item"><div class="care-icon">🌱</div><div class="care-title">繁殖</div><div class="care-desc">{care.get("prop", "—")}</div></div></div>', unsafe_allow_html=True)
+                st.markdown(f'''
+                <div class="care-grid">
+                    <div class="care-item"><div class="care-icon">💧</div><div class="care-title">澆水</div><div class="care-desc">{care.get("water", "—")}</div></div>
+                    <div class="care-item"><div class="care-icon">🌿</div><div class="care-title">肥料</div><div class="care-desc">{care.get("fert", "—")}</div></div>
+                    <div class="care-item"><div class="care-icon">✂️</div><div class="care-title">修剪</div><div class="care-desc">{care.get("prune", "—")}</div></div>
+                    <div class="care-item"><div class="care-icon">🌱</div><div class="care-title">繁殖</div><div class="care-desc">{care.get("prop", "—")}</div></div>
+                </div>
+                ''', unsafe_allow_html=True)
             
             st.markdown('</div>', unsafe_allow_html=True)
         
@@ -786,7 +934,17 @@ if st.session_state.get('show_results') and st.session_state.get('identification
     best_cn = [n for n in best.get('species', {}).get('commonNames', []) if has_chinese(n)]
     best_name = best_cn[0] if best_cn else best_sci
     
-    report = f"🌿 植物辨識報告\n{'='*40}\n時間：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n{'='*40}\n\n最佳匹配：{best_name}\n學名：{best_sci}\n信心：{best_score:.2f}%\n\n候選結果：\n"
+    report = f"""🌿 植物辨識報告
+{'='*40}
+時間：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+{'='*40}
+
+最佳匹配：{best_name}
+學名：{best_sci}
+信心：{best_score:.2f}%
+
+候選結果：
+"""
     for i, m in enumerate(top_results):
         sn = m.get('species', {}).get('scientificNameWithoutAuthor', '')
         sc = m.get('score', 0) * 100
@@ -794,16 +952,46 @@ if st.session_state.get('show_results') and st.session_state.get('identification
         nm = cn[0] if cn else sn
         report += f"{i+1}. {nm}（{sn}）{sc:.2f}%\n"
     
-    json_str = json.dumps({"time": datetime.now().isoformat(), "results": [{"rank": i+1, "name": m.get('species', {}).get('scientificNameWithoutAuthor', ''), "score": m.get('score', 0)} for i, m in enumerate(top_results)]}, ensure_ascii=False, indent=2)
+    report += f"\n{'='*40}\nPlantNet + 維基百科 + GBIF"
+    
+    json_str = json.dumps({
+        "time": datetime.now().isoformat(),
+        "results": [
+            {
+                "rank": i+1,
+                "name": m.get('species', {}).get('scientificNameWithoutAuthor', ''),
+                "score": m.get('score', 0)
+            }
+            for i, m in enumerate(top_results)
+        ]
+    }, ensure_ascii=False, indent=2)
     
     c1, c2 = st.columns(2)
     with c1:
-        st.download_button("📄 下載文字報告", report.encode("utf-8"), f"植物辨識_{datetime.now().strftime('%Y%m%d_%H%M')}.txt", "text/plain", use_container_width=True)
+        st.download_button(
+            "📄 下載文字報告",
+            report.encode("utf-8"),
+            f"植物辨識_{datetime.now().strftime('%Y%m%d_%H%M')}.txt",
+            "text/plain",
+            use_container_width=True
+        )
     with c2:
-        st.download_button("📊 下載 JSON", json_str.encode("utf-8"), f"plant_{datetime.now().strftime('%Y%m%d_%H%M')}.json", "application/json", use_container_width=True)
+        st.download_button(
+            "📊 下載 JSON",
+            json_str.encode("utf-8"),
+            f"plant_{datetime.now().strftime('%Y%m%d_%H%M')}.json",
+            "application/json",
+            use_container_width=True
+        )
 
 # ==========================================
 # 10. 頁尾
 # ==========================================
 st.markdown("---")
-st.markdown('<div style="text-align:center;color:#2d5c3a;font-size:0.8rem;padding:1rem 0;line-height:2;">🌿 <strong style="color:#4a7a56;">生態探索</strong> v2.5<br>PlantNet AI + 維基百科 + GBIF<br><span style="font-size:0.72rem;">僅供參考，鑑定請諮詢專家</span></div>', unsafe_allow_html=True)
+st.markdown('''
+<div style="text-align:center;color:#2d5c3a;font-size:0.8rem;padding:1rem 0;line-height:2;">
+    🌿 <strong style="color:#4a7a56;">生態探索</strong> v2.7<br>
+    PlantNet AI + 維基百科 + GBIF<br>
+    <span style="font-size:0.72rem;">僅供參考，鑑定請諮詢專家</span>
+</div>
+''', unsafe_allow_html=True)
