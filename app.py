@@ -15,15 +15,16 @@ def load_css():
     #MainMenu, footer, header {visibility: hidden;}
 
     /* ========================================
-       上傳區塊美化（核心修改）
+       上傳區塊美化 + 重複字體修復（核心）
        ======================================== */
 
-    /* 隱藏 Streamlit 內建副文字 (包含手機版增強) */
+    /* 精準隱藏所有多餘重複文字（桌面+手機全覆蓋，絕不誤傷按鈕/標題） */
     section[data-testid="stFileUploader"] small,
     section[data-testid="stCameraInput"] small,
-    /* 針對手機版可能重複出現的文字元素 */
-    section[data-testid="stFileUploader"] div[data-testid="stCaptionContainer"],
-    section[data-testid="stFileUploader"] span[class*="uploaderText"] {
+    section[data-testid="stFileUploader"] hr,
+    /* 隱藏手機版重複渲染的輔助文字容器 */
+    section[data-testid="stFileUploader"] > div > div > div:not([data-testid]):not(section):not(label),
+    section[data-testid="stFileUploader"] div[data-testid="stCaptionContainer"] {
         display: none !important;
     }
 
@@ -47,7 +48,7 @@ def load_css():
         transform: translateY(-2px) !important;
     }
 
-    /* Label 樣式（上傳區標題） */
+    /* Label 樣式（上傳區標題，強制保留不被隱藏） */
     section[data-testid="stFileUploader"] label {
         font-size: 1.15em !important;
         font-weight: 700 !important;
@@ -55,9 +56,11 @@ def load_css():
         text-align: center !important;
         display: block !important;
         margin-bottom: 10px !important;
+        visibility: visible !important;
+        opacity: 1 !important;
     }
 
-    /* Browse 按鈕 — 綠色漸層膠囊 */
+    /* Browse 按鈕 — 綠色漸層膠囊（強制保留文字不被隱藏） */
     section[data-testid="stFileUploader"] section button {
         background: linear-gradient(135deg, #2e7d32, #43a047) !important;
         color: white !important;
@@ -71,6 +74,8 @@ def load_css():
         transition: all 0.3s ease !important;
         cursor: pointer !important;
         margin-top: 10px !important;
+        visibility: visible !important;
+        opacity: 1 !important;
     }
 
     /* 按鈕懸停 */
@@ -84,11 +89,6 @@ def load_css():
     section[data-testid="stFileUploader"] section button:active {
         transform: translateY(0px) !important;
         box-shadow: 0 2px 10px rgba(46,125,50,0.3) !important;
-    }
-
-    /* 上傳區內的分隔線隱藏 */
-    section[data-testid="stFileUploader"] hr {
-        display: none !important;
     }
 
     /* 相機輸入美化 */
@@ -244,6 +244,7 @@ def load_css():
         color: white !important;
     }
 
+    /* 手機版響應式調整，完全不碰隱藏規則，只調整尺寸 */
     @media screen and (max-width: 767px) {
         :root {
             --font-size-hero-title: 1.8em;
@@ -258,10 +259,8 @@ def load_css():
             padding: 10px 30px !important;
             font-size: 0.9em !important;
         }
-        /* 再次強化手機版隱藏規則，防止特定DOM結構滲漏 */
-        section[data-testid="stFileUploader"] div[class*="uploader"] > div > div > div,
-        section[data-testid="stFileUploader"] div[class*="uploader"] span {
-            display: none !important;
+        section[data-testid="stFileUploader"] label {
+            font-size: 1em !important;
         }
     }
 
