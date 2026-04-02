@@ -78,7 +78,7 @@ h2, h3 {
     border-color: #4a9e5f !important;
 }
 
-/* ── 統一桌機／手機上傳按鈕：消除原生文字，注入自訂標籤 ── */
+/* ── 統一桌機／手機上傳按鈕 ── */
 [data-testid="stFileUploaderDropzone"] button {
     background: transparent !important;
     border: 1px solid #2d5c3a !important;
@@ -297,104 +297,104 @@ hr {
 
 /* ── 分類階層表格 ── */
 .taxon-table { 
-    width:100%; 
-    border-collapse:collapse; 
-    margin:0.5rem 0; 
+    width: 100%; 
+    border-collapse: collapse; 
+    margin: 0.5rem 0; 
 }
 .taxon-table tr { 
-    border-bottom:1px solid #1a3020; 
+    border-bottom: 1px solid #1a3020; 
 }
 .taxon-table tr:last-child { 
-    border-bottom:none; 
+    border-bottom: none; 
 }
 .taxon-table td { 
-    padding:0.65rem 0.5rem; 
-    font-size:0.88rem; 
+    padding: 0.65rem 0.5rem; 
+    font-size: 0.88rem; 
 }
 .taxon-label { 
-    color:#5a8a6a; 
-    width:60px; 
-    font-weight:500; 
+    color: #5a8a6a; 
+    width: 60px; 
+    font-weight: 500; 
 }
 .taxon-value { 
-    color:#c0e0c8; 
-    font-style:italic; 
+    color: #c0e0c8; 
+    font-style: italic; 
 }
 .taxon-cn { 
-    color:#7ec98a; 
-    font-style:normal; 
-    margin-left:0.5rem; 
-    font-size:0.82rem; 
+    color: #7ec98a; 
+    font-style: normal; 
+    margin-left: 0.5rem; 
+    font-size: 0.82rem; 
 }
 
 /* ── 特徵 & 照護卡片 ── */
 .char-card { 
-    background:#0e1a12; 
-    border:1px solid #1e3824; 
-    border-radius:14px; 
-    padding:1.2rem 1.4rem; 
-    margin:0.8rem 0; 
+    background: #0e1a12; 
+    border: 1px solid #1e3824; 
+    border-radius: 14px; 
+    padding: 1.2rem 1.4rem; 
+    margin: 0.8rem 0; 
 }
 .char-row { 
-    display:flex; 
-    justify-content:space-between; 
-    align-items:center; 
-    padding:0.55rem 0; 
-    border-bottom:1px solid #1a2e1e; 
-    font-size:0.87rem; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 0.55rem 0; 
+    border-bottom: 1px solid #1a2e1e; 
+    font-size: 0.87rem; 
 }
 .char-row:last-child { 
-    border-bottom:none; 
+    border-bottom: none; 
 }
 .char-key { 
-    color:#5a8a6a; 
+    color: #5a8a6a; 
 }
 .char-val { 
-    color:#b0d8b8; 
-    font-weight:500; 
+    color: #b0d8b8; 
+    font-weight: 500; 
 }
 .care-grid { 
-    display:grid; 
-    grid-template-columns:1fr 1fr; 
-    gap:0.8rem; 
-    margin:0.8rem 0; 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 0.8rem; 
+    margin: 0.8rem 0; 
 }
 .care-item { 
-    background:#0e1a12; 
-    border:1px solid #1e3824; 
-    border-radius:12px; 
-    padding:1rem 1.1rem; 
+    background: #0e1a12; 
+    border: 1px solid #1e3824; 
+    border-radius: 12px; 
+    padding: 1rem 1.1rem; 
 }
 .care-item-wide { 
-    grid-column:1/-1; 
-    background:#0e1a12; 
-    border:1px solid #1e3824; 
-    border-radius:12px; 
-    padding:1rem 1.1rem; 
+    grid-column: 1 / -1; 
+    background: #0e1a12; 
+    border: 1px solid #1e3824; 
+    border-radius: 12px; 
+    padding: 1rem 1.1rem; 
 }
 .care-icon { 
-    font-size:1.4rem; 
-    margin-bottom:0.3rem; 
+    font-size: 1.4rem; 
+    margin-bottom: 0.3rem; 
 }
 .care-title { 
-    color:#7ec98a; 
-    font-size:0.82rem; 
-    font-weight:600; 
-    margin-bottom:0.2rem; 
+    color: #7ec98a; 
+    font-size: 0.82rem; 
+    font-weight: 600; 
+    margin-bottom: 0.2rem; 
 }
 .care-desc { 
-    color:#90b898; 
-    font-size:0.85rem; 
+    color: #90b898; 
+    font-size: 0.85rem; 
 }
 .wiki-extract { 
-    background:#0c1810; 
-    border-left:3px solid #2d6a40; 
-    border-radius:0 10px 10px 0; 
-    padding:0.9rem 1.2rem; 
-    color:#8ab898; 
-    font-size:0.85rem; 
-    line-height:1.8; 
-    margin:0.8rem 0; 
+    background: #0c1810; 
+    border-left: 3px solid #2d6a40; 
+    border-radius: 0 10px 10px 0; 
+    padding: 0.9rem 1.2rem; 
+    color: #8ab898; 
+    font-size: 0.85rem; 
+    line-height: 1.8; 
+    margin: 0.8rem 0; 
 }
 
 /* ── 分享按鈕 ── */
@@ -406,20 +406,11 @@ hr {
     text-decoration: none;
     font-weight: 500;
     transition: all 0.2s;
+    margin-bottom: 0.5rem;
 }
 .share-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-}
-
-/* ── 進度條動畫 ── */
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-}
-.loading-text {
-    animation: pulse 1.5s ease-in-out infinite;
-    color: #4a9e5f;
 }
 
 /* ── 手機響應式 ── */
@@ -438,25 +429,49 @@ hr {
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 2. API 設定與快取
+# 2. API 設定
 # ==========================================
-# 優先從 Streamlit Secrets 讀取，否則使用預設值
 API_KEY = st.secrets.get("PLANTNET_API_KEY", "2b1004UqTrbWJn4mj5hqcaZN")
 API_ENDPOINT = f"https://my-api.plantnet.org/v2/identify/all?api-key={API_KEY}&lang=zh"
 
 # ==========================================
-# 3. Session State 初始化
+# 3. Session State 初始化（防禦性編程）
 # ==========================================
 if "history" not in st.session_state:
     st.session_state.history = []
 if "total_identifications" not in st.session_state:
     st.session_state.total_identifications = 0
 
+def validate_and_migrate_history():
+    """驗證並修復歷史記錄格式，確保所有必要欄位存在"""
+    valid_records = []
+    for record in st.session_state.history:
+        if isinstance(record, dict):
+            try:
+                # 確保必要欄位存在，提供預設值
+                validated_record = {
+                    'name': record.get('name', '未知植物'),
+                    'sci': record.get('sci', record.get('scientific', '—')),
+                    'score': float(record.get('score', 0.0)),
+                    'time': record.get('time', '—'),
+                    'emoji': record.get('emoji', '🌿')
+                }
+                valid_records.append(validated_record)
+            except (ValueError, TypeError):
+                # 跳過無效記錄
+                continue
+    st.session_state.history = valid_records
+
+# 執行驗證
+validate_and_migrate_history()
+
 # ==========================================
-# 4. 核心工具函數（添加快取優化）
+# 4. 核心工具函數
 # ==========================================
 def has_chinese(text):
     """檢查文字是否包含中文字元"""
+    if not isinstance(text, str):
+        return False
     return bool(re.search(r'[\u4e00-\u9fff]', text))
 
 @st.cache_data(ttl=3600, show_spinner=False)
@@ -500,7 +515,7 @@ def search_wikipedia_for_chinese(scientific_name):
         
         for _, page_info in pages.items():
             for rd in page_info.get("redirects", []):
-                t = rd["title"]
+                t = rd.get("title", "")
                 if ":" not in t and has_chinese(t):
                     aliases.append(t)
         
@@ -508,15 +523,12 @@ def search_wikipedia_for_chinese(scientific_name):
         wiki_link = f"https://zh.wikipedia.org/wiki/{quote(main_title)}"
         return unique, wiki_link
         
-    except Exception as e:
-        st.warning(f"⚠️ 維基百科查詢失敗：{str(e)}")
+    except Exception:
         return None, None
 
 @st.cache_data(ttl=3600, show_spinner=False)
 def get_gbif_taxonomy(scientific_name):
-    """
-    透過 GBIF API 取得完整分類階層（快取 1 小時）
-    """
+    """透過 GBIF API 取得完整分類階層（快取 1 小時）"""
     try:
         res = requests.get(
             "https://api.gbif.org/v1/species/match",
@@ -533,15 +545,12 @@ def get_gbif_taxonomy(scientific_name):
             "status":    res.get("status", ""),
             "matchType": res.get("matchType", ""),
         }
-    except Exception as e:
-        st.warning(f"⚠️ GBIF 查詢失敗：{str(e)}")
+    except Exception:
         return {}
 
 @st.cache_data(ttl=3600, show_spinner=False)
 def get_wikipedia_extract(title):
-    """
-    取得中文維基百科摘要（前3句，快取 1 小時）
-    """
+    """取得中文維基百科摘要（前3句，快取 1 小時）"""
     try:
         res = requests.get(
             "https://zh.wikipedia.org/w/api.php",
@@ -565,8 +574,8 @@ def get_wikipedia_extract(title):
                 txt = page.get("extract", "").strip()
                 if txt and len(txt) > 30:
                     return txt[:350]
-    except Exception as e:
-        st.warning(f"⚠️ 維基摘要查詢失敗：{str(e)}")
+    except Exception:
+        pass
     return None
 
 def get_confidence_color(score):
@@ -597,22 +606,27 @@ def render_confidence_bar(score, color):
     """, unsafe_allow_html=True)
 
 def compress_image(image, max_width=1920):
-    """
-    壓縮大尺寸圖片以加快上傳速度
-    """
-    if image.width > max_width:
-        ratio = max_width / image.width
-        new_height = int(image.height * ratio)
-        image = image.resize((max_width, new_height), Image.Resampling.LANCZOS)
-        st.info(f"📐 圖片已自動調整為 {max_width}×{new_height} 以加快辨識速度")
-    
-    # 轉換為 RGB（處理 PNG 透明背景）
-    if image.mode in ('RGBA', 'LA', 'P'):
-        bg = Image.new('RGB', image.size, (255, 255, 255))
-        bg.paste(image, mask=image.split()[-1] if image.mode == 'RGBA' else None)
-        image = bg
-    
-    return image
+    """壓縮大尺寸圖片以加快上傳速度"""
+    try:
+        if image.width > max_width:
+            ratio = max_width / image.width
+            new_height = int(image.height * ratio)
+            image = image.resize((max_width, new_height), Image.Resampling.LANCZOS)
+        
+        # 轉換為 RGB（處理 PNG 透明背景）
+        if image.mode in ('RGBA', 'LA', 'P'):
+            bg = Image.new('RGB', image.size, (255, 255, 255))
+            if image.mode == 'RGBA':
+                bg.paste(image, mask=image.split()[-1])
+            else:
+                bg.paste(image)
+            image = bg
+        elif image.mode != 'RGB':
+            image = image.convert('RGB')
+        
+        return image
+    except Exception:
+        return image
 
 # ── 分類階層翻譯對照 ──
 TAXON_ZH = {
@@ -620,6 +634,7 @@ TAXON_ZH = {
     "Magnoliopsida": "木蘭綱（雙子葉）",
     "Liliopsida": "百合綱（單子葉）", 
     "Pinopsida": "松綱",
+    "Polypodiopsida": "蕨綱",
     "Lamiales": "唇形目", 
     "Rosales": "薔薇目", 
     "Fabales": "豆目",
@@ -629,6 +644,9 @@ TAXON_ZH = {
     "Sapindales": "無患子目", 
     "Malvales": "錦葵目", 
     "Myrtales": "桃金孃目",
+    "Gentianales": "龍膽目",
+    "Solanales": "茄目",
+    "Caryophyllales": "石竹目",
     "Lamiaceae": "唇形科", 
     "Rosaceae": "薔薇科", 
     "Fabaceae": "豆科",
@@ -640,81 +658,99 @@ TAXON_ZH = {
     "Meliaceae": "楝科",
     "Apocynaceae": "夾竹桃科", 
     "Rubiaceae": "茜草科",
+    "Solanaceae": "茄科",
+    "Brassicaceae": "十字花科",
+    "Orchidaceae": "蘭科",
+    "Araceae": "天南星科",
     "Plantae": "植物界", 
     "Viridiplantae": "綠色植物界",
 }
 
 # ── 按科別建立照護資料庫 ──
 FAMILY_CARE = {
-    "Lamiaceae":    {
-        "diff":"容易","diff_c":"#3fcf6e",
-        "temp":"-5 ~ 41°C","zone":"8-10",
-        "water":"中等","fert":"每月一次（生長期）",
-        "prune":"冬季、早春","prop":"扦插",
-        "repot":"春季、秋季","sun":"全日照至半日照"
+    "Lamiaceae": {
+        "diff": "容易", "diff_c": "#3fcf6e",
+        "temp": "-5 ~ 41°C", "zone": "8-10",
+        "water": "中等", "fert": "每月一次（生長期）",
+        "prune": "冬季、早春", "prop": "扦插",
+        "repot": "春季、秋季", "sun": "全日照至半日照"
     },
-    "Rosaceae":     {
-        "diff":"中等","diff_c":"#c8b864",
-        "temp":"-15 ~ 35°C","zone":"5-9",
-        "water":"規律澆水","fert":"每2週一次",
-        "prune":"早春休眠後","prop":"扦插、嫁接",
-        "repot":"春季","sun":"全日照"
+    "Rosaceae": {
+        "diff": "中等", "diff_c": "#c8b864",
+        "temp": "-15 ~ 35°C", "zone": "5-9",
+        "water": "規律澆水", "fert": "每2週一次",
+        "prune": "早春休眠後", "prop": "扦插、嫁接",
+        "repot": "春季", "sun": "全日照"
     },
-    "Moraceae":     {
-        "diff":"容易","diff_c":"#3fcf6e",
-        "temp":"10 ~ 38°C","zone":"9-12",
-        "water":"中等","fert":"每月一次",
-        "prune":"冬末","prop":"扦插",
-        "repot":"春季","sun":"全日照至半日照"
+    "Moraceae": {
+        "diff": "容易", "diff_c": "#3fcf6e",
+        "temp": "10 ~ 38°C", "zone": "9-12",
+        "water": "中等", "fert": "每月一次",
+        "prune": "冬末", "prop": "扦插",
+        "repot": "春季", "sun": "全日照至半日照"
     },
-    "Fabaceae":     {
-        "diff":"容易","diff_c":"#3fcf6e",
-        "temp":"5 ~ 40°C","zone":"7-11",
-        "water":"少量","fert":"少量（可自行固氮）",
-        "prune":"開花後","prop":"播種",
-        "repot":"春季","sun":"全日照"
+    "Fabaceae": {
+        "diff": "容易", "diff_c": "#3fcf6e",
+        "temp": "5 ~ 40°C", "zone": "7-11",
+        "water": "少量", "fert": "少量（可自行固氮）",
+        "prune": "開花後", "prop": "播種",
+        "repot": "春季", "sun": "全日照"
     },
-    "Asteraceae":   {
-        "diff":"容易","diff_c":"#3fcf6e",
-        "temp":"0 ~ 35°C","zone":"6-10",
-        "water":"中等","fert":"每2-4週一次",
-        "prune":"花後修剪","prop":"播種、分株",
-        "repot":"春季","sun":"全日照"
+    "Asteraceae": {
+        "diff": "容易", "diff_c": "#3fcf6e",
+        "temp": "0 ~ 35°C", "zone": "6-10",
+        "water": "中等", "fert": "每2-4週一次",
+        "prune": "花後修剪", "prop": "播種、分株",
+        "repot": "春季", "sun": "全日照"
     },
-    "Poaceae":      {
-        "diff":"容易","diff_c":"#3fcf6e",
-        "temp":"-10 ~ 45°C","zone":"5-12",
-        "water":"規律","fert":"生長期施氮肥",
-        "prune":"冬末","prop":"分株、播種",
-        "repot":"春季","sun":"全日照"
+    "Poaceae": {
+        "diff": "容易", "diff_c": "#3fcf6e",
+        "temp": "-10 ~ 45°C", "zone": "5-12",
+        "water": "規律", "fert": "生長期施氮肥",
+        "prune": "冬末", "prop": "分株、播種",
+        "repot": "春季", "sun": "全日照"
     },
-    "Euphorbiaceae":{
-        "diff":"容易","diff_c":"#3fcf6e",
-        "temp":"10 ~ 38°C","zone":"9-12",
-        "water":"少量（耐旱）","fert":"每季一次",
-        "prune":"視需要","prop":"扦插",
-        "repot":"春季","sun":"全日照"
+    "Euphorbiaceae": {
+        "diff": "容易", "diff_c": "#3fcf6e",
+        "temp": "10 ~ 38°C", "zone": "9-12",
+        "water": "少量（耐旱）", "fert": "每季一次",
+        "prune": "視需要", "prop": "扦插",
+        "repot": "春季", "sun": "全日照"
     },
-    "Rutaceae":     {
-        "diff":"中等","diff_c":"#c8b864",
-        "temp":"5 ~ 38°C","zone":"8-11",
-        "water":"規律","fert":"柑橘專用肥",
-        "prune":"春季","prop":"嫁接、扦插",
-        "repot":"春季","sun":"全日照"
+    "Rutaceae": {
+        "diff": "中等", "diff_c": "#c8b864",
+        "temp": "5 ~ 38°C", "zone": "8-11",
+        "water": "規律", "fert": "柑橘專用肥",
+        "prune": "春季", "prop": "嫁接、扦插",
+        "repot": "春季", "sun": "全日照"
     },
-    "Apocynaceae":  {
-        "diff":"容易","diff_c":"#3fcf6e",
-        "temp":"15 ~ 40°C","zone":"10-12",
-        "water":"少量","fert":"每月一次",
-        "prune":"花後","prop":"扦插",
-        "repot":"春季","sun":"全日照"
+    "Apocynaceae": {
+        "diff": "容易", "diff_c": "#3fcf6e",
+        "temp": "15 ~ 40°C", "zone": "10-12",
+        "water": "少量", "fert": "每月一次",
+        "prune": "花後", "prop": "扦插",
+        "repot": "春季", "sun": "全日照"
     },
-    "DEFAULT":      {
-        "diff":"中等","diff_c":"#c8b864",
-        "temp":"5 ~ 35°C","zone":"7-10",
-        "water":"中等","fert":"每月一次",
-        "prune":"春季","prop":"扦插、播種",
-        "repot":"春季","sun":"全日照至半日照"
+    "Orchidaceae": {
+        "diff": "困難", "diff_c": "#c86464",
+        "temp": "15 ~ 30°C", "zone": "10-12",
+        "water": "少量、高濕度", "fert": "蘭花專用肥",
+        "prune": "花後剪花梗", "prop": "分株",
+        "repot": "花後", "sun": "散射光"
+    },
+    "Araceae": {
+        "diff": "容易", "diff_c": "#3fcf6e",
+        "temp": "15 ~ 35°C", "zone": "10-12",
+        "water": "保持濕潤", "fert": "每月一次",
+        "prune": "清除枯葉", "prop": "分株、扦插",
+        "repot": "春季", "sun": "半日照"
+    },
+    "DEFAULT": {
+        "diff": "中等", "diff_c": "#c8b864",
+        "temp": "5 ~ 35°C", "zone": "7-10",
+        "water": "中等", "fert": "每月一次",
+        "prune": "春季", "prop": "扦插、播種",
+        "repot": "春季", "sun": "全日照至半日照"
     },
 }
 
@@ -749,48 +785,48 @@ def render_taxonomy_section(gbif, display_name, sci_name):
 
 def render_care_section(care, family):
     """渲染照護指南卡片"""
-    diff_color = care["diff_c"]
+    diff_color = care.get("diff_c", "#c8b864")
     st.markdown(f"""
     <div class="result-card">
         <div style="color:#5a9a6a;font-size:0.78rem;letter-spacing:0.1em;margin-bottom:0.8rem;">🌱 植物照護指南</div>
         <div style="margin-bottom:1rem;">
             <span style="background:{diff_color}22;color:{diff_color};border:1px solid {diff_color}66;
                          border-radius:20px;padding:0.35rem 1.1rem;font-size:0.92rem;font-weight:600;">
-                {care['diff']}
+                {care.get('diff', '中等')}
             </span>
             <span style="color:#3a6a48;font-size:0.8rem;margin-left:0.8rem;">照護難度（依 {family} 科估算）</span>
         </div>
         <div class="char-card" style="margin-bottom:0.8rem;">
             <div style="color:#5a8a6a;font-size:0.78rem;letter-spacing:0.08em;margin-bottom:0.5rem;">🌡️ 氣候條件</div>
-            <div class="char-row"><span class="char-key">適合氣溫</span><span class="char-val">{care['temp']}</span></div>
-            <div class="char-row"><span class="char-key">耐寒區間</span><span class="char-val">Zone {care['zone']}</span></div>
-            <div class="char-row"><span class="char-key">光照需求</span><span class="char-val">{care['sun']}</span></div>
+            <div class="char-row"><span class="char-key">適合氣溫</span><span class="char-val">{care.get('temp', '—')}</span></div>
+            <div class="char-row"><span class="char-key">耐寒區間</span><span class="char-val">Zone {care.get('zone', '—')}</span></div>
+            <div class="char-row"><span class="char-key">光照需求</span><span class="char-val">{care.get('sun', '—')}</span></div>
         </div>
         <div class="care-grid">
             <div class="care-item">
                 <div class="care-icon">💧</div>
                 <div class="care-title">澆水</div>
-                <div class="care-desc">{care['water']}</div>
+                <div class="care-desc">{care.get('water', '—')}</div>
             </div>
             <div class="care-item">
                 <div class="care-icon">🌿</div>
                 <div class="care-title">肥料</div>
-                <div class="care-desc">{care['fert']}</div>
+                <div class="care-desc">{care.get('fert', '—')}</div>
             </div>
             <div class="care-item">
                 <div class="care-icon">✂️</div>
                 <div class="care-title">修剪</div>
-                <div class="care-desc">{care['prune']}</div>
+                <div class="care-desc">{care.get('prune', '—')}</div>
             </div>
             <div class="care-item">
                 <div class="care-icon">🌱</div>
                 <div class="care-title">繁殖方式</div>
-                <div class="care-desc">{care['prop']}</div>
+                <div class="care-desc">{care.get('prop', '—')}</div>
             </div>
             <div class="care-item-wide">
                 <div class="care-icon">🪴</div>
                 <div class="care-title">翻盆 / 移植</div>
-                <div class="care-desc">{care['repot']}</div>
+                <div class="care-desc">{care.get('repot', '—')}</div>
             </div>
         </div>
         <p style="color:#2d5040;font-size:0.72rem;margin-top:0.5rem;">
@@ -808,16 +844,30 @@ with st.sidebar:
     if not st.session_state.history:
         st.markdown('<p style="color:#3a6a48;font-size:0.85rem;">尚無辨識紀錄</p>', unsafe_allow_html=True)
     else:
-        for i, record in enumerate(reversed(st.session_state.history[-10:])):  # 最多顯示 10 筆
-            st.markdown(f"""
-            <div class="history-item">
-                <span style="font-size:1.5rem;">{record['emoji']}</span>
-                <div style="flex:1;">
-                    <div style="font-size:0.88rem;color:#a0d0a8;font-weight:500;">{record['name']}</div>
-                    <div style="font-size:0.72rem;color:#4a7a56;">{record['time']} · {record['score']:.1f}%</div>
+        # 🔧 安全遍歷歷史記錄，使用 .get() 避免 KeyError
+        for i, record in enumerate(reversed(st.session_state.history[-10:])):
+            try:
+                emoji = record.get('emoji', '🌿')
+                name = record.get('name', '未知植物')
+                time_str = record.get('time', '—')
+                score = record.get('score', 0.0)
+                
+                # 確保 score 是數字
+                if not isinstance(score, (int, float)):
+                    score = 0.0
+                
+                st.markdown(f"""
+                <div class="history-item">
+                    <span style="font-size:1.5rem;">{emoji}</span>
+                    <div style="flex:1;">
+                        <div style="font-size:0.88rem;color:#a0d0a8;font-weight:500;">{name}</div>
+                        <div style="font-size:0.72rem;color:#4a7a56;">{time_str} · {score:.1f}%</div>
+                    </div>
                 </div>
-            </div>
-            """, unsafe_allow_html=True)
+                """, unsafe_allow_html=True)
+            except Exception:
+                # 忽略任何錯誤的記錄
+                continue
     
     st.markdown("---")
     
@@ -841,7 +891,7 @@ with st.sidebar:
     show_wiki = st.toggle(
         "顯示維基百科連結",
         value=True,
-        help="啟用後會顯示維基百科連結（需要額外查詢時間）"
+        help="啟用後會顯示維基百科連結"
     )
     
     show_all_names = st.toggle(
@@ -878,8 +928,12 @@ with col_stats1:
     st.metric("本次已辨識", f"{st.session_state.total_identifications} 種")
 with col_stats2:
     if st.session_state.history:
-        avg_score = sum(r['score'] for r in st.session_state.history) / len(st.session_state.history)
-        st.metric("平均信心度", f"{avg_score:.1f}%")
+        try:
+            scores = [r.get('score', 0) for r in st.session_state.history if isinstance(r.get('score'), (int, float))]
+            avg_score = sum(scores) / len(scores) if scores else 0
+            st.metric("平均信心度", f"{avg_score:.1f}%")
+        except Exception:
+            st.metric("平均信心度", "—")
     else:
         st.metric("平均信心度", "—")
 with col_stats3:
@@ -911,16 +965,16 @@ with col_upload:
         file_size_kb = uploaded_file.size // 1024
         file_size_mb = file_size_kb / 1024
         
+        size_display = f"📦 {file_size_mb:.1f} MB" if file_size_mb >= 1 else f"📦 {file_size_kb} KB"
         st.markdown(f"""
         <div class="badge">📁 {uploaded_file.name}</div>
-        <div class="badge">{"📦 %.1f MB" % file_size_mb if file_size_mb >= 1 else "📦 %d KB" % file_size_kb}</div>
+        <div class="badge">{size_display}</div>
         """, unsafe_allow_html=True)
 
 with col_preview:
     if uploaded_file:
         try:
             image = Image.open(uploaded_file)
-            # 壓縮大圖片
             image = compress_image(image)
             st.image(image, caption="📸 預覽圖片", use_container_width=True)
         except Exception as e:
@@ -937,6 +991,7 @@ with col_preview:
             </p>
         </div>
         """, unsafe_allow_html=True)
+        image = None
 
 st.markdown("")
 btn_col, _ = st.columns([1, 3])
@@ -949,17 +1004,20 @@ with btn_col:
     )
 
 # ==========================================
-# 8. 辨識執行邏輯（完整錯誤處理）
+# 8. 辨識執行邏輯
 # ==========================================
 if identify_btn and uploaded_file and image:
     with st.spinner("🌱 AI 辨識中，同步深度檢索文獻與別名..."):
         
         # 準備圖片資料
-        img_bytes = uploaded_file.getvalue()
+        img_buffer = io.BytesIO()
+        image.save(img_buffer, format='JPEG', quality=85)
+        img_bytes = img_buffer.getvalue()
+        
         files = {'images': ('image.jpg', img_bytes, 'image/jpeg')}
         data = {'organs': ['auto']}
         
-        # 發送 API 請求（完整錯誤處理）
+        # 發送 API 請求
         try:
             response = requests.post(
                 API_ENDPOINT,
@@ -971,24 +1029,20 @@ if identify_btn and uploaded_file and image:
             
         except requests.exceptions.Timeout:
             st.error("⏱️ 請求逾時（超過30秒），請檢查網路連線。")
-            st.info("💡 建議：嘗試壓縮圖片大小或使用其他網路環境。")
+            st.info("💡 建議：嘗試使用較小的圖片或檢查網路環境。")
             st.stop()
             
         except requests.exceptions.ConnectionError:
             st.error("🌐 無法連接到 PlantNet 伺服器，請稍後再試。")
-            st.info("💡 可能原因：網路不穩定或伺服器維護中。")
             st.stop()
             
-        except requests.exceptions.HTTPError as e:
+        except requests.exceptions.HTTPError:
             if response.status_code == 429:
                 st.error("⚠️ API 請求次數已達上限（每日 500 次），請明天再試。")
-                st.info("💡 解決方法：註冊新的 API Key → https://my.plantnet.org")
             elif response.status_code == 401:
-                st.error("🔑 API Key 無效或已過期，請更新 API Key。")
-                st.code("在 Streamlit Cloud 的 Secrets 設定中更新 PLANTNET_API_KEY")
+                st.error("🔑 API Key 無效或已過期。")
             else:
                 st.error(f"❌ HTTP 錯誤：{response.status_code}")
-                st.code(response.text)
             st.stop()
             
         except Exception as e:
@@ -999,8 +1053,7 @@ if identify_btn and uploaded_file and image:
         try:
             result = response.json()
         except json.JSONDecodeError:
-            st.error("❌ API 回應格式錯誤，無法解析 JSON 資料。")
-            st.code(response.text[:500])
+            st.error("❌ API 回應格式錯誤。")
             st.stop()
         
         all_results = result.get('results', [])
@@ -1016,7 +1069,7 @@ if identify_btn and uploaded_file and image:
             st.stop()
         
         # ══════════════════════════════════════
-        # 辨識成功，開始處理結果
+        # 辨識成功，處理結果
         # ══════════════════════════════════════
         st.markdown("---")
         st.markdown("## 🎯 辨識結果")
@@ -1025,11 +1078,11 @@ if identify_btn and uploaded_file and image:
         
         # 處理每個候選結果
         for idx, match in enumerate(top_results):
-            sci_name = match['species']['scientificNameWithoutAuthor']
-            genus = match['species'].get('genus', {}).get('scientificNameWithoutAuthor', '')
-            family = match['species'].get('family', {}).get('scientificNameWithoutAuthor', '')
-            common_names = match['species'].get('commonNames', [])
-            score = match['score'] * 100
+            sci_name = match.get('species', {}).get('scientificNameWithoutAuthor', '未知')
+            genus = match.get('species', {}).get('genus', {}).get('scientificNameWithoutAuthor', '')
+            family = match.get('species', {}).get('family', {}).get('scientificNameWithoutAuthor', '')
+            common_names = match.get('species', {}).get('commonNames', [])
+            score = match.get('score', 0) * 100
             
             conf_color = get_confidence_color(score)
             conf_label, conf_emoji = get_confidence_label(score)
@@ -1039,7 +1092,6 @@ if identify_btn and uploaded_file and image:
             wiki_link = None
             
             if not chinese_list:
-                # 從維基百科查詢
                 wiki_names, wiki_link = search_wikipedia_for_chinese(sci_name)
                 if wiki_names:
                     chinese_list = wiki_names
@@ -1051,17 +1103,17 @@ if identify_btn and uploaded_file and image:
                 if show_wiki:
                     _, wiki_link = search_wikipedia_for_chinese(sci_name)
             
-            display_name = chinese_list[0] if chinese_list else "【資料不足，無法確認】"
+            display_name = chinese_list[0] if chinese_list else "【資料不足】"
             card_class = "result-card-best" if idx == 0 else "result-card"
             
             # 加入歷史記錄（僅第一筆）
             if idx == 0:
                 st.session_state.history.append({
-                    "name": display_name,
-                    "sci": sci_name,
-                    "score": score,
-                    "time": datetime.now().strftime("%H:%M"),
-                    "emoji": "🌿"
+                    'name': display_name,
+                    'sci': sci_name,
+                    'score': score,
+                    'time': datetime.now().strftime("%H:%M"),
+                    'emoji': '🌿'
                 })
                 st.session_state.total_identifications += 1
             
@@ -1071,6 +1123,9 @@ if identify_btn and uploaded_file and image:
                     rank_badge = '<span class="badge badge-gold">✨ 最佳匹配</span>'
                 else:
                     rank_badge = f'<span class="badge">候選 #{idx+1}</span>'
+                
+                genus_html = f"<span style='color:#4a7a56;font-size:0.85rem;'>🌱 屬：{genus}</span>" if genus else ""
+                family_html = f"<span style='color:#4a7a56;font-size:0.85rem;'>🌾 科：{family}</span>" if family else ""
                 
                 st.markdown(f"""
                 <div class="{card_class}">
@@ -1084,8 +1139,8 @@ if identify_btn and uploaded_file and image:
                     <div class="plant-name">{display_name}</div>
                     <div class="scientific-name">{sci_name}</div>
                     <div style="display:flex;gap:1.5rem;margin-bottom:1rem;flex-wrap:wrap;">
-                        {"<span style='color:#4a7a56;font-size:0.85rem;'>🌱 屬：" + genus + "</span>" if genus else ""}
-                        {"<span style='color:#4a7a56;font-size:0.85rem;'>🌾 科：" + family + "</span>" if family else ""}
+                        {genus_html}
+                        {family_html}
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
@@ -1102,8 +1157,9 @@ if identify_btn and uploaded_file and image:
                     ):
                         cols = st.columns(3)
                         for i, alias in enumerate(chinese_list):
+                            star = "⭐ " if i == 0 else ""
                             cols[i % 3].markdown(
-                                f'<span class="badge">{"⭐ " if i==0 else ""}{alias}</span>',
+                                f'<span class="badge">{star}{alias}</span>',
                                 unsafe_allow_html=True
                             )
                 
@@ -1129,19 +1185,18 @@ if identify_btn and uploaded_file and image:
                     st.markdown("")
         
         # ══════════════════════════════════════
-        # 最佳匹配的深度資訊（分類 + 照護）
+        # 最佳匹配的深度資訊
         # ══════════════════════════════════════
         best_match = top_results[0]
-        best_sci = best_match['species']['scientificNameWithoutAuthor']
-        best_family = best_match['species'].get('family', {}).get('scientificNameWithoutAuthor', '')
-        best_cn = list(dict.fromkeys([n for n in best_match['species'].get('commonNames', []) if has_chinese(n)]))
+        best_sci = best_match.get('species', {}).get('scientificNameWithoutAuthor', '')
+        best_family = best_match.get('species', {}).get('family', {}).get('scientificNameWithoutAuthor', '')
+        best_cn = list(dict.fromkeys([n for n in best_match.get('species', {}).get('commonNames', []) if has_chinese(n)]))
         best_display = best_cn[0] if best_cn else best_sci
         
         st.markdown("---")
         info_col1, info_col2 = st.columns(2, gap="medium")
         
         with info_col1:
-            # GBIF 完整分類
             with st.spinner("🔍 載入分類階層..."):
                 gbif = get_gbif_taxonomy(best_sci)
             render_taxonomy_section(gbif, best_display, best_sci)
@@ -1155,23 +1210,21 @@ if identify_btn and uploaded_file and image:
                 st.markdown(f'<div class="wiki-extract">📖 {extract}</div>', unsafe_allow_html=True)
         
         with info_col2:
-            # 照護指南
             family_for_care = gbif.get("family", best_family) or best_family or "DEFAULT"
             care = get_care_info(family_for_care)
             render_care_section(care, family_for_care)
         
         # ══════════════════════════════════════
-        # 匯出與分享功能
+        # 匯出與分享
         # ══════════════════════════════════════
         st.markdown("---")
         st.markdown("### 📤 匯出與分享")
         
-        # 準備匯出資料
         best = top_results[0]
-        best_sci = best['species']['scientificNameWithoutAuthor']
-        best_score = best['score'] * 100
-        best_common = list(dict.fromkeys([n for n in best['species'].get('commonNames', []) if has_chinese(n)]))
-        best_name = best_common[0] if best_common else best_sci
+        best_sci_export = best.get('species', {}).get('scientificNameWithoutAuthor', '')
+        best_score_export = best.get('score', 0) * 100
+        best_common_export = list(dict.fromkeys([n for n in best.get('species', {}).get('commonNames', []) if has_chinese(n)]))
+        best_name_export = best_common_export[0] if best_common_export else best_sci_export
         
         # 文字報告
         report_text = f"""🌿 植物辨識報告
@@ -1180,18 +1233,18 @@ if identify_btn and uploaded_file and image:
 {'='*40}
 
 【最佳匹配】
-中文名稱：{best_name}
-學　　名：{best_sci}
-信心指數：{best_score:.2f}%
-屬：{best['species'].get('genus', {}).get('scientificNameWithoutAuthor', '—')}
-科：{best['species'].get('family', {}).get('scientificNameWithoutAuthor', '—')}
+中文名稱：{best_name_export}
+學　　名：{best_sci_export}
+信心指數：{best_score_export:.2f}%
+屬：{best.get('species', {}).get('genus', {}).get('scientificNameWithoutAuthor', '—')}
+科：{best.get('species', {}).get('family', {}).get('scientificNameWithoutAuthor', '—')}
 
 【所有候選結果】
 """
         for i, m in enumerate(top_results):
-            sn = m['species']['scientificNameWithoutAuthor']
-            sc = m['score'] * 100
-            cn = [n for n in m['species'].get('commonNames', []) if has_chinese(n)]
+            sn = m.get('species', {}).get('scientificNameWithoutAuthor', '')
+            sc = m.get('score', 0) * 100
+            cn = [n for n in m.get('species', {}).get('commonNames', []) if has_chinese(n)]
             cn_str = cn[0] if cn else sn
             report_text += f"{i+1}. {cn_str}（{sn}）— {sc:.2f}%\n"
         
@@ -1200,20 +1253,18 @@ if identify_btn and uploaded_file and image:
         # JSON 資料
         json_data = json.dumps({
             "timestamp": datetime.now().isoformat(),
-            "image_file": uploaded_file.name,
             "results": [
                 {
                     "rank": i+1,
-                    "scientific_name": m['species']['scientificNameWithoutAuthor'],
-                    "common_names": m['species'].get('commonNames', []),
-                    "score": m['score'],
-                    "genus": m['species'].get('genus', {}).get('scientificNameWithoutAuthor', ''),
-                    "family": m['species'].get('family', {}).get('scientificNameWithoutAuthor', '')
+                    "scientific_name": m.get('species', {}).get('scientificNameWithoutAuthor', ''),
+                    "common_names": m.get('species', {}).get('commonNames', []),
+                    "score": m.get('score', 0),
+                    "genus": m.get('species', {}).get('genus', {}).get('scientificNameWithoutAuthor', ''),
+                    "family": m.get('species', {}).get('family', {}).get('scientificNameWithoutAuthor', '')
                 } for i, m in enumerate(top_results)
             ]
         }, ensure_ascii=False, indent=2)
         
-        # 匯出按鈕
         exp_col1, exp_col2 = st.columns(2)
         with exp_col1:
             st.download_button(
@@ -1236,8 +1287,7 @@ if identify_btn and uploaded_file and image:
         
         # 分享功能
         st.markdown("### 📣 分享結果")
-        share_text = f"我用「生態探索」辨識出：{best_name}（{best_sci}）！準確度 {best_score:.1f}%"
-        app_url = "https://你的應用網址.streamlit.app"  # 替換成你的實際網址
+        share_text = f"我用「生態探索」辨識出：{best_name_export}（{best_sci_export}）！準確度 {best_score_export:.1f}%"
         
         share_col1, share_col2, share_col3 = st.columns(3)
         
@@ -1251,7 +1301,7 @@ if identify_btn and uploaded_file and image:
             """, unsafe_allow_html=True)
         
         with share_col2:
-            fb_url = f"https://www.facebook.com/sharer/sharer.php?u={quote(app_url)}"
+            fb_url = f"https://www.facebook.com/sharer/sharer.php?quote={quote(share_text)}"
             st.markdown(f"""
                 <a href="{fb_url}" target="_blank" class="share-btn" 
                    style="background:#4267B2;color:white;">
@@ -1272,11 +1322,6 @@ st.markdown("""
 <div style="text-align:center;color:#2d5c3a;font-size:0.8rem;padding:1rem 0;line-height:2;">
     🌿 <strong style="color:#4a7a56;">生態探索 Plant Explorer</strong> v2.1<br>
     植物辨識 by PlantNet AI · 別名擴充 by 中文維基百科 · 分類資料 by GBIF<br>
-    <span style="font-size:0.72rem;">本系統僅供參考，物種鑑定請諮詢專業植物學家</span><br>
-    <br>
-    <a href="https://github.com/你的使用者名稱/plant-explorer" target="_blank" 
-       style="color:#4a7a56;text-decoration:none;">
-        📦 查看原始碼
-    </a>
+    <span style="font-size:0.72rem;">本系統僅供參考，物種鑑定請諮詢專業植物學家</span>
 </div>
 """, unsafe_allow_html=True)
