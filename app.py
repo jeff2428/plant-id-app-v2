@@ -77,6 +77,34 @@ h2, h3 {
     border-color: #4a9e5f !important;
 }
 
+/* ── 隱藏手機端多餘的 UPLOAD 按鈕文字，統一桌機/手機體驗 ── */
+[data-testid="stFileUploaderDropzoneInput"] + div button span {
+    display: none !important;
+}
+[data-testid="stFileUploaderDropzone"] button {
+    background: transparent !important;
+    border: 1px solid #2d5c3a !important;
+    color: #5a9a6a !important;
+    border-radius: 8px !important;
+    font-size: 0.82rem !important;
+    padding: 0.3rem 1rem !important;
+}
+[data-testid="stFileUploaderDropzone"] button::after {
+    content: "📂 選擇檔案";
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 0.82rem;
+    color: #5a9a6a;
+}
+/* 手機端隱藏原生 UPLOAD 文字 */
+@media (max-width: 768px) {
+    [data-testid="stFileUploaderDropzone"] > div:first-child {
+        display: none !important;
+    }
+    [data-testid="stFileUploader"] {
+        padding: 1rem !important;
+    }
+}
+
 /* ── 按鈕 ── */
 .stButton > button {
     background: linear-gradient(135deg, #2d6e45, #1a4a2e) !important;
