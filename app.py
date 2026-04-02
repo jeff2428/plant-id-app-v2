@@ -87,7 +87,7 @@ h2, h3 {
     color: transparent !important;
 }
 [data-testid="stFileUploaderDropzone"] button::after {
-    content: "📂 選擇檔案";
+    content: "📂 Up:oad 選擇檔案";
     font-family: 'Noto Sans TC', sans-serif;
     font-size: 0.85rem;
     color: #5a9a6a;
