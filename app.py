@@ -791,4 +791,209 @@ if start_btn and uploaded and image:
             sci = match.get('species', {}).get('scientificNameWithoutAuthor', '未知')
             genus = match.get('species', {}).get('genus', {}).get('scientificNameWithoutAuthor', '')
             family = match.get('species', {}).get('family', {}).get('scientificNameWithoutAuthor', '')
-            common 
+            common = match.get('species', {}).get('commonNames', [])
+            score = match.get('score', 0) * 100
+            
+            color = get_color(score)
+            label, emoji = get_label(score)
+            
+            cn_list = list(dict.fromkeys([n for n in common if has_chinese(n)]))
+            wiki_link = None
+            
+            if not cn_list:
+                wiki_names, wiki_link = search_wikipedia(sci)
+                if wiki_names:
+                    cn_list = wiki_names
+                    source = f"維基百科({len(cn_list)}筆)"
+                else:
+                    source = "無中文資料"
+            else:
+                source = f"PlantNet({len(cn_list)}筆)"
+                _, wiki_link = search_wikipedia(sci)
+            
+            display = cn_list[0] if cn_list else "資料不足"
+            
+            if idx == 0:
+                st.session_state.history.append({
+                    'name': display, 'sci': sci, 'score': score,
+                    'time': datetime.now().strftime("%H:%M"), 'emoji': '🌿'
+                })
+                st.session_state.total_identifications += 1
+            
+            # Expander 標題
+            if idx == 0:
+                title = f"✨ 最佳匹配：{display}（{sci}）— {score:.1f}%"
+            else:
+                title = f"#{idx+1} {display}（{sci}）— {score:.1f}%"
+            
+            with st.expander(title, expanded=(idx == 0)):
+                # 基本資訊
+                card = "result-card-best" if idx == 0 else "result-card"
+                badge = '<span class="badge badge-gold">✨ 最佳匹配</span>' if idx == 0 else f'<span class="badge">候選 #{idx+1}</span>'
+                
+                genus_html = f"<span style='color:#4a7a56;font-size:0.85rem;'>🌱 屬：{genus}</span>" if genus else ""
+                family_html = f"<span style='color:#4a7a56;font-size:0.85rem;'>🌾 科：{family}</span>" if family else ""
+                
+                st.markdown(f"""
+                <div class="{card}">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.5rem;">
+                        <div>{badge} <span class="badge">{emoji} {label}</span></div>
+                        <span style="color:#3a6a48;font-size:0.8rem;">{source}</span>
+                    </div>
+                    <div class="plant-name">{display}</div>
+                    <div class="scientific-name">{sci}</div>
+                    <div style="display:flex;gap:1.5rem;flex-wrap:wrap;">{genus_html} {family_html}</div>
+                </div>
+                """, unsafe_allow_html=True)
+                
+                st.markdown(f"**信心指標** {score:.2f}%")
+                render_bar(score, color)
+                
+                # 別名
+                if len(cn_list) > 1:
+                    st.markdown("**📖 所有別名**")
+                    cols = st.columns(3)
+                    for i, a in enumerate(cn_list):
+                        cols[i % 3].markdown(f'<span class="badge">{"⭐ " if i==0 else ""}{a}</span>', unsafe_allow_html=True)
+                
+                # 英文名
+                eng = [n for n in common if not has_chinese(n)][:3]
+                if eng:
+                    st.markdown(f'<p style="color:#3a6058;font-size:0.82rem;">英文：{" · ".join(eng)}</p>', unsafe_allow_html=True)
+                
+                # Wiki 連結
+                if wiki_link:
+                    st.markdown(f"[📚 查看維基百科]({wiki_link})")
+                
+                st.markdown("---")
+                
+                # 詳細資訊
+                c1, c2 = st.columns(2, gap="medium")
+                
+                with c1:
+                    st.markdown("#### 🌳 分類階層")
+                    gbif = get_gbif(sci)
+                    
+                    rows = [
+                        ("門", gbif.get("phylum", "—")),
+                        ("綱", gbif.get("class", "—")),
+                        ("目", gbif.get("order", "—")),
+                        ("科", gbif.get("family", "—")),
+                        ("屬", gbif.get("genus", "—")),
+                        ("種", gbif.get("species", sci)),
+                    ]
+                    html = ""
+                    for lbl, val in rows:
+                        zh = TAXON_ZH.get(val, "")
+                        zh_span = f'<span class="taxon-cn">（{zh}）</span>' if zh else ""
+                        html += f'<tr><td class="taxon-label">{lbl}</td><td class="taxon-value">{val}{zh_span}</td></tr>'
+                    st.markdown(f'<table class="taxon-table">{html}</table>', unsafe_allow_html=True)
+                    
+                    # 簡介
+                    wiki_title = cn_list[0] if cn_list else sci
+                    extract = get_wiki_extract(wiki_title) or get_wiki_extract(sci)
+                    if extract:
+                        st.markdown("#### 📖 植物簡介")
+                        st.markdown(f'<div class="wiki-extract">{extract}</div>', unsafe_allow_html=True)
+                
+                with c2:
+                    st.markdown("#### 🌱 照護指南")
+                    fam = gbif.get("family", family) or family or "DEFAULT"
+                    care = get_care(fam)
+                    dc = care.get("diff_c", "#c8b864")
+                    
+                    st.markdown(f"""
+                    <div style="margin-bottom:1rem;">
+                        <span style="background:{dc}22;color:{dc};border:1px solid {dc}66;
+                                     border-radius:20px;padding:0.35rem 1.1rem;font-weight:600;">
+                            {care.get('diff', '中等')}
+                        </span>
+                        <span style="color:#3a6a48;font-size:0.8rem;margin-left:0.5rem;">照護難度</span>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    
+                    st.markdown(f"""
+                    <div class="char-card">
+                        <div style="color:#5a8a6a;font-size:0.78rem;margin-bottom:0.5rem;">🌡️ 氣候條件</div>
+                        <div class="char-row"><span class="char-key">適合氣溫</span><span class="char-val">{care.get('temp', '—')}</span></div>
+                        <div class="char-row"><span class="char-key">耐寒區間</span><span class="char-val">Zone {care.get('zone', '—')}</span></div>
+                        <div class="char-row"><span class="char-key">光照需求</span><span class="char-val">{care.get('sun', '—')}</span></div>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    
+                    st.markdown(f"""
+                    <div class="care-grid">
+                        <div class="care-item"><div class="care-icon">💧</div><div class="care-title">澆水</div><div class="care-desc">{care.get('water', '—')}</div></div>
+                        <div class="care-item"><div class="care-icon">🌿</div><div class="care-title">肥料</div><div class="care-desc">{care.get('fert', '—')}</div></div>
+                        <div class="care-item"><div class="care-icon">✂️</div><div class="care-title">修剪</div><div class="care-desc">{care.get('prune', '—')}</div></div>
+                        <div class="care-item"><div class="care-icon">🌱</div><div class="care-title">繁殖</div><div class="care-desc">{care.get('prop', '—')}</div></div>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    
+                    st.markdown('<p style="color:#2d5040;font-size:0.72rem;">※ 照護資料依科別估算</p>', unsafe_allow_html=True)
+        
+        # 匯出
+        st.markdown("---")
+        st.markdown("### 📤 匯出報告")
+        
+        best = top_results[0]
+        best_sci = best.get('species', {}).get('scientificNameWithoutAuthor', '')
+        best_score = best.get('score', 0) * 100
+        best_cn = [n for n in best.get('species', {}).get('commonNames', []) if has_chinese(n)]
+        best_name = best_cn[0] if best_cn else best_sci
+        
+        report = f"""🌿 植物辨識報告
+{'='*40}
+時間：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+{'='*40}
+
+最佳匹配：{best_name}
+學名：{best_sci}
+信心：{best_score:.2f}%
+
+候選結果：
+"""
+        for i, m in enumerate(top_results):
+            sn = m.get('species', {}).get('scientificNameWithoutAuthor', '')
+            sc = m.get('score', 0) * 100
+            cn = [n for n in m.get('species', {}).get('commonNames', []) if has_chinese(n)]
+            nm = cn[0] if cn else sn
+            report += f"{i+1}. {nm}（{sn}）{sc:.2f}%\n"
+        
+        report += f"\n{'='*40}\nPlantNet + 維基百科 + GBIF"
+        
+        json_str = json.dumps({
+            "time": datetime.now().isoformat(),
+            "results": [{"rank": i+1, "name": m.get('species', {}).get('scientificNameWithoutAuthor', ''), "score": m.get('score', 0)} for i, m in enumerate(top_results)]
+        }, ensure_ascii=False, indent=2)
+        
+        c1, c2 = st.columns(2)
+        with c1:
+            st.download_button("📄 下載文字報告", report.encode("utf-8"), f"植物辨識_{datetime.now().strftime('%Y%m%d_%H%M')}.txt", "text/plain", use_container_width=True)
+        with c2:
+            st.download_button("📊 下載 JSON", json_str.encode("utf-8"), f"plant_{datetime.now().strftime('%Y%m%d_%H%M')}.json", "application/json", use_container_width=True)
+        
+        st.markdown("")
+        st.markdown("### 📣 分享")
+        share = f"我用「生態探索」辨識出：{best_name}（{best_sci}）準確度 {best_score:.1f}%"
+        
+        c1, c2, c3 = st.columns(3)
+        with c1:
+            st.markdown(f'<a href="https://twitter.com/intent/tweet?text={quote(share)}" target="_blank" class="share-btn" style="background:#1DA1F2;color:white;">🐦 Twitter</a>', unsafe_allow_html=True)
+        with c2:
+            st.markdown(f'<a href="https://www.facebook.com/sharer/sharer.php?quote={quote(share)}" target="_blank" class="share-btn" style="background:#4267B2;color:white;">📘 Facebook</a>', unsafe_allow_html=True)
+        with c3:
+            if st.button("📋 複製", use_container_width=True):
+                st.code(share)
+
+# ==========================================
+# 9. 頁尾
+# ==========================================
+st.markdown("---")
+st.markdown("""
+<div style="text-align:center;color:#2d5c3a;font-size:0.8rem;padding:1rem 0;line-height:2;">
+    🌿 <strong style="color:#4a7a56;">生態探索</strong> v2.2<br>
+    PlantNet AI + 維基百科 + GBIF<br>
+    <span style="font-size:0.72rem;">僅供參考，鑑定請諮詢專家</span>
+</div>
+""", unsafe_allow_html=True)
