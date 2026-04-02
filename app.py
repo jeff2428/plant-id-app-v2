@@ -87,7 +87,7 @@ h2, h3 {
     color: transparent !important;
 }
 [data-testid="stFileUploaderDropzone"] button::after {
-    content: "📂 Upload 選擇檔案";
+    content: "📂 選擇檔案";
     font-family: 'Noto Sans TC', sans-serif;
     font-size: 0.85rem;
     color: #5a9a6a;
@@ -268,6 +268,29 @@ hr {
     color: #7ec98a !important;
     font-family: 'Noto Serif TC', serif !important;
 }
+
+/* ── 分類階層表格 ── */
+.taxon-table { width:100%; border-collapse:collapse; margin:0.5rem 0; }
+.taxon-table tr { border-bottom:1px solid #1a3020; }
+.taxon-table tr:last-child { border-bottom:none; }
+.taxon-table td { padding:0.65rem 0.5rem; font-size:0.88rem; }
+.taxon-label { color:#5a8a6a; width:60px; font-weight:500; }
+.taxon-value { color:#c0e0c8; font-style:italic; }
+.taxon-cn { color:#7ec98a; font-style:normal; margin-left:0.5rem; font-size:0.82rem; }
+
+/* ── 特徵 & 照護卡片 ── */
+.char-card { background:#0e1a12; border:1px solid #1e3824; border-radius:14px; padding:1.2rem 1.4rem; margin:0.8rem 0; }
+.char-row { display:flex; justify-content:space-between; align-items:center; padding:0.55rem 0; border-bottom:1px solid #1a2e1e; font-size:0.87rem; }
+.char-row:last-child { border-bottom:none; }
+.char-key { color:#5a8a6a; }
+.char-val { color:#b0d8b8; font-weight:500; }
+.care-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; margin:0.8rem 0; }
+.care-item { background:#0e1a12; border:1px solid #1e3824; border-radius:12px; padding:1rem 1.1rem; }
+.care-item-wide { grid-column:1/-1; background:#0e1a12; border:1px solid #1e3824; border-radius:12px; padding:1rem 1.1rem; }
+.care-icon { font-size:1.4rem; margin-bottom:0.3rem; }
+.care-title { color:#7ec98a; font-size:0.82rem; font-weight:600; margin-bottom:0.2rem; }
+.care-desc { color:#90b898; font-size:0.85rem; }
+.wiki-extract { background:#0c1810; border-left:3px solid #2d6a40; border-radius:0 10px 10px 0; padding:0.9rem 1.2rem; color:#8ab898; font-size:0.85rem; line-height:1.8; margin:0.8rem 0; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -348,6 +371,156 @@ def render_confidence_bar(score, color):
         <div class="confidence-bar" style="width:{score:.1f}%;background:linear-gradient(90deg,{color}88,{color});"></div>
     </div>
     <p style="color:{color};font-size:0.82rem;margin:0;text-align:right;">{score:.2f}%</p>
+    """, unsafe_allow_html=True)
+
+# ── 分類階層翻譯對照 ──
+TAXON_ZH = {
+    "Tracheophyta": "維管束植物門", "Magnoliopsida": "木蘭綱（雙子葉）",
+    "Liliopsida": "百合綱（單子葉）", "Pinopsida": "松綱",
+    "Lamiales": "唇形目", "Rosales": "薔薇目", "Fabales": "豆目",
+    "Asterales": "菊目", "Poales": "禾本目", "Malpighiales": "金虎尾目",
+    "Sapindales": "無患子目", "Malvales": "錦葵目", "Myrtales": "桃金孃目",
+    "Lamiaceae": "唇形科", "Rosaceae": "薔薇科", "Fabaceae": "豆科",
+    "Asteraceae": "菊科", "Poaceae": "禾本科", "Moraceae": "桑科",
+    "Euphorbiaceae": "大戟科", "Rutaceae": "芸香科", "Meliaceae": "楝科",
+    "Apocynaceae": "夾竹桃科", "Rubiaceae": "茜草科",
+    "Plantae": "植物界", "Viridiplantae": "綠色植物界",
+}
+
+# ── 按科別建立照護資料庫 ──
+FAMILY_CARE = {
+    "Lamiaceae":    {"diff":"容易","diff_c":"#3fcf6e","temp":"-5 ~ 41°C","zone":"8-10","water":"中等","fert":"每月一次（生長期）","prune":"冬季、早春","prop":"扦插","repot":"春季、秋季","sun":"全日照至半日照"},
+    "Rosaceae":     {"diff":"中等","diff_c":"#c8b864","temp":"-15 ~ 35°C","zone":"5-9","water":"規律澆水","fert":"每2週一次","prune":"早春休眠後","prop":"扦插、嫁接","repot":"春季","sun":"全日照"},
+    "Moraceae":     {"diff":"容易","diff_c":"#3fcf6e","temp":"10 ~ 38°C","zone":"9-12","water":"中等","fert":"每月一次","prune":"冬末","prop":"扦插","repot":"春季","sun":"全日照至半日照"},
+    "Fabaceae":     {"diff":"容易","diff_c":"#3fcf6e","temp":"5 ~ 40°C","zone":"7-11","water":"少量","fert":"少量（可自行固氮）","prune":"開花後","prop":"播種","repot":"春季","sun":"全日照"},
+    "Asteraceae":   {"diff":"容易","diff_c":"#3fcf6e","temp":"0 ~ 35°C","zone":"6-10","water":"中等","fert":"每2-4週一次","prune":"花後修剪","prop":"播種、分株","repot":"春季","sun":"全日照"},
+    "Poaceae":      {"diff":"容易","diff_c":"#3fcf6e","temp":"-10 ~ 45°C","zone":"5-12","water":"規律","fert":"生長期施氮肥","prune":"冬末","prop":"分株、播種","repot":"春季","sun":"全日照"},
+    "Euphorbiaceae":{"diff":"容易","diff_c":"#3fcf6e","temp":"10 ~ 38°C","zone":"9-12","water":"少量（耐旱）","fert":"每季一次","prune":"視需要","prop":"扦插","repot":"春季","sun":"全日照"},
+    "Rutaceae":     {"diff":"中等","diff_c":"#c8b864","temp":"5 ~ 38°C","zone":"8-11","water":"規律","fert":"柑橘專用肥","prune":"春季","prop":"嫁接、扦插","repot":"春季","sun":"全日照"},
+    "Apocynaceae":  {"diff":"容易","diff_c":"#3fcf6e","temp":"15 ~ 40°C","zone":"10-12","water":"少量","fert":"每月一次","prune":"花後","prop":"扦插","repot":"春季","sun":"全日照"},
+    "DEFAULT":      {"diff":"中等","diff_c":"#c8b864","temp":"5 ~ 35°C","zone":"7-10","water":"中等","fert":"每月一次","prune":"春季","prop":"扦插、播種","repot":"春季","sun":"全日照至半日照"},
+}
+
+def get_gbif_taxonomy(scientific_name):
+    """透過 GBIF API 取得完整分類階層"""
+    try:
+        res = requests.get(
+            "https://api.gbif.org/v1/species/match",
+            params={"name": scientific_name, "verbose": False},
+            timeout=6
+        ).json()
+        return {
+            "phylum":   res.get("phylum", ""),
+            "class":    res.get("class", ""),
+            "order":    res.get("order", ""),
+            "family":   res.get("family", ""),
+            "genus":    res.get("genus", ""),
+            "species":  res.get("species", scientific_name),
+            "status":   res.get("status", ""),
+            "matchType":res.get("matchType", ""),
+        }
+    except Exception:
+        return {}
+
+def get_wikipedia_extract(title):
+    """取得中文維基百科前3句摘要"""
+    try:
+        res = requests.get(
+            "https://zh.wikipedia.org/w/api.php",
+            params={"action":"query","prop":"extracts","exintro":True,
+                    "explaintext":True,"exsentences":3,
+                    "titles":title,"format":"json","utf8":1,"redirects":1},
+            headers={"User-Agent":"PlantExplorer/2.0"},
+            timeout=5
+        ).json()
+        for pid, page in res.get("query",{}).get("pages",{}).items():
+            if pid != "-1":
+                txt = page.get("extract","").strip()
+                if txt and len(txt) > 30:
+                    return txt[:350]
+    except Exception:
+        pass
+    return None
+
+def get_care_info(family):
+    """依科別查詢照護建議，找不到時回傳預設值"""
+    return FAMILY_CARE.get(family, FAMILY_CARE["DEFAULT"])
+
+def render_taxonomy_section(gbif, display_name, sci_name):
+    """渲染分類階層卡片"""
+    rows = [
+        ("門", gbif.get("phylum","—")),
+        ("綱", gbif.get("class","—")),
+        ("目", gbif.get("order","—")),
+        ("科", gbif.get("family","—")),
+        ("屬", gbif.get("genus","—")),
+        ("種", gbif.get("species", sci_name)),
+    ]
+    rows_html = ""
+    for label, val in rows:
+        zh = TAXON_ZH.get(val, "")
+        zh_span = f'<span class="taxon-cn">（{zh}）</span>' if zh else ""
+        rows_html += f'<tr><td class="taxon-label">{label}</td><td class="taxon-value">{val}{zh_span}</td></tr>'
+    
+    st.markdown(f"""
+    <div class="result-card">
+        <div style="color:#5a9a6a;font-size:0.78rem;letter-spacing:0.1em;margin-bottom:0.8rem;">🌳 分類階層</div>
+        <div style="font-size:1.1rem;color:#8fd4a0;font-weight:600;margin-bottom:0.3rem;">{display_name}</div>
+        <div style="color:#4a7a56;font-style:italic;font-size:0.85rem;margin-bottom:1rem;">{sci_name}</div>
+        <table class="taxon-table">{rows_html}</table>
+    </div>
+    """, unsafe_allow_html=True)
+
+def render_care_section(care, family):
+    """渲染照護指南卡片"""
+    diff_color = care["diff_c"]
+    st.markdown(f"""
+    <div class="result-card">
+        <div style="color:#5a9a6a;font-size:0.78rem;letter-spacing:0.1em;margin-bottom:0.8rem;">🌱 植物照護指南</div>
+        <div style="margin-bottom:1rem;">
+            <span style="background:{diff_color}22;color:{diff_color};border:1px solid {diff_color}66;
+                         border-radius:20px;padding:0.35rem 1.1rem;font-size:0.92rem;font-weight:600;">
+                {care['diff']}
+            </span>
+            <span style="color:#3a6a48;font-size:0.8rem;margin-left:0.8rem;">照護難度（依 {family} 科估算）</span>
+        </div>
+        <div class="char-card" style="margin-bottom:0.8rem;">
+            <div style="color:#5a8a6a;font-size:0.78rem;letter-spacing:0.08em;margin-bottom:0.5rem;">🌡️ 氣候條件</div>
+            <div class="char-row"><span class="char-key">適合氣溫</span><span class="char-val">{care['temp']}</span></div>
+            <div class="char-row"><span class="char-key">耐寒區間</span><span class="char-val">Zone {care['zone']}</span></div>
+            <div class="char-row"><span class="char-key">光照需求</span><span class="char-val">{care['sun']}</span></div>
+        </div>
+        <div class="care-grid">
+            <div class="care-item">
+                <div class="care-icon">💧</div>
+                <div class="care-title">澆水</div>
+                <div class="care-desc">{care['water']}</div>
+            </div>
+            <div class="care-item">
+                <div class="care-icon">🌿</div>
+                <div class="care-title">肥料</div>
+                <div class="care-desc">{care['fert']}</div>
+            </div>
+            <div class="care-item">
+                <div class="care-icon">✂️</div>
+                <div class="care-title">修剪</div>
+                <div class="care-desc">{care['prune']}</div>
+            </div>
+            <div class="care-item">
+                <div class="care-icon">🌱</div>
+                <div class="care-title">繁殖方式</div>
+                <div class="care-desc">{care['prop']}</div>
+            </div>
+            <div class="care-item-wide">
+                <div class="care-icon">🪴</div>
+                <div class="care-title">翻盆 / 移植</div>
+                <div class="care-desc">{care['repot']}</div>
+            </div>
+        </div>
+        <p style="color:#2d5040;font-size:0.72rem;margin-top:0.5rem;">
+            ※ 照護資料依植物科別估算，實際情況請參考專業文獻
+        </p>
+    </div>
     """, unsafe_allow_html=True)
 
 # ==========================================
@@ -568,6 +741,38 @@ if identify_btn and uploaded_file:
                 
                 if idx < len(top_results) - 1:
                     st.markdown("")
+        
+        # ══════════════════════════════════════
+        # 最佳匹配的深度資訊（分類 + 照護）
+        # ══════════════════════════════════════
+        best_match = top_results[0]
+        best_sci   = best_match['species']['scientificNameWithoutAuthor']
+        best_family= best_match['species'].get('family', {}).get('scientificNameWithoutAuthor', '')
+        best_cn    = list(dict.fromkeys([n for n in best_match['species'].get('commonNames',[]) if has_chinese(n)]))
+        best_display = best_cn[0] if best_cn else best_sci
+        
+        st.markdown("---")
+        info_col1, info_col2 = st.columns(2, gap="medium")
+        
+        with info_col1:
+            # ── 取得 GBIF 完整分類 ──
+            with st.spinner("🔍 載入分類階層..."):
+                gbif = get_gbif_taxonomy(best_sci)
+            render_taxonomy_section(gbif, best_display, best_sci)
+            
+            # ── Wikipedia 摘要 ──
+            wiki_title = best_cn[0] if best_cn else best_sci
+            extract = get_wikipedia_extract(wiki_title)
+            if not extract and best_cn:
+                extract = get_wikipedia_extract(best_sci)
+            if extract:
+                st.markdown(f'<div class="wiki-extract">📖 {extract}</div>', unsafe_allow_html=True)
+        
+        with info_col2:
+            # ── 照護指南 ──
+            family_for_care = gbif.get("family", best_family) or best_family or "DEFAULT"
+            care = get_care_info(family_for_care)
+            render_care_section(care, family_for_care)
         
         # ── 匯出功能 ──
         st.markdown("---")
