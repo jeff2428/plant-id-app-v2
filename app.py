@@ -962,7 +962,7 @@ st.markdown(
 )
 
 # ==========================================
-# 10. 辨識主邏輯
+# 10. 辨識主邏輯與分頁呈現
 # ==========================================
 if uploaded_file is not None:
     image = Image.open(uploaded_file)
@@ -1064,29 +1064,59 @@ if uploaded_file is not None:
                 )
                 
                 st.markdown("<br>", unsafe_allow_html=True)
-                detail_col1, detail_col2 = st.columns(2)
                 
-                with detail_col1:
-                    st.markdown("#### 🧬 分類資訊")
-                    st.markdown(f"- **科：** {family}")
-                    st.markdown(f"- **屬：** {genus}")
-                    st.markdown(f"- **學名：** *{sci_name}*")
-                    st.markdown(f"- **中文來源：** {source}")
-                    if all_names != "無中文資料":
-                        st.markdown(f"- **所有名稱：** {all_names}")
+                # ==========================================
+                # 大眾通用版 - 進階分頁結構
+                # ==========================================
+                tab_overview, tab_care, tab_usage = st.tabs(["📝 總覽資訊", "🌱 養護指南", "⚠️ 安全與用途"])
                 
-                with detail_col2:
+                # [分頁 1]：總覽資訊
+                with tab_overview:
+                    col_dl1, col_dl2 = st.columns(2)
+                    with col_dl1:
+                        st.markdown(f'<div class="stat-card" style="min-height:80px; padding:15px;"><div class="stat-label">科 (Family)</div><div class="stat-number" style="font-size:1.5em; color:#1b5e20;">{family}</div></div>', unsafe_allow_html=True)
+                    with col_dl2:
+                        st.markdown(f'<div class="stat-card" style="min-height:80px; padding:15px;"><div class="stat-label">屬 (Genus)</div><div class="stat-number" style="font-size:1.5em; color:#1b5e20;">{genus}</div></div>', unsafe_allow_html=True)
+                    
                     st.markdown("#### 📖 植物簡介")
                     if wiki_summary:
                         st.info(wiki_summary)
                         if has_chinese(display_name):
                             wiki_link = f"https://zh.wikipedia.org/wiki/{display_name}"
-                            st.markdown(f"[🔗 查看維基百科]({wiki_link})")
+                            st.markdown(f"[🔗 查看維基百科完整條目]({wiki_link})")
                     else:
-                        st.warning("暫無中文簡介")
+                        st.write("暫無中文簡介。")
                         search_link = f"https://www.google.com/search?q={sci_name}+植物"
-                        st.markdown(f"[🔍 Google 搜尋]({search_link})")
+                        st.markdown(f"[🔍 使用 Google 搜尋相關資訊]({search_link})")
+                        
+                    st.markdown(f"**中文來源：** {source}")
+                    if all_names != "無中文資料":
+                        st.markdown(f"**所有已知別名：** {all_names}")
+
+                # [分頁 2]：植物養護指南 (大眾版位預留)
+                with tab_care:
+                    st.info("💡 **功能解鎖提示：** 此區塊未來可整合植物養護資料庫，提供精準照護建議。")
+                    with st.expander("💧 基礎養護條件 (展示範例)", expanded=True):
+                        st.write("- **日照需求**：全日照 / 半日照")
+                        st.write("- **澆水頻率**：土乾澆透 (預設)")
+                        st.write("- **適宜溫度**：15°C - 30°C")
+                    with st.expander("✂️ 種植與修剪 (展示範例)"):
+                        st.write("- **生長週期**：多年生 / 一年生")
+                        st.write("- **修剪建議**：春季或花期後進行")
+
+                # [分頁 3]：安全警示與常見用途 (大眾版位預留)
+                with tab_usage:
+                    st.warning("⚠️ **野外接觸與採集注意：** 在野外遇到不熟悉的植物時，請避免隨意觸碰或摘食，以免發生過敏或中毒。")
+                    with st.expander("🛡️ 毒性與安全性 (展示範例)", expanded=True):
+                        st.write("- **寵物友善**：(待資料庫建檔)")
+                        st.write("- **人體毒性**：(待資料庫建檔)")
+                    with st.expander("💡 常見生活用途 (展示範例)"):
+                        st.write("- **園藝觀賞**：適合庭院造景或室內盆栽")
+                        st.write("- **其他用途**：(待資料庫建檔)")
                 
+                # ==========================================
+                # 其他可能物種與報告下載
+                # ==========================================
                 if len(all_results) > 1 and top_k > 1:
                     st.markdown("<br>", unsafe_allow_html=True)
                     st.markdown("### 🏅 其他可能物種")
