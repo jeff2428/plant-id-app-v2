@@ -15,7 +15,7 @@ st.set_page_config(
 )
 
 # ==========================================
-# CSS 樣式（用函數包裝，避免引號衝突）
+# CSS 樣式
 # ==========================================
 def load_css():
     css = '''
@@ -33,31 +33,106 @@ def load_css():
 
     #MainMenu, footer, header {visibility: hidden;}
 
-    /* 修復：隱藏上傳元件文字 */
-    section[data-testid="stFileUploader"] label,
-    section[data-testid="stCameraInput"] label {
-        display: none !important;
-    }
+    /* ========================================
+       上傳區塊美化（核心修改）
+       ======================================== */
+
+    /* 隱藏 Streamlit 內建副文字 */
     section[data-testid="stFileUploader"] small,
-    section[data-testid="stFileUploader"] p,
-    section[data-testid="stCameraInput"] small,
-    section[data-testid="stCameraInput"] p {
-        display: none !important;
-    }
-    [data-testid="stFileUploader"] .stMarkdown,
-    [data-testid="stCameraInput"] .stMarkdown {
+    section[data-testid="stCameraInput"] small {
         display: none !important;
     }
 
+    /* 上傳區域外框 — 綠色虛線卡片 */
+    section[data-testid="stFileUploader"] > div > div {
+        border: 3px dashed #81c784 !important;
+        border-radius: 20px !important;
+        background: linear-gradient(135deg, rgba(232,245,233,0.6), rgba(241,248,233,0.6)) !important;
+        padding: 30px 20px !important;
+        text-align: center !important;
+        transition: all 0.3s ease !important;
+        position: relative !important;
+        overflow: hidden !important;
+    }
+
+    /* 滑鼠懸停效果 */
+    section[data-testid="stFileUploader"] > div > div:hover {
+        border-color: #2e7d32 !important;
+        background: linear-gradient(135deg, rgba(200,230,201,0.8), rgba(220,237,200,0.8)) !important;
+        box-shadow: 0 8px 30px rgba(46,125,50,0.15) !important;
+        transform: translateY(-2px) !important;
+    }
+
+    /* Label 樣式（上傳區標題） */
+    section[data-testid="stFileUploader"] label {
+        font-size: 1.15em !important;
+        font-weight: 700 !important;
+        color: #2e7d32 !important;
+        text-align: center !important;
+        display: block !important;
+        margin-bottom: 10px !important;
+    }
+
+    /* Browse 按鈕 — 綠色漸層膠囊 */
     section[data-testid="stFileUploader"] section button {
         background: linear-gradient(135deg, #2e7d32, #43a047) !important;
         color: white !important;
         border: none !important;
-        border-radius: 12px !important;
-        padding: 12px 30px !important;
-        font-weight: 600 !important;
-        width: 100% !important;
+        border-radius: 50px !important;
+        padding: 12px 40px !important;
+        font-weight: 700 !important;
+        font-size: 1em !important;
+        letter-spacing: 0.5px !important;
+        box-shadow: 0 4px 15px rgba(46,125,50,0.35) !important;
+        transition: all 0.3s ease !important;
+        cursor: pointer !important;
+        margin-top: 10px !important;
     }
+
+    /* 按鈕懸停 */
+    section[data-testid="stFileUploader"] section button:hover {
+        background: linear-gradient(135deg, #1b5e20, #2e7d32) !important;
+        box-shadow: 0 6px 25px rgba(46,125,50,0.5) !important;
+        transform: translateY(-2px) !important;
+    }
+
+    /* 按鈕按下 */
+    section[data-testid="stFileUploader"] section button:active {
+        transform: translateY(0px) !important;
+        box-shadow: 0 2px 10px rgba(46,125,50,0.3) !important;
+    }
+
+    /* 上傳區內的分隔線隱藏 */
+    section[data-testid="stFileUploader"] hr {
+        display: none !important;
+    }
+
+    /* 相機輸入美化 */
+    section[data-testid="stCameraInput"] > div > div {
+        border: 3px dashed #81c784 !important;
+        border-radius: 20px !important;
+        background: linear-gradient(135deg, rgba(232,245,233,0.6), rgba(241,248,233,0.6)) !important;
+        padding: 30px 20px !important;
+        text-align: center !important;
+        transition: all 0.3s ease !important;
+    }
+
+    section[data-testid="stCameraInput"] > div > div:hover {
+        border-color: #2e7d32 !important;
+        box-shadow: 0 8px 30px rgba(46,125,50,0.15) !important;
+    }
+
+    section[data-testid="stCameraInput"] label {
+        font-size: 1.15em !important;
+        font-weight: 700 !important;
+        color: #2e7d32 !important;
+        text-align: center !important;
+        display: block !important;
+    }
+
+    /* ========================================
+       其他元件樣式
+       ======================================== */
 
     .hero-container {
         background: linear-gradient(135deg, #1b5e20, #2e7d32, #388e3c, #43a047, #66bb6a);
@@ -81,15 +156,6 @@ def load_css():
         font-size: var(--font-size-hero-subtitle);
         line-height: 1.5;
         margin-top: 10px;
-    }
-
-    .upload-section {
-        background: white;
-        border-radius: 16px;
-        padding: 20px 30px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        border: 2px dashed #a5d6a7;
-        margin-bottom: 20px;
     }
 
     .tip-card {
@@ -200,6 +266,13 @@ def load_css():
             --font-size-hero-subtitle: 0.95em;
             --padding-card: 20px;
             --padding-hero: 30px 20px;
+        }
+        section[data-testid="stFileUploader"] > div > div {
+            padding: 20px 15px !important;
+        }
+        section[data-testid="stFileUploader"] section button {
+            padding: 10px 30px !important;
+            font-size: 0.9em !important;
         }
     }
 
@@ -329,7 +402,7 @@ with st.sidebar:
             st.markdown(
                 '<div class="history-item">'
                 '<b>' + item['name'] + '</b><br>'
-                '<small>' + item['time'] + ' | ' + str(item['score']) + '%</small>'
+                '<small>' + item['time'] + ' | ' + str(round(item['score'], 1)) + '%</small>'
                 '</div>',
                 unsafe_allow_html=True
             )
@@ -347,7 +420,7 @@ with st.sidebar:
         '🔬 引擎：Pl@ntNet API<br>'
         '📚 資料：維基百科<br>'
         '🛠️ 框架：Streamlit<br>'
-        '📌 版本：2.2.0'
+        '📌 版本：2.3.0'
         '</small>',
         unsafe_allow_html=True
     )
@@ -365,6 +438,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+# 統計卡片
 col1, col2, col3 = st.columns(3)
 with col1:
     st.markdown(
@@ -393,16 +467,9 @@ with col3:
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# 上傳區塊
-st.markdown(
-    '<div class="upload-section">'
-    '<p style="text-align:center; color:#43a047; font-size:1.05em; margin:0;">'
-    '📤 支援 JPG、PNG 格式'
-    '</p>'
-    '</div>',
-    unsafe_allow_html=True
-)
-
+# ==========================================
+# 上傳區塊（已美化）
+# ==========================================
 input_method = st.radio(
     "選擇來源",
     ["📁 從相簿選擇", "📷 開啟相機"],
@@ -413,19 +480,18 @@ input_method = st.radio(
 uploaded_file = None
 if input_method == "📁 從相簿選擇":
     uploaded_file = st.file_uploader(
-        "上傳圖片",
-        type=["jpg", "jpeg", "png"],
-        label_visibility="collapsed"
+        "🌿 點擊上傳或拖放植物照片",
+        type=["jpg", "jpeg", "png"]
     )
 else:
-    cam = st.camera_input("拍照", label_visibility="collapsed")
+    cam = st.camera_input("📷 點擊拍攝植物照片")
     if cam:
         uploaded_file = cam
 
 st.markdown(
     '<div class="tip-card">'
     '💡 <b>拍攝小技巧：</b>'
-    '清晰拍攝<b>葉片、花朵、果實</b>可提升準確度'
+    '盡量讓主體清晰、背景單純，建議分別拍攝葉片、花朵、果實等特徵部位。'
     '</div>',
     unsafe_allow_html=True
 )
@@ -546,9 +612,10 @@ if uploaded_file:
                 progress.empty()
                 st.error("❌ 發生錯誤：" + str(e))
 
+# 頁尾
 st.markdown(
     '<div style="text-align:center; padding:30px; color:#9e9e9e; font-size:0.85em; margin-top:40px;">'
-    '🌿 植物辨識系統 v2.2 ｜ Powered by Pl@ntNet &amp; Wikipedia<br>'
+    '🌿 植物辨識系統 v2.3 ｜ Powered by Pl@ntNet &amp; Wikipedia<br>'
     'Made with 💚 for nature lovers'
     '</div>',
     unsafe_allow_html=True
