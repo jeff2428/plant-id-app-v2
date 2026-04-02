@@ -6,6 +6,7 @@ from PIL import Image
 # ==========================================
 # 1. 系統與 API 設定區塊
 # ==========================================
+# 請將下方的金鑰替換為你在 PlantNet 申請的真實 API Key
 API_KEY = "2b1004UqTrbWJn4mj5hqcaZN"
 API_ENDPOINT = f"https://my-api.plantnet.org/v2/identify/all?api-key={API_KEY}&lang=zh"
 
@@ -16,61 +17,67 @@ def has_chinese(text):
     """檢查字串中是否包含中文字元 (Unicode 範圍判定)"""
     return bool(re.search(r'[\u4e00-\u9fff]', text))
 
-def search_wikipedia_for_chinese(scientific_name):
+def search_wikidata_for_chinese(scientific_name):
     """
-    透過維基百科 API 進行模糊搜尋，並利用「重新導向 (Redirects)」功能抓取所有別名。
+    透過全球 Wikidata (維基數據庫) 進行結構化精準檢索。
+    能一併抓出該學名在兩岸三地所有的正式標籤 (labels) 與別名 (aliases)。
     """
-    wiki_url = "https://zh.wikipedia.org/w/api.php"
+    url = "https://www.wikidata.org/w/api.php"
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
     }
     
-    # 階段一：搜尋主條目名稱
+    # 階段一：透過學名尋找 Wikidata 中的物種專屬 ID (例如 Q11100523)
     search_params = {
-        "action": "query",
-        "list": "search",
-        "srsearch": scientific_name,
+        "action": "wbsearchentities",
+        "search": scientific_name,
+        "language": "en", # 學名以英文/拉丁文檢索最準確
         "format": "json",
-        "utf8": 1
+        "type": "item"
     }
     
     try:
-        search_res = requests.get(wiki_url, params=search_params, headers=headers).json()
-        search_results = search_res.get("query", {}).get("search", [])
+        search_res = requests.get(url, params=search_params, headers=headers).json()
+        search_results = search_res.get("search", [])
+        
         if not search_results:
             return None
             
-        main_title = search_results[0].get("title", "")
-        if not has_chinese(main_title):
-            return None
-            
-        # 階段二：抓取該條目的所有重新導向 (鄉土俗名或別名)
-        redirect_params = {
-            "action": "query",
-            "titles": main_title,
-            "prop": "redirects",
-            "rdlimit": "50", # 最多抓取 50 個別名
-            "format": "json",
-            "utf8": 1
+        entity_id = search_results[0].get("id")
+        
+        # 階段二：透過物種 ID，一口氣抓出所有中文語系的名稱
+        get_params = {
+            "action": "wbgetentities",
+            "ids": entity_id,
+            # 涵蓋繁體、簡體、台灣、香港等所有中文變體
+            "languages": "zh|zh-tw|zh-hk|zh-cn|zh-hans|zh-hant", 
+            "props": "labels|aliases",
+            "format": "json"
         }
         
-        rd_res = requests.get(wiki_url, params=redirect_params, headers=headers).json()
-        pages = rd_res.get("query", {}).get("pages", {})
+        entity_res = requests.get(url, params=get_params, headers=headers).json()
+        entity_data = entity_res.get("entities", {}).get(entity_id, {})
         
-        aliases = [main_title] # 將主名稱先放入清單
+        aliases_list = []
         
-        # 解析回傳的重新導向名單
-        for page_id, page_info in pages.items():
-            if "redirects" in page_info:
-                for rd in page_info["redirects"]:
-                    title = rd["title"]
-                    # 排除維基百科內部系統頁面(如含冒號的分類頁)並確保名稱含有中文
-                    if ":" not in title and has_chinese(title):
-                        aliases.append(title)
-                        
-        # 移除重複的名稱，並保持原始排序
-        unique_aliases = list(dict.fromkeys(aliases))
-        return unique_aliases
+        # 1. 提取正式標籤 (Labels)
+        labels = entity_data.get("labels", {})
+        for lang, lang_data in labels.items():
+            val = lang_data.get("value", "")
+            if has_chinese(val):
+                aliases_list.append(val)
+                
+        # 2. 提取所有別名 (Aliases)
+        aliases = entity_data.get("aliases", {})
+        for lang, lang_list in aliases.items():
+            for alias_data in lang_list:
+                val = alias_data.get("value", "")
+                if has_chinese(val):
+                    aliases_list.append(val)
+        
+        # 移除重複名稱並保持原有排序
+        unique_aliases = list(dict.fromkeys(aliases_list))
+        return unique_aliases if unique_aliases else None
         
     except Exception as e:
         return None
@@ -91,7 +98,7 @@ if uploaded_file is not None:
     st.image(image, caption='已上傳照片', use_container_width=True)
     
     if st.button("開始辨識"):
-        with st.spinner("AI 辨識中，並同步深度檢索文獻與別名..."):
+        with st.spinner("AI 辨識中，並同步連線全球維基數據庫檢索別名..."):
             
             img_bytes = uploaded_file.getvalue()
             files = {'images': ('image.jpg', img_bytes, 'image/jpeg')}
@@ -118,11 +125,11 @@ if uploaded_file is not None:
                     display_name = "、".join(unique_chinese_names)
                     source = f"內建圖鑑 ({len(unique_chinese_names)}筆名稱)"
                 else:
-                    # 第二層檢索：觸發升級版的維基百科深度搜尋
-                    wiki_names_list = search_wikipedia_for_chinese(scientific_name)
-                    if wiki_names_list:
-                        display_name = "、".join(wiki_names_list)
-                        source = f"維基百科擴充 ({len(wiki_names_list)}筆名稱)"
+                    # 第二層檢索：觸發 Wikidata 全球結構化資料庫搜尋
+                    wikidata_names_list = search_wikidata_for_chinese(scientific_name)
+                    if wikidata_names_list:
+                        display_name = "、".join(wikidata_names_list)
+                        source = f"全球維基數據庫 ({len(wikidata_names_list)}筆名稱)"
                     else:
                         display_name = "【資料不足，無法確認】"
                         source = "無資料"
