@@ -59,6 +59,56 @@ uploaded_file = st.file_uploader("選擇圖片", type=["jpg", "jpeg", "png"])
 # 4. 主程式執行邏輯
 # ==========================================
 if uploaded_file is not None:
-    # 顯示使用者上傳的圖片
+    # 顯示使用者上傳的圖片 (這就是剛剛發生截斷錯誤的那一行，現在已修復完整)
     image = Image.open(uploaded_file)
-    st.image(image, caption='已上傳照片',
+    st.image(image, caption='已上傳照片', use_container_width=True)
+    
+    if st.button("開始辨識"):
+        with st.spinner("AI 辨識中，並同步檢索文獻..."):
+            
+            # 將圖片轉換為 API 接受的二進位格式
+            img_bytes = uploaded_file.getvalue()
+            files = {'images': ('image.jpg', img_bytes, 'image/jpeg')}
+            data = {'organs': ['auto']} # 讓系統自動判斷植物器官
+            
+            # 發送請求至 PlantNet
+            response = requests.post(API_ENDPOINT, files=files, data=data)
+            
+            # 處理伺服器回傳結果
+            if response.status_code == 200:
+                result = response.json()
+                best_match = result['results'][0]
+                
+                # 提取學名與內建俗名清單
+                scientific_name = best_match['species']['scientificNameWithoutAuthor']
+                common_names = best_match['species'].get('commonNames', [])
+                score = best_match['score'] * 100
+                
+                display_name = ""
+                source = ""
+                
+                # 第一層檢索：尋找內建圖鑑中的中文字元
+                plantnet_chinese_name = next((name for name in common_names if has_chinese(name)), None)
+                
+                if plantnet_chinese_name:
+                    display_name = plantnet_chinese_name
+                    source = "內建圖鑑"
+                else:
+                    # 第二層檢索：啟動維基百科備援搜尋
+                    wiki_name = search_wikipedia_for_chinese(scientific_name)
+                    if wiki_name:
+                        display_name = wiki_name
+                        source = "維基百科擴充"
+                    else:
+                        # 第三層判定：資料庫中缺乏相關資訊
+                        display_name = "【資料不足，無法確認】"
+                        source = "無資料"
+                
+                # 輸出最終辨識結果
+                st.success(f"🎯 辨識結果：**{display_name}**")
+                st.markdown(f"**學名：** *{scientific_name}*")
+                st.info(f"準確率: {score:.2f}% (中文來源: {source})")
+                
+            else:
+                # 處理 API 請求失敗的狀況
+                st.error("辨識失敗，請確認網路連線或 API Key 是否正確。")
