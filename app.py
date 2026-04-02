@@ -18,10 +18,74 @@ st.set_page_config(
 )
 
 # ==========================================
-# 1. CSS 樣式
+# 1. CSS 樣式（含修復圖標問題）
 # ==========================================
 st.markdown("""
 <style>
+/* ══════════════════════════════════════════
+   修復 Material Icons 顯示問題
+   ══════════════════════════════════════════ */
+
+/* 載入 Material Icons 字型 */
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+
+/* 修復側邊欄展開/收合按鈕 */
+[data-testid="collapsedControl"] {
+    color: transparent !important;
+    position: relative;
+}
+
+[data-testid="collapsedControl"]::after {
+    content: "☰";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem;
+    color: #7ec98a;
+}
+
+/* 隱藏側邊欄頂部的關閉按鈕文字問題 */
+[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"] {
+    color: transparent !important;
+    position: relative;
+}
+
+[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"]::after {
+    content: "✕";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.2rem;
+    color: #7ec98a;
+}
+
+/* 修復所有 Material Icon 相關的按鈕 */
+button[kind="header"],
+[data-testid="baseButton-header"] {
+    font-size: 0 !important;
+}
+
+button[kind="header"]::before,
+[data-testid="baseButton-header"]::before {
+    content: "✕";
+    font-size: 1.2rem;
+    color: #7ec98a;
+}
+
+/* 隱藏顯示為文字的圖標 */
+.stIcon, 
+[data-testid="stIconMaterial"] {
+    font-size: 0 !important;
+    color: transparent !important;
+}
+
+/* ══════════════════════════════════════════
+   主要樣式
+   ══════════════════════════════════════════ */
+
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500&display=swap');
 
 html, body, [class*="css"] {
@@ -60,6 +124,7 @@ h2, h3 {
     font-weight: 300;
 }
 
+/* 上傳區 */
 [data-testid="stFileUploader"] {
     border: 2px dashed #2d5c3a !important;
     border-radius: 16px !important;
@@ -92,6 +157,7 @@ h2, h3 {
     display: none !important;
 }
 
+/* 按鈕 */
 .stButton > button {
     background: linear-gradient(135deg, #2d6e45, #1a4a2e) !important;
     color: #c8f0cc !important;
@@ -114,6 +180,7 @@ h2, h3 {
     opacity: 0.5 !important;
 }
 
+/* 結果卡片 */
 .result-card {
     background: linear-gradient(145deg, #112018, #0e1a12);
     border: 1px solid #2d5c3a;
@@ -156,6 +223,7 @@ h2, h3 {
     margin-bottom: 1rem;
 }
 
+/* 信心指標 */
 .confidence-bar-wrap {
     background: #1a2e20;
     border-radius: 8px;
@@ -170,6 +238,7 @@ h2, h3 {
     border-radius: 8px;
 }
 
+/* 標籤 */
 .badge {
     display: inline-block;
     background: #1d3d28;
@@ -187,22 +256,7 @@ h2, h3 {
     border-color: #5a5020;
 }
 
-.expand-btn {
-    background: #1a2e20 !important;
-    border: 1px solid #2d5c3a !important;
-    color: #7ec98a !important;
-    padding: 0.5rem 1rem !important;
-    border-radius: 8px !important;
-    cursor: pointer;
-    font-size: 0.85rem !important;
-    margin-top: 0.5rem;
-}
-
-.expand-btn:hover {
-    background: #243828 !important;
-    border-color: #4a9e5f !important;
-}
-
+/* 詳情區塊 */
 .detail-section {
     background: #0a1410;
     border: 1px solid #1e3824;
@@ -211,6 +265,7 @@ h2, h3 {
     margin-top: 1rem;
 }
 
+/* 歷史紀錄 */
 .history-item {
     background: #111a14;
     border: 1px solid #1e3824;
@@ -228,6 +283,7 @@ hr {
     margin: 1.5rem 0 !important;
 }
 
+/* 側邊欄 */
 [data-testid="stSidebar"] {
     background: #0b1510 !important;
     border-right: 1px solid #1a3020 !important;
@@ -252,6 +308,7 @@ hr {
     font-family: 'Noto Serif TC', serif !important;
 }
 
+/* 分類表格 */
 .taxon-table { 
     width: 100%; 
     border-collapse: collapse; 
@@ -289,6 +346,7 @@ hr {
     font-size: 0.82rem; 
 }
 
+/* 照護卡片 */
 .char-card { 
     background: #0e1a12; 
     border: 1px solid #1e3824; 
@@ -371,6 +429,7 @@ hr {
     margin-bottom: 0.5rem;
 }
 
+/* 響應式 */
 @media (max-width: 768px) {
     .care-grid {
         grid-template-columns: 1fr;
@@ -403,6 +462,10 @@ if "total_identifications" not in st.session_state:
     st.session_state.total_identifications = 0
 if "expanded_cards" not in st.session_state:
     st.session_state.expanded_cards = {}
+if "identification_results" not in st.session_state:
+    st.session_state.identification_results = None
+if "show_results" not in st.session_state:
+    st.session_state.show_results = False
 
 def validate_history():
     valid = []
@@ -433,7 +496,7 @@ def has_chinese(text):
 @st.cache_data(ttl=3600, show_spinner=False)
 def search_wikipedia(scientific_name):
     url = "https://zh.wikipedia.org/w/api.php"
-    headers = {"User-Agent": "PlantExplorer/2.2"}
+    headers = {"User-Agent": "PlantExplorer/2.3"}
     try:
         res = requests.get(url, params={
             "action": "query", "list": "search",
@@ -497,7 +560,7 @@ def get_wiki_extract(title):
                 "exsentences": 3, "titles": title,
                 "format": "json", "utf8": 1, "redirects": 1
             },
-            headers={"User-Agent": "PlantExplorer/2.2"},
+            headers={"User-Agent": "PlantExplorer/2.3"},
             timeout=5
         ).json()
         for pid, page in res.get("query", {}).get("pages", {}).items():
@@ -689,8 +752,7 @@ with btn_col:
 # 8. 辨識邏輯
 # ==========================================
 if start_btn and uploaded and image:
-    # 重置展開狀態
-    st.session_state.expanded_cards = {}
+    st.session_state.expanded_cards = {0: True}
     
     with st.spinner("🌱 AI 辨識中..."):
         buf = io.BytesIO()
@@ -734,12 +796,12 @@ if start_btn and uploaded and image:
             st.warning("未能辨識，請嘗試更清晰的照片")
             st.stop()
         
-        # 儲存結果到 session state
         st.session_state.identification_results = all_results[:top_n]
         st.session_state.show_results = True
+        st.session_state.just_identified = True
 
 # ==========================================
-# 9. 顯示結果（使用按鈕控制展開）
+# 9. 顯示結果
 # ==========================================
 if st.session_state.get('show_results') and st.session_state.get('identification_results'):
     st.markdown("---")
@@ -774,15 +836,16 @@ if st.session_state.get('show_results') and st.session_state.get('identification
         
         display = cn_list[0] if cn_list else "資料不足"
         
-        # 只在首次辨識時加入歷史
-        if idx == 0 and start_btn:
+        # 加入歷史
+        if idx == 0 and st.session_state.get('just_identified'):
             st.session_state.history.append({
                 'name': display, 'sci': sci, 'score': score,
                 'time': datetime.now().strftime("%H:%M"), 'emoji': '🌿'
             })
             st.session_state.total_identifications += 1
+            st.session_state.just_identified = False
         
-        # 結果卡片
+        # 卡片
         card = "result-card-best" if idx == 0 else "result-card"
         badge = '<span class="badge badge-gold">✨ 最佳匹配</span>' if idx == 0 else f'<span class="badge">候選 #{idx+1}</span>'
         
@@ -801,12 +864,11 @@ if st.session_state.get('show_results') and st.session_state.get('identification
         </div>
         """, unsafe_allow_html=True)
         
-        # 信心指標
         st.markdown(f"**信心指標** {score:.2f}%")
         render_bar(score, color)
         
-        # 展開/收合按鈕
-        card_key = f"card_{idx}"
+        # 展開按鈕
+        card_key = idx
         is_expanded = st.session_state.expanded_cards.get(card_key, idx == 0)
         
         col_btn1, col_btn2, col_btn3 = st.columns([1, 1, 1])
@@ -820,29 +882,25 @@ if st.session_state.get('show_results') and st.session_state.get('identification
                     st.session_state.expanded_cards[card_key] = True
                     st.rerun()
         
-        # 詳細資訊區塊
+        # 詳細資訊
         if is_expanded:
             st.markdown('<div class="detail-section">', unsafe_allow_html=True)
             
-            # 別名
             if len(cn_list) > 1:
                 st.markdown("**📖 所有別名**")
                 cols = st.columns(3)
                 for i, a in enumerate(cn_list):
                     cols[i % 3].markdown(f'<span class="badge">{"⭐ " if i==0 else ""}{a}</span>', unsafe_allow_html=True)
             
-            # 英文名
             eng = [n for n in common if not has_chinese(n)][:3]
             if eng:
                 st.markdown(f'<p style="color:#3a6058;font-size:0.82rem;">英文：{" · ".join(eng)}</p>', unsafe_allow_html=True)
             
-            # Wiki 連結
             if wiki_link:
                 st.markdown(f"[📚 查看維基百科]({wiki_link})")
             
             st.markdown("---")
             
-            # 詳細資訊兩欄
             c1, c2 = st.columns(2, gap="medium")
             
             with c1:
@@ -864,7 +922,6 @@ if st.session_state.get('show_results') and st.session_state.get('identification
                     html += f'<tr><td class="taxon-label">{lbl}</td><td class="taxon-value">{val}{zh_span}</td></tr>'
                 st.markdown(f'<table class="taxon-table">{html}</table>', unsafe_allow_html=True)
                 
-                # 簡介
                 wiki_title = cn_list[0] if cn_list else sci
                 extract = get_wiki_extract(wiki_title) or get_wiki_extract(sci)
                 if extract:
