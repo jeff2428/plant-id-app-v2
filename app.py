@@ -23,7 +23,15 @@ st.set_page_config(
 st.markdown("""
 <style>
 /* ══════════════════════════════════════════
-   電腦端 - 側邊欄展開按鈕
+   修正說明：
+   Streamlit 的 collapsedControl 按鈕內部
+   使用 Material Icons ligature 文字（如 chevron_right），
+   字體未載入時顯示原始字串（bubble_arrow_right 等）。
+   解法：全平台統一「隱藏原生內容 + ::after 偽元素覆蓋 ☰」
+   ══════════════════════════════════════════ */
+
+/* ══════════════════════════════════════════
+   側邊欄展開按鈕 - 全平台共用基礎樣式
    ══════════════════════════════════════════ */
 [data-testid="collapsedControl"] {
     position: fixed !important;
@@ -37,11 +45,19 @@ st.markdown("""
     height: 48px !important;
     min-width: 48px !important;
     min-height: 48px !important;
-    padding: 8px !important;
+    padding: 0 !important;
     margin: 0 !important;
     cursor: pointer !important;
     box-shadow: 0 4px 15px rgba(0,0,0,0.4), 0 0 20px rgba(74,158,95,0.3) !important;
     transition: all 0.2s ease !important;
+    /* 關鍵：隱藏原生文字 ligature */
+    overflow: hidden !important;
+    font-size: 0 !important;
+    color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
 
 [data-testid="collapsedControl"]:hover {
@@ -50,22 +66,33 @@ st.markdown("""
     transform: scale(1.05) !important;
 }
 
-/* 電腦端 SVG 圖標顏色 */
+/* 隱藏按鈕內所有子元素（含 span、SVG、ligature 文字） */
+[data-testid="collapsedControl"] *,
+[data-testid="collapsedControl"] span,
 [data-testid="collapsedControl"] svg {
-    stroke: #c8f0cc !important;
-    color: #c8f0cc !important;
-    width: 24px !important;
-    height: 24px !important;
+    display: none !important;
+    visibility: hidden !important;
+    font-size: 0 !important;
+    color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
 }
 
-[data-testid="collapsedControl"] svg line,
-[data-testid="collapsedControl"] svg path,
-[data-testid="collapsedControl"] svg polyline {
-    stroke: #c8f0cc !important;
+/* 用 ::after 偽元素統一顯示漢堡圖示 ☰ */
+[data-testid="collapsedControl"]::after {
+    content: "☰" !important;
+    font-size: 1.55rem !important;
+    font-family: Arial, Helvetica, sans-serif !important;
+    color: #c8f0cc !important;
+    -webkit-text-fill-color: #c8f0cc !important;
+    display: block !important;
+    visibility: visible !important;
+    line-height: 1 !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.4) !important;
+    pointer-events: none !important;
 }
 
 /* ══════════════════════════════════════════
-   電腦端 - 側邊欄關閉按鈕
+   側邊欄關閉按鈕 - 全平台共用基礎樣式
    ══════════════════════════════════════════ */
 [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"],
 [data-testid="stSidebar"] button[kind="header"],
@@ -81,41 +108,59 @@ st.markdown("""
     height: 36px !important;
     min-width: 36px !important;
     min-height: 36px !important;
-    padding: 6px !important;
+    padding: 0 !important;
     cursor: pointer !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     transition: all 0.2s ease !important;
+    overflow: hidden !important;
+    font-size: 0 !important;
+    color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
 }
 
 [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"]:hover,
-[data-testid="stSidebar"] button[kind="header"]:hover {
+[data-testid="stSidebar"] button[kind="header"]:hover,
+[data-testid="stSidebar"] [data-testid="baseButton-header"]:hover {
     background: linear-gradient(135deg, #243828, #162018) !important;
     border-color: #4a9e5f !important;
 }
 
-/* 電腦端關閉按鈕 SVG 顏色 */
+/* 隱藏關閉按鈕內所有子元素 */
+[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"] *,
 [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"] svg,
-[data-testid="stSidebar"] button[kind="header"] svg {
-    stroke: #7ec98a !important;
-    color: #7ec98a !important;
-    width: 18px !important;
-    height: 18px !important;
+[data-testid="stSidebar"] button[kind="header"] *,
+[data-testid="stSidebar"] button[kind="header"] svg,
+[data-testid="stSidebar"] [data-testid="baseButton-header"] *,
+[data-testid="stSidebar"] [data-testid="baseButton-header"] svg {
+    display: none !important;
+    visibility: hidden !important;
+    font-size: 0 !important;
+    color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
 }
 
-[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"] svg line,
-[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"] svg path,
-[data-testid="stSidebar"] button[kind="header"] svg line,
-[data-testid="stSidebar"] button[kind="header"] svg path {
-    stroke: #7ec98a !important;
+/* 用 ::after 偽元素顯示關閉圖示 ✕ */
+[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"]::after,
+[data-testid="stSidebar"] button[kind="header"]::after,
+[data-testid="stSidebar"] [data-testid="baseButton-header"]::after {
+    content: "✕" !important;
+    font-size: 1.1rem !important;
+    font-family: Arial, Helvetica, sans-serif !important;
+    font-weight: bold !important;
+    color: #7ec98a !important;
+    -webkit-text-fill-color: #7ec98a !important;
+    display: block !important;
+    visibility: visible !important;
+    line-height: 1 !important;
+    pointer-events: none !important;
 }
 
 /* ══════════════════════════════════════════
-   手機端專用樣式 - 修復圖示顯示問題
+   手機端微調尺寸（邏輯不變，僅調整 size）
    ══════════════════════════════════════════ */
 @media (max-width: 768px) {
-    /* 手機端展開按鈕基本樣式 */
     [data-testid="collapsedControl"] {
         top: 10px !important;
         left: 10px !important;
@@ -123,47 +168,8 @@ st.markdown("""
         height: 44px !important;
         min-width: 44px !important;
         min-height: 44px !important;
-        padding: 0 !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        overflow: hidden !important;
-        font-size: 0 !important;
-        color: transparent !important;
     }
-    
-    /* 隱藏按鈕內所有子元素的文字（包括 bubble_arrow_right） */
-    [data-testid="collapsedControl"] * {
-        font-size: 0 !important;
-        color: transparent !important;
-        -webkit-text-fill-color: transparent !important;
-    }
-    
-    /* 隱藏 SVG */
-    [data-testid="collapsedControl"] svg {
-        display: none !important;
-        visibility: hidden !important;
-    }
-    
-    /* 使用偽元素顯示漢堡圖示 */
-    [data-testid="collapsedControl"]::after {
-        content: "☰" !important;
-        font-size: 1.6rem !important;
-        color: #c8f0cc !important;
-        -webkit-text-fill-color: #c8f0cc !important;
-        display: block !important;
-        visibility: visible !important;
-        position: absolute !important;
-        top: 50% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) !important;
-        pointer-events: none !important;
-        font-family: Arial, Helvetica, sans-serif !important;
-        line-height: 1 !important;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.3) !important;
-    }
-    
-    /* 手機端關閉按鈕基本樣式 */
+
     [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"],
     [data-testid="stSidebar"] button[kind="header"],
     [data-testid="stSidebar"] [data-testid="baseButton-header"] {
@@ -173,50 +179,6 @@ st.markdown("""
         height: 40px !important;
         min-width: 40px !important;
         min-height: 40px !important;
-        padding: 0 !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        overflow: hidden !important;
-        font-size: 0 !important;
-        color: transparent !important;
-    }
-    
-    /* 隱藏關閉按鈕內所有子元素文字 */
-    [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"] *,
-    [data-testid="stSidebar"] button[kind="header"] *,
-    [data-testid="stSidebar"] [data-testid="baseButton-header"] * {
-        font-size: 0 !important;
-        color: transparent !important;
-        -webkit-text-fill-color: transparent !important;
-    }
-    
-    /* 隱藏關閉按鈕 SVG */
-    [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"] svg,
-    [data-testid="stSidebar"] button[kind="header"] svg,
-    [data-testid="stSidebar"] [data-testid="baseButton-header"] svg {
-        display: none !important;
-        visibility: hidden !important;
-    }
-    
-    /* 使用偽元素顯示關閉圖示 */
-    [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"]::after,
-    [data-testid="stSidebar"] button[kind="header"]::after,
-    [data-testid="stSidebar"] [data-testid="baseButton-header"]::after {
-        content: "✕" !important;
-        font-size: 1.2rem !important;
-        color: #7ec98a !important;
-        -webkit-text-fill-color: #7ec98a !important;
-        display: block !important;
-        visibility: visible !important;
-        position: absolute !important;
-        top: 50% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) !important;
-        pointer-events: none !important;
-        font-family: Arial, Helvetica, sans-serif !important;
-        line-height: 1 !important;
-        font-weight: bold !important;
     }
 }
 
