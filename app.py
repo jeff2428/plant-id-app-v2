@@ -817,7 +817,7 @@ with col2:
     else:
         st.metric("平均信心度", "—")
 with col3:
-    st.metric("資料庫", "30,000+ 種")
+    st.metric("資料庫", "70,000+ 種")
 
 st.markdown("---")
 
