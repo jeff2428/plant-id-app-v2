@@ -50,7 +50,6 @@ st.markdown("""
     transform: scale(1.05) !important;
 }
 
-/* 電腦端 SVG 圖標顏色 */
 [data-testid="collapsedControl"] svg {
     stroke: #c8f0cc !important;
     color: #c8f0cc !important;
@@ -95,7 +94,6 @@ st.markdown("""
     border-color: #4a9e5f !important;
 }
 
-/* 電腦端關閉按鈕 SVG 顏色 */
 [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"] svg,
 [data-testid="stSidebar"] button[kind="header"] svg {
     stroke: #7ec98a !important;
@@ -112,10 +110,9 @@ st.markdown("""
 }
 
 /* ══════════════════════════════════════════
-   手機端專用樣式 - 修復圖示顯示問題
+   手機端專用樣式
    ══════════════════════════════════════════ */
 @media (max-width: 768px) {
-    /* 手機端展開按鈕基本樣式 */
     [data-testid="collapsedControl"] {
         top: 10px !important;
         left: 10px !important;
@@ -132,20 +129,17 @@ st.markdown("""
         color: transparent !important;
     }
     
-    /* 隱藏按鈕內所有子元素的文字（包括 bubble_arrow_right） */
     [data-testid="collapsedControl"] * {
         font-size: 0 !important;
         color: transparent !important;
         -webkit-text-fill-color: transparent !important;
     }
     
-    /* 隱藏 SVG */
     [data-testid="collapsedControl"] svg {
         display: none !important;
         visibility: hidden !important;
     }
     
-    /* 使用偽元素顯示漢堡圖示 */
     [data-testid="collapsedControl"]::after {
         content: "☰" !important;
         font-size: 1.6rem !important;
@@ -163,7 +157,6 @@ st.markdown("""
         text-shadow: 0 1px 2px rgba(0,0,0,0.3) !important;
     }
     
-    /* 手機端關閉按鈕基本樣式 */
     [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"],
     [data-testid="stSidebar"] button[kind="header"],
     [data-testid="stSidebar"] [data-testid="baseButton-header"] {
@@ -182,7 +175,6 @@ st.markdown("""
         color: transparent !important;
     }
     
-    /* 隱藏關閉按鈕內所有子元素文字 */
     [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"] *,
     [data-testid="stSidebar"] button[kind="header"] *,
     [data-testid="stSidebar"] [data-testid="baseButton-header"] * {
@@ -191,7 +183,6 @@ st.markdown("""
         -webkit-text-fill-color: transparent !important;
     }
     
-    /* 隱藏關閉按鈕 SVG */
     [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"] svg,
     [data-testid="stSidebar"] button[kind="header"] svg,
     [data-testid="stSidebar"] [data-testid="baseButton-header"] svg {
@@ -199,7 +190,6 @@ st.markdown("""
         visibility: hidden !important;
     }
     
-    /* 使用偽元素顯示關閉圖示 */
     [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"]::after,
     [data-testid="stSidebar"] button[kind="header"]::after,
     [data-testid="stSidebar"] [data-testid="baseButton-header"]::after {
@@ -277,7 +267,6 @@ h2, h3 {
     font-weight: 300;
 }
 
-/* 上傳區 */
 [data-testid="stFileUploader"] {
     border: 2px dashed #2d5c3a !important;
     border-radius: 16px !important;
@@ -302,7 +291,6 @@ h2, h3 {
     display: none !important;
 }
 
-/* 主要按鈕 */
 .main .stButton > button {
     background: linear-gradient(135deg, #2d6e45, #1a4a2e) !important;
     color: #c8f0cc !important;
@@ -325,7 +313,6 @@ h2, h3 {
     opacity: 0.5 !important;
 }
 
-/* 側邊欄按鈕 */
 [data-testid="stSidebar"] .stButton > button {
     background: linear-gradient(135deg, #2d6e45, #1a4a2e) !important;
     color: #c8f0cc !important;
@@ -336,7 +323,6 @@ h2, h3 {
     padding: 0.5rem 1rem !important;
 }
 
-/* 結果卡片 */
 .result-card {
     background: linear-gradient(145deg, #112018, #0e1a12);
     border: 1px solid #2d5c3a;
@@ -411,14 +397,6 @@ h2, h3 {
     border-color: #5a5020;
 }
 
-.detail-section {
-    background: #0a1410;
-    border: 1px solid #1e3824;
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-top: 1rem;
-}
-
 .history-item {
     background: #111a14;
     border: 1px solid #1e3824;
@@ -473,27 +451,29 @@ hr {
 
 .wiki-extract { background: #0c1810; border-left: 3px solid #2d6a40; border-radius: 0 10px 10px 0; padding: 0.9rem 1.2rem; color: #8ab898; font-size: 0.85rem; line-height: 1.8; margin: 0.8rem 0; }
 
-/* 名稱資訊區塊 */
+/* 名稱資訊區塊 - 修正樣式 */
 .name-info-section {
     background: #0c1810;
     border: 1px solid #1e3824;
     border-radius: 10px;
     padding: 1rem 1.2rem;
-    margin-bottom: 1rem;
+    margin: 0 0 1rem 0;
 }
 
-.name-info-section .section-title {
+.section-title {
     color: #7ec98a;
     font-size: 0.9rem;
     font-weight: 600;
-    margin-bottom: 0.6rem;
+    margin: 0 0 0.6rem 0;
+    padding: 0;
 }
 
 .alias-container {
     display: flex;
     flex-wrap: wrap;
     gap: 0.3rem;
-    margin-bottom: 0.5rem;
+    margin: 0;
+    padding: 0;
 }
 
 .english-names {
@@ -526,9 +506,14 @@ hr {
     transform: translateY(-1px);
 }
 
-/* ══════════════════════════════════════════
-   手機響應式 - 其他元素
-   ══════════════════════════════════════════ */
+.api-warning {
+    background: linear-gradient(135deg, #2a2a10, #1a1a08);
+    border: 1px solid #5a5020;
+    border-radius: 12px;
+    padding: 1.2rem 1.5rem;
+    margin: 1rem 0;
+}
+
 @media (max-width: 768px) {
     .care-grid { grid-template-columns: 1fr; }
     .plant-name { font-size: 1.6rem; }
@@ -541,8 +526,11 @@ hr {
 # ==========================================
 # 2. API 設定
 # ==========================================
-API_KEY = st.secrets.get("PLANTNET_API_KEY", "2b10XXXXXXXXXXXXXXXXXXXXXXXXxx")
-API_ENDPOINT = f"https://my-api.plantnet.org/v2/identify/all?api-key={API_KEY}&lang=zh"
+API_KEY = st.secrets.get("PLANTNET_API_KEY", "")
+API_READY = bool(API_KEY and API_KEY.strip() and "XXXX" not in API_KEY and len(API_KEY) > 20)
+
+if API_READY:
+    API_ENDPOINT = f"https://my-api.plantnet.org/v2/identify/all?api-key={API_KEY}&lang=zh"
 
 # ==========================================
 # 3. Session State
@@ -589,7 +577,7 @@ def has_chinese(text):
 @st.cache_data(ttl=3600, show_spinner=False)
 def search_wikipedia(scientific_name):
     url = "https://zh.wikipedia.org/w/api.php"
-    headers = {"User-Agent": "PlantExplorer/3.0"}
+    headers = {"User-Agent": "PlantExplorer/3.1"}
     try:
         res = requests.get(url, params={
             "action": "query", "list": "search",
@@ -647,7 +635,7 @@ def get_wiki_extract(title):
                 "exsentences": 3, "titles": title,
                 "format": "json", "utf8": 1, "redirects": 1
             },
-            headers={"User-Agent": "PlantExplorer/3.0"},
+            headers={"User-Agent": "PlantExplorer/3.1"},
             timeout=5
         ).json()
         for pid, page in res.get("query", {}).get("pages", {}).items():
@@ -700,38 +688,16 @@ def compress_image(img, max_w=1920):
         return img
 
 TAXON_ZH = {
-    "Tracheophyta": "維管束植物門",
-    "Magnoliopsida": "木蘭綱",
-    "Liliopsida": "百合綱",
-    "Pinopsida": "松綱",
-    "Polypodiopsida": "蕨綱",
-    "Lamiales": "唇形目",
-    "Rosales": "薔薇目",
-    "Fabales": "豆目",
-    "Asterales": "菊目",
-    "Poales": "禾本目",
-    "Malpighiales": "金虎尾目",
-    "Sapindales": "無患子目",
-    "Malvales": "錦葵目",
-    "Gentianales": "龍膽目",
-    "Solanales": "茄目",
-    "Brassicales": "十字花目",
-    "Myrtales": "桃金孃目",
-    "Ericales": "杜鵑花目",
-    "Lamiaceae": "唇形科",
-    "Rosaceae": "薔薇科",
-    "Fabaceae": "豆科",
-    "Asteraceae": "菊科",
-    "Poaceae": "禾本科",
-    "Moraceae": "桑科",
-    "Euphorbiaceae": "大戟科",
-    "Rutaceae": "芸香科",
-    "Orchidaceae": "蘭科",
-    "Araceae": "天南星科",
-    "Apocynaceae": "夾竹桃科",
-    "Solanaceae": "茄科",
-    "Brassicaceae": "十字花科",
-    "Myrtaceae": "桃金孃科",
+    "Tracheophyta": "維管束植物門", "Magnoliopsida": "木蘭綱", "Liliopsida": "百合綱",
+    "Pinopsida": "松綱", "Polypodiopsida": "蕨綱", "Lamiales": "唇形目",
+    "Rosales": "薔薇目", "Fabales": "豆目", "Asterales": "菊目", "Poales": "禾本目",
+    "Malpighiales": "金虎尾目", "Sapindales": "無患子目", "Malvales": "錦葵目",
+    "Gentianales": "龍膽目", "Solanales": "茄目", "Brassicales": "十字花目",
+    "Myrtales": "桃金孃目", "Ericales": "杜鵑花目", "Lamiaceae": "唇形科",
+    "Rosaceae": "薔薇科", "Fabaceae": "豆科", "Asteraceae": "菊科", "Poaceae": "禾本科",
+    "Moraceae": "桑科", "Euphorbiaceae": "大戟科", "Rutaceae": "芸香科",
+    "Orchidaceae": "蘭科", "Araceae": "天南星科", "Apocynaceae": "夾竹桃科",
+    "Solanaceae": "茄科", "Brassicaceae": "十字花科", "Myrtaceae": "桃金孃科",
     "Convolvulaceae": "旋花科",
 }
 
@@ -791,9 +757,15 @@ with st.sidebar:
     top_n = st.slider("顯示候選數", 1, 5, 3)
     
     st.markdown("---")
+    
+    if API_READY:
+        st.markdown('<p style="color:#3fcf6e;font-size:0.8rem;">✅ API 已連接</p>', unsafe_allow_html=True)
+    else:
+        st.markdown('<p style="color:#c86464;font-size:0.8rem;">❌ API 未設定</p>', unsafe_allow_html=True)
+    
     st.markdown('''
     <div style="color:#3a6a48;font-size:0.78rem;line-height:1.8;">
-    🌿 <strong style="color:#5a9a68;">生態探索 v3.0</strong><br>
+    🌿 <strong style="color:#5a9a68;">生態探索 v3.2</strong><br>
     PlantNet + 維基百科 + GBIF
     </div>
     ''', unsafe_allow_html=True)
@@ -803,6 +775,28 @@ with st.sidebar:
 # ==========================================
 st.markdown("# 🌿 生態探索")
 st.markdown('<p class="subtitle">植物智能辨識系統 Powered by PlantNet AI</p>', unsafe_allow_html=True)
+
+if not API_READY:
+    st.markdown('''
+    <div class="api-warning">
+        <h4 style="color:#c8b864;margin:0 0 0.5rem 0;">⚠️ API Key 未設定</h4>
+        <p style="color:#a0a060;font-size:0.9rem;margin:0;">請設定 PlantNet API Key 才能使用辨識功能</p>
+    </div>
+    ''', unsafe_allow_html=True)
+    
+    with st.expander("📖 如何取得並設定 API Key？"):
+        st.markdown("""
+        ### 步驟 1：取得 API Key
+        1. 前往 [PlantNet API](https://my.plantnet.org/)
+        2. 點擊 **Sign up** 註冊帳號
+        3. 登入後，建立新的 API Key
+        4. 複製你的 API Key
+        
+        ### 步驟 2：設定 API Key
+        **Streamlit Cloud：** Settings → Secrets → 加入 `PLANTNET_API_KEY = "你的金鑰"`
+        
+        **本地開發：** 建立 `.streamlit/secrets.toml` 並加入上述內容
+        """)
 
 col1, col2, col3 = st.columns(3)
 with col1:
@@ -857,16 +851,21 @@ with col_prev:
 st.markdown("")
 btn_col, _ = st.columns([1, 3])
 with btn_col:
-    start_btn = st.button("🔬 開始辨識", disabled=(uploaded is None), use_container_width=True)
+    start_btn = st.button("🔬 開始辨識", disabled=(uploaded is None or not API_READY), use_container_width=True)
 
 # ==========================================
 # 8. 辨識邏輯
 # ==========================================
 if start_btn and uploaded and image:
+    if not API_READY:
+        st.error("❌ API Key 未設定")
+        st.stop()
+    
     st.session_state.expanded_cards = {0: True}
     with st.spinner("🌱 AI 辨識中..."):
         buf = io.BytesIO()
         image.save(buf, format='JPEG', quality=85)
+        
         try:
             resp = requests.post(
                 API_ENDPOINT,
@@ -875,17 +874,25 @@ if start_btn and uploaded and image:
                 timeout=30
             )
             resp.raise_for_status()
+            
         except requests.exceptions.Timeout:
-            st.error("請求逾時，請檢查網路")
+            st.error("⏱️ 請求逾時，請檢查網路連線後重試")
             st.stop()
         except requests.exceptions.ConnectionError:
-            st.error("無法連接伺服器")
+            st.error("🌐 無法連接伺服器，請檢查網路連線")
             st.stop()
         except requests.exceptions.HTTPError:
-            st.error(f"HTTP 錯誤：{resp.status_code}")
+            if resp.status_code == 401:
+                st.error("🔑 API Key 無效或已過期")
+            elif resp.status_code == 403:
+                st.error("🚫 API 存取被拒絕，可能已超過配額")
+            elif resp.status_code == 429:
+                st.error("⚠️ 請求過於頻繁，請稍後再試")
+            else:
+                st.error(f"❌ HTTP 錯誤：{resp.status_code}")
             st.stop()
         except Exception as e:
-            st.error(f"錯誤：{e}")
+            st.error(f"❌ 發生錯誤：{e}")
             st.stop()
         
         try:
@@ -896,7 +903,7 @@ if start_btn and uploaded and image:
         
         all_results = result.get('results', [])
         if not all_results:
-            st.warning("未能辨識，請嘗試更清晰的照片")
+            st.warning("🔍 未能辨識此植物，請嘗試更清晰的照片")
             st.stop()
         
         st.session_state.identification_results = all_results[:top_n]
@@ -981,51 +988,43 @@ if st.session_state.get('show_results') and st.session_state.get('identification
                 st.rerun()
         
         if is_expanded:
-            st.markdown('<div class="detail-section">', unsafe_allow_html=True)
-            
+            # 準備名稱資訊區塊的內容
             has_alias = len(cn_list) > 1
             eng = [n for n in common if not has_chinese(n)][:3]
             has_eng = len(eng) > 0
             
+            # 只有在有內容時才渲染名稱區塊
             if has_alias or has_eng or wiki_link:
-                name_html = '<div class="name-info-section">'
+                name_parts = []
                 
                 if has_alias:
-                    name_html += '<div class="section-title">📖 所有別名</div>'
-                    name_html += '<div class="alias-container">'
-                    for i, a in enumerate(cn_list):
-                        star = "⭐ " if i == 0 else ""
-                        name_html += f'<span class="badge">{star}{a}</span>'
-                    name_html += '</div>'
+                    alias_badges = ''.join([f'<span class="badge">{"⭐ " if i == 0 else ""}{a}</span>' for i, a in enumerate(cn_list)])
+                    name_parts.append(f'<div class="section-title">📖 所有別名</div><div class="alias-container">{alias_badges}</div>')
                 
                 if has_eng:
-                    name_html += f'<div class="english-names">英文名：{" · ".join(eng)}</div>'
+                    name_parts.append(f'<div class="english-names">英文名：{" · ".join(eng)}</div>')
                 
                 if wiki_link:
-                    name_html += f'<a href="{wiki_link}" target="_blank" class="wiki-link">📚 查看維基百科</a>'
+                    name_parts.append(f'<a href="{wiki_link}" target="_blank" class="wiki-link">📚 查看維基百科</a>')
                 
-                name_html += '</div>'
-                st.markdown(name_html, unsafe_allow_html=True)
+                name_content = ''.join(name_parts)
+                st.markdown(f'<div class="name-info-section">{name_content}</div>', unsafe_allow_html=True)
             
+            # 分類與照護（使用 columns）
             c1, c2 = st.columns(2, gap="medium")
             
             with c1:
                 st.markdown("#### 🌳 分類階層")
                 gbif = get_gbif(sci)
-                rows = [
-                    ("門", gbif.get("phylum", "—")),
-                    ("綱", gbif.get("class", "—")),
-                    ("目", gbif.get("order", "—")),
-                    ("科", gbif.get("family", "—")),
-                    ("屬", gbif.get("genus", "—")),
-                    ("種", gbif.get("species", sci)),
-                ]
-                html = ""
+                rows = [("門", gbif.get("phylum", "—")), ("綱", gbif.get("class", "—")),
+                        ("目", gbif.get("order", "—")), ("科", gbif.get("family", "—")),
+                        ("屬", gbif.get("genus", "—")), ("種", gbif.get("species", sci))]
+                table_html = ""
                 for lbl, val in rows:
                     zh = TAXON_ZH.get(val, "")
                     zh_span = f'<span class="taxon-cn">（{zh}）</span>' if zh else ""
-                    html += f'<tr><td class="taxon-label">{lbl}</td><td class="taxon-value">{val}{zh_span}</td></tr>'
-                st.markdown(f'<table class="taxon-table">{html}</table>', unsafe_allow_html=True)
+                    table_html += f'<tr><td class="taxon-label">{lbl}</td><td class="taxon-value">{val}{zh_span}</td></tr>'
+                st.markdown(f'<table class="taxon-table">{table_html}</table>', unsafe_allow_html=True)
                 
                 wiki_title = cn_list[0] if cn_list else sci
                 extract = get_wiki_extract(wiki_title) or get_wiki_extract(sci)
@@ -1041,9 +1040,7 @@ if st.session_state.get('show_results') and st.session_state.get('identification
                 
                 st.markdown(f'''
                 <div style="margin-bottom:1rem;">
-                    <span style="background:{dc}22;color:{dc};border:1px solid {dc}66;border-radius:20px;padding:0.35rem 1.1rem;font-weight:600;">
-                        {care.get("diff", "中等")}
-                    </span>
+                    <span style="background:{dc}22;color:{dc};border:1px solid {dc}66;border-radius:20px;padding:0.35rem 1.1rem;font-weight:600;">{care.get("diff", "中等")}</span>
                     <span style="color:#3a6a48;font-size:0.8rem;margin-left:0.5rem;">照護難度</span>
                 </div>
                 ''', unsafe_allow_html=True)
@@ -1065,11 +1062,10 @@ if st.session_state.get('show_results') and st.session_state.get('identification
                     <div class="care-item"><div class="care-icon">🌱</div><div class="care-title">繁殖</div><div class="care-desc">{care.get("prop", "—")}</div></div>
                 </div>
                 ''', unsafe_allow_html=True)
-            
-            st.markdown('</div>', unsafe_allow_html=True)
         
         st.markdown("")
     
+    # 匯出報告
     st.markdown("---")
     st.markdown("### 📤 匯出報告")
     
@@ -1079,55 +1075,22 @@ if st.session_state.get('show_results') and st.session_state.get('identification
     best_cn = [n for n in best.get('species', {}).get('commonNames', []) if has_chinese(n)]
     best_name = best_cn[0] if best_cn else best_sci
     
-    report = f"""🌿 植物辨識報告
-{'='*40}
-時間：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
-{'='*40}
-
-最佳匹配：{best_name}
-學名：{best_sci}
-信心：{best_score:.2f}%
-
-候選結果：
-"""
+    report = f"🌿 植物辨識報告\n{'='*40}\n時間：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n{'='*40}\n\n最佳匹配：{best_name}\n學名：{best_sci}\n信心：{best_score:.2f}%\n\n候選結果：\n"
     for i, m in enumerate(top_results):
         sn = m.get('species', {}).get('scientificNameWithoutAuthor', '')
         sc = m.get('score', 0) * 100
         cn = [n for n in m.get('species', {}).get('commonNames', []) if has_chinese(n)]
         nm = cn[0] if cn else sn
         report += f"{i+1}. {nm}（{sn}）{sc:.2f}%\n"
-    
     report += f"\n{'='*40}\nPlantNet + 維基百科 + GBIF"
     
-    json_str = json.dumps({
-        "time": datetime.now().isoformat(),
-        "results": [
-            {
-                "rank": i+1,
-                "name": m.get('species', {}).get('scientificNameWithoutAuthor', ''),
-                "score": m.get('score', 0)
-            }
-            for i, m in enumerate(top_results)
-        ]
-    }, ensure_ascii=False, indent=2)
+    json_str = json.dumps({"time": datetime.now().isoformat(), "results": [{"rank": i+1, "name": m.get('species', {}).get('scientificNameWithoutAuthor', ''), "score": m.get('score', 0)} for i, m in enumerate(top_results)]}, ensure_ascii=False, indent=2)
     
     c1, c2 = st.columns(2)
     with c1:
-        st.download_button(
-            "📄 下載文字報告",
-            report.encode("utf-8"),
-            f"植物辨識_{datetime.now().strftime('%Y%m%d_%H%M')}.txt",
-            "text/plain",
-            use_container_width=True
-        )
+        st.download_button("📄 下載文字報告", report.encode("utf-8"), f"植物辨識_{datetime.now().strftime('%Y%m%d_%H%M')}.txt", "text/plain", use_container_width=True)
     with c2:
-        st.download_button(
-            "📊 下載 JSON",
-            json_str.encode("utf-8"),
-            f"plant_{datetime.now().strftime('%Y%m%d_%H%M')}.json",
-            "application/json",
-            use_container_width=True
-        )
+        st.download_button("📊 下載 JSON", json_str.encode("utf-8"), f"plant_{datetime.now().strftime('%Y%m%d_%H%M')}.json", "application/json", use_container_width=True)
 
 # ==========================================
 # 10. 頁尾
@@ -1135,7 +1098,7 @@ if st.session_state.get('show_results') and st.session_state.get('identification
 st.markdown("---")
 st.markdown('''
 <div style="text-align:center;color:#2d5c3a;font-size:0.8rem;padding:1rem 0;line-height:2;">
-    🌿 <strong style="color:#4a7a56;">生態探索</strong> v3.0<br>
+    🌿 <strong style="color:#4a7a56;">生態探索</strong> v3.2<br>
     PlantNet AI + 維基百科 + GBIF<br>
     <span style="font-size:0.72rem;">僅供參考，鑑定請諮詢專家</span>
 </div>
