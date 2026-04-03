@@ -391,7 +391,58 @@ hr {
 
 .wiki-extract { background: #0c1810; border-left: 3px solid #2d6a40; border-radius: 0 10px 10px 0; padding: 0.9rem 1.2rem; color: #8ab898; font-size: 0.85rem; line-height: 1.8; margin: 0.8rem 0; }
 
-.share-btn { display: block; padding: 0.6rem 1rem; border-radius: 8px; text-align: center; text-decoration: none; font-weight: 500; margin-bottom: 0.5rem; }
+/* 名稱資訊區塊 */
+.name-info-section {
+    background: #0c1810;
+    border: 1px solid #1e3824;
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.name-info-section .section-title {
+    color: #7ec98a;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+}
+
+.alias-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin-bottom: 0.5rem;
+}
+
+.english-names {
+    color: #3a6058;
+    font-size: 0.82rem;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid #1a2e1e;
+}
+
+.wiki-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: linear-gradient(135deg, #1a3828, #0e2018);
+    border: 1px solid #2d5c3a;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    color: #7ec98a !important;
+    text-decoration: none !important;
+    font-size: 0.88rem;
+    font-weight: 500;
+    margin-top: 0.8rem;
+    transition: all 0.2s ease;
+}
+
+.wiki-link:hover {
+    background: linear-gradient(135deg, #245038, #163028);
+    border-color: #4a9e5f;
+    transform: translateY(-1px);
+}
 
 /* 手機響應式 */
 @media (max-width: 768px) {
@@ -417,7 +468,7 @@ hr {
 # ==========================================
 # 2. API 設定
 # ==========================================
-API_KEY = st.secrets.get("PLANTNET_API_KEY", "2b1004UqTrbWJn4mj5hqcaZN")
+API_KEY = st.secrets.get("PLANTNET_API_KEY", "2b10XXXXXXXXXXXXXXXXXXXXXXXXxx")
 API_ENDPOINT = f"https://my-api.plantnet.org/v2/identify/all?api-key={API_KEY}&lang=zh"
 
 # ==========================================
@@ -465,7 +516,7 @@ def has_chinese(text):
 @st.cache_data(ttl=3600, show_spinner=False)
 def search_wikipedia(scientific_name):
     url = "https://zh.wikipedia.org/w/api.php"
-    headers = {"User-Agent": "PlantExplorer/2.7"}
+    headers = {"User-Agent": "PlantExplorer/2.8"}
     try:
         res = requests.get(url, params={
             "action": "query", "list": "search",
@@ -523,7 +574,7 @@ def get_wiki_extract(title):
                 "exsentences": 3, "titles": title,
                 "format": "json", "utf8": 1, "redirects": 1
             },
-            headers={"User-Agent": "PlantExplorer/2.7"},
+            headers={"User-Agent": "PlantExplorer/2.8"},
             timeout=5
         ).json()
         for pid, page in res.get("query", {}).get("pages", {}).items():
@@ -580,6 +631,7 @@ TAXON_ZH = {
     "Magnoliopsida": "木蘭綱",
     "Liliopsida": "百合綱",
     "Pinopsida": "松綱",
+    "Polypodiopsida": "蕨綱",
     "Lamiales": "唇形目",
     "Rosales": "薔薇目",
     "Fabales": "豆目",
@@ -588,6 +640,11 @@ TAXON_ZH = {
     "Malpighiales": "金虎尾目",
     "Sapindales": "無患子目",
     "Malvales": "錦葵目",
+    "Gentianales": "龍膽目",
+    "Solanales": "茄目",
+    "Brassicales": "十字花目",
+    "Myrtales": "桃金孃目",
+    "Ericales": "杜鵑花目",
     "Lamiaceae": "唇形科",
     "Rosaceae": "薔薇科",
     "Fabaceae": "豆科",
@@ -598,6 +655,11 @@ TAXON_ZH = {
     "Rutaceae": "芸香科",
     "Orchidaceae": "蘭科",
     "Araceae": "天南星科",
+    "Apocynaceae": "夾竹桃科",
+    "Solanaceae": "茄科",
+    "Brassicaceae": "十字花科",
+    "Myrtaceae": "桃金孃科",
+    "Convolvulaceae": "旋花科",
 }
 
 CARE_DATA = {
@@ -606,6 +668,8 @@ CARE_DATA = {
     "Fabaceae": {"diff": "容易", "diff_c": "#3fcf6e", "temp": "5~40°C", "zone": "7-11", "water": "少量", "fert": "少量", "prune": "花後", "prop": "播種", "sun": "全日照"},
     "Asteraceae": {"diff": "容易", "diff_c": "#3fcf6e", "temp": "0~35°C", "zone": "6-10", "water": "中等", "fert": "每2-4週", "prune": "花後", "prop": "播種分株", "sun": "全日照"},
     "Orchidaceae": {"diff": "困難", "diff_c": "#c86464", "temp": "15~30°C", "zone": "10-12", "water": "少量", "fert": "蘭花肥", "prune": "花後", "prop": "分株", "sun": "散射光"},
+    "Araceae": {"diff": "中等", "diff_c": "#c8b864", "temp": "18~30°C", "zone": "10-12", "water": "保持濕潤", "fert": "每2週", "prune": "去黃葉", "prop": "分株扦插", "sun": "散射光"},
+    "Solanaceae": {"diff": "中等", "diff_c": "#c8b864", "temp": "15~30°C", "zone": "8-11", "water": "規律", "fert": "每2週", "prune": "整形", "prop": "播種扦插", "sun": "全日照"},
     "DEFAULT": {"diff": "中等", "diff_c": "#c8b864", "temp": "5~35°C", "zone": "7-10", "water": "中等", "fert": "每月一次", "prune": "春季", "prop": "扦插播種", "sun": "全日照"},
 }
 
@@ -656,7 +720,7 @@ with st.sidebar:
     st.markdown("---")
     st.markdown('''
     <div style="color:#3a6a48;font-size:0.78rem;line-height:1.8;">
-    🌿 <strong style="color:#5a9a68;">生態探索 v2.7</strong><br>
+    🌿 <strong style="color:#5a9a68;">生態探索 v2.8</strong><br>
     PlantNet + 維基百科 + GBIF
     </div>
     ''', unsafe_allow_html=True)
@@ -844,23 +908,38 @@ if st.session_state.get('show_results') and st.session_state.get('identification
                 st.rerun()
         
         if is_expanded:
+            # 詳情區塊開始
             st.markdown('<div class="detail-section">', unsafe_allow_html=True)
             
-            if len(cn_list) > 1:
-                st.markdown("**📖 所有別名**")
-                cols = st.columns(3)
-                for i, a in enumerate(cn_list):
-                    cols[i % 3].markdown(f'<span class="badge">{"⭐ " if i==0 else ""}{a}</span>', unsafe_allow_html=True)
-            
+            # ===== 名稱資訊區塊（整合所有名稱相關內容）=====
+            has_alias = len(cn_list) > 1
             eng = [n for n in common if not has_chinese(n)][:3]
-            if eng:
-                st.markdown(f'<p style="color:#3a6058;font-size:0.82rem;">英文：{" · ".join(eng)}</p>', unsafe_allow_html=True)
+            has_eng = len(eng) > 0
             
-            if wiki_link:
-                st.markdown(f"[📚 查看維基百科]({wiki_link})")
+            if has_alias or has_eng or wiki_link:
+                name_html = '<div class="name-info-section">'
+                
+                # 別名
+                if has_alias:
+                    name_html += '<div class="section-title">📖 所有別名</div>'
+                    name_html += '<div class="alias-container">'
+                    for i, a in enumerate(cn_list):
+                        star = "⭐ " if i == 0 else ""
+                        name_html += f'<span class="badge">{star}{a}</span>'
+                    name_html += '</div>'
+                
+                # 英文名
+                if has_eng:
+                    name_html += f'<div class="english-names">英文名：{" · ".join(eng)}</div>'
+                
+                # 維基百科連結
+                if wiki_link:
+                    name_html += f'<a href="{wiki_link}" target="_blank" class="wiki-link">📚 查看維基百科</a>'
+                
+                name_html += '</div>'
+                st.markdown(name_html, unsafe_allow_html=True)
             
-            st.markdown("---")
-            
+            # ===== 分類與照護 =====
             c1, c2 = st.columns(2, gap="medium")
             
             with c1:
@@ -881,6 +960,7 @@ if st.session_state.get('show_results') and st.session_state.get('identification
                     html += f'<tr><td class="taxon-label">{lbl}</td><td class="taxon-value">{val}{zh_span}</td></tr>'
                 st.markdown(f'<table class="taxon-table">{html}</table>', unsafe_allow_html=True)
                 
+                # 植物簡介
                 wiki_title = cn_list[0] if cn_list else sci
                 extract = get_wiki_extract(wiki_title) or get_wiki_extract(sci)
                 if extract:
@@ -924,7 +1004,7 @@ if st.session_state.get('show_results') and st.session_state.get('identification
         
         st.markdown("")
     
-    # 匯出
+    # ===== 匯出報告 =====
     st.markdown("---")
     st.markdown("### 📤 匯出報告")
     
@@ -990,7 +1070,7 @@ if st.session_state.get('show_results') and st.session_state.get('identification
 st.markdown("---")
 st.markdown('''
 <div style="text-align:center;color:#2d5c3a;font-size:0.8rem;padding:1rem 0;line-height:2;">
-    🌿 <strong style="color:#4a7a56;">生態探索</strong> v2.7<br>
+    🌿 <strong style="color:#4a7a56;">生態探索</strong> v2.8<br>
     PlantNet AI + 維基百科 + GBIF<br>
     <span style="font-size:0.72rem;">僅供參考，鑑定請諮詢專家</span>
 </div>
