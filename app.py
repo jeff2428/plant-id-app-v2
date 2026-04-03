@@ -23,7 +23,7 @@ st.set_page_config(
 st.markdown("""
 <style>
 /* ══════════════════════════════════════════
-   側邊欄展開按鈕（左上角漢堡按鈕）
+   電腦端 - 側邊欄展開按鈕
    ══════════════════════════════════════════ */
 [data-testid="collapsedControl"] {
     position: fixed !important;
@@ -37,104 +37,203 @@ st.markdown("""
     height: 48px !important;
     min-width: 48px !important;
     min-height: 48px !important;
-    padding: 0 !important;
+    padding: 8px !important;
     margin: 0 !important;
     cursor: pointer !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
     box-shadow: 0 4px 15px rgba(0,0,0,0.4), 0 0 20px rgba(74,158,95,0.3) !important;
     transition: all 0.2s ease !important;
-    overflow: visible !important;
 }
 
 [data-testid="collapsedControl"]:hover {
     background: linear-gradient(135deg, #3a8a56, #245c38) !important;
     border-color: #7ec98a !important;
-    transform: scale(1.08) !important;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.5), 0 0 25px rgba(74,158,95,0.4) !important;
+    transform: scale(1.05) !important;
 }
 
-[data-testid="collapsedControl"] svg,
-[data-testid="collapsedControl"] span,
-[data-testid="collapsedControl"] div,
-[data-testid="collapsedControl"] p {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    width: 0 !important;
-    height: 0 !important;
-    font-size: 0 !important;
-}
-
-[data-testid="collapsedControl"]::after {
-    content: "☰" !important;
-    font-size: 1.8rem !important;
+/* 電腦端 SVG 圖標顏色 */
+[data-testid="collapsedControl"] svg {
+    stroke: #c8f0cc !important;
     color: #c8f0cc !important;
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    position: absolute !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    line-height: 1 !important;
-    font-weight: bold !important;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3) !important;
+    width: 24px !important;
+    height: 24px !important;
+}
+
+[data-testid="collapsedControl"] svg line,
+[data-testid="collapsedControl"] svg path,
+[data-testid="collapsedControl"] svg polyline {
+    stroke: #c8f0cc !important;
 }
 
 /* ══════════════════════════════════════════
-   側邊欄關閉按鈕
+   電腦端 - 側邊欄關閉按鈕
    ══════════════════════════════════════════ */
-[data-testid="stSidebar"] button[kind="header"],
 [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"],
+[data-testid="stSidebar"] button[kind="header"],
 [data-testid="stSidebar"] [data-testid="baseButton-header"] {
     position: absolute !important;
-    top: 10px !important;
-    right: 10px !important;
+    top: 12px !important;
+    right: 12px !important;
     z-index: 9999 !important;
-    background: #1a3020 !important;
+    background: linear-gradient(135deg, #1a3020, #0e1a14) !important;
     border: 1px solid #3a7a50 !important;
     border-radius: 8px !important;
     width: 36px !important;
     height: 36px !important;
     min-width: 36px !important;
     min-height: 36px !important;
-    padding: 0 !important;
+    padding: 6px !important;
     cursor: pointer !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+    transition: all 0.2s ease !important;
 }
 
-[data-testid="stSidebar"] button[kind="header"]:hover,
-[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"]:hover {
-    background: #243828 !important;
+[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"]:hover,
+[data-testid="stSidebar"] button[kind="header"]:hover {
+    background: linear-gradient(135deg, #243828, #162018) !important;
     border-color: #4a9e5f !important;
 }
 
-[data-testid="stSidebar"] button[kind="header"] svg,
-[data-testid="stSidebar"] button[kind="header"] span,
-[data-testid="stSidebar"] button[kind="header"] div,
+/* 電腦端關閉按鈕 SVG 顏色 */
 [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"] svg,
-[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"] span,
-[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"] div {
-    display: none !important;
-    visibility: hidden !important;
-    font-size: 0 !important;
+[data-testid="stSidebar"] button[kind="header"] svg {
+    stroke: #7ec98a !important;
+    color: #7ec98a !important;
+    width: 18px !important;
+    height: 18px !important;
 }
 
-[data-testid="stSidebar"] button[kind="header"]::after,
-[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"]::after {
-    content: "✕" !important;
-    font-size: 1.2rem !important;
-    color: #7ec98a !important;
-    display: block !important;
-    visibility: visible !important;
-    position: absolute !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
+[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"] svg line,
+[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"] svg path,
+[data-testid="stSidebar"] button[kind="header"] svg line,
+[data-testid="stSidebar"] button[kind="header"] svg path {
+    stroke: #7ec98a !important;
+}
+
+/* ══════════════════════════════════════════
+   手機端專用樣式 - 修復圖示顯示問題
+   ══════════════════════════════════════════ */
+@media (max-width: 768px) {
+    /* 手機端展開按鈕基本樣式 */
+    [data-testid="collapsedControl"] {
+        top: 10px !important;
+        left: 10px !important;
+        width: 44px !important;
+        height: 44px !important;
+        min-width: 44px !important;
+        min-height: 44px !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        overflow: hidden !important;
+        font-size: 0 !important;
+        color: transparent !important;
+    }
+    
+    /* 隱藏按鈕內所有子元素的文字（包括 bubble_arrow_right） */
+    [data-testid="collapsedControl"] * {
+        font-size: 0 !important;
+        color: transparent !important;
+        -webkit-text-fill-color: transparent !important;
+    }
+    
+    /* 隱藏 SVG */
+    [data-testid="collapsedControl"] svg {
+        display: none !important;
+        visibility: hidden !important;
+    }
+    
+    /* 使用偽元素顯示漢堡圖示 */
+    [data-testid="collapsedControl"]::after {
+        content: "☰" !important;
+        font-size: 1.6rem !important;
+        color: #c8f0cc !important;
+        -webkit-text-fill-color: #c8f0cc !important;
+        display: block !important;
+        visibility: visible !important;
+        position: absolute !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        pointer-events: none !important;
+        font-family: Arial, Helvetica, sans-serif !important;
+        line-height: 1 !important;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.3) !important;
+    }
+    
+    /* 手機端關閉按鈕基本樣式 */
+    [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"],
+    [data-testid="stSidebar"] button[kind="header"],
+    [data-testid="stSidebar"] [data-testid="baseButton-header"] {
+        top: 10px !important;
+        right: 10px !important;
+        width: 40px !important;
+        height: 40px !important;
+        min-width: 40px !important;
+        min-height: 40px !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        overflow: hidden !important;
+        font-size: 0 !important;
+        color: transparent !important;
+    }
+    
+    /* 隱藏關閉按鈕內所有子元素文字 */
+    [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"] *,
+    [data-testid="stSidebar"] button[kind="header"] *,
+    [data-testid="stSidebar"] [data-testid="baseButton-header"] * {
+        font-size: 0 !important;
+        color: transparent !important;
+        -webkit-text-fill-color: transparent !important;
+    }
+    
+    /* 隱藏關閉按鈕 SVG */
+    [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"] svg,
+    [data-testid="stSidebar"] button[kind="header"] svg,
+    [data-testid="stSidebar"] [data-testid="baseButton-header"] svg {
+        display: none !important;
+        visibility: hidden !important;
+    }
+    
+    /* 使用偽元素顯示關閉圖示 */
+    [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"]::after,
+    [data-testid="stSidebar"] button[kind="header"]::after,
+    [data-testid="stSidebar"] [data-testid="baseButton-header"]::after {
+        content: "✕" !important;
+        font-size: 1.2rem !important;
+        color: #7ec98a !important;
+        -webkit-text-fill-color: #7ec98a !important;
+        display: block !important;
+        visibility: visible !important;
+        position: absolute !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        pointer-events: none !important;
+        font-family: Arial, Helvetica, sans-serif !important;
+        line-height: 1 !important;
+        font-weight: bold !important;
+    }
+}
+
+/* ══════════════════════════════════════════
+   側邊欄主體樣式
+   ══════════════════════════════════════════ */
+[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, #0b1510 0%, #0a1210 100%) !important;
+    border-right: 1px solid #1a3020 !important;
+}
+
+[data-testid="stSidebar"] > div:first-child {
+    padding-top: 3.5rem !important;
+}
+
+[data-testid="stSidebar"] .stMarkdown {
+    color: #7aab82 !important;
 }
 
 /* ══════════════════════════════════════════
@@ -195,15 +294,7 @@ h2, h3 {
     border: 1px solid #2d5c3a !important;
     border-radius: 8px !important;
     padding: 0.3rem 1.2rem !important;
-    font-size: 0 !important;
-    color: transparent !important;
-}
-
-[data-testid="stFileUploaderDropzone"] button::after {
-    content: "📂 選擇檔案";
-    font-family: 'Noto Sans TC', sans-serif;
-    font-size: 0.85rem;
-    color: #5a9a6a;
+    color: #5a9a6a !important;
 }
 
 [data-testid="stFileUploader"] small,
@@ -271,6 +362,7 @@ h2, h3 {
     top: 0; left: 0; right: 0;
     height: 3px;
     background: linear-gradient(90deg, #3a9e5f, #7ec98a, #3a9e5f);
+    border-radius: 20px 20px 0 0;
 }
 
 .plant-name {
@@ -342,16 +434,6 @@ hr {
     border: none;
     border-top: 1px solid #1e3824 !important;
     margin: 1.5rem 0 !important;
-}
-
-[data-testid="stSidebar"] {
-    background: #0b1510 !important;
-    border-right: 1px solid #1a3020 !important;
-    padding-top: 3rem !important;
-}
-
-[data-testid="stSidebar"] .stMarkdown {
-    color: #7aab82 !important;
 }
 
 .stSpinner > div {
@@ -444,23 +526,14 @@ hr {
     transform: translateY(-1px);
 }
 
-/* 手機響應式 */
+/* ══════════════════════════════════════════
+   手機響應式 - 其他元素
+   ══════════════════════════════════════════ */
 @media (max-width: 768px) {
     .care-grid { grid-template-columns: 1fr; }
     .plant-name { font-size: 1.6rem; }
     h1 { font-size: 2rem !important; }
     .main .block-container { padding: 1.5rem 1rem 3rem; }
-    
-    [data-testid="collapsedControl"] {
-        top: 10px !important;
-        left: 10px !important;
-        width: 42px !important;
-        height: 42px !important;
-    }
-    
-    [data-testid="collapsedControl"]::after {
-        font-size: 1.5rem !important;
-    }
 }
 </style>
 """, unsafe_allow_html=True)
@@ -516,7 +589,7 @@ def has_chinese(text):
 @st.cache_data(ttl=3600, show_spinner=False)
 def search_wikipedia(scientific_name):
     url = "https://zh.wikipedia.org/w/api.php"
-    headers = {"User-Agent": "PlantExplorer/2.8"}
+    headers = {"User-Agent": "PlantExplorer/3.0"}
     try:
         res = requests.get(url, params={
             "action": "query", "list": "search",
@@ -574,7 +647,7 @@ def get_wiki_extract(title):
                 "exsentences": 3, "titles": title,
                 "format": "json", "utf8": 1, "redirects": 1
             },
-            headers={"User-Agent": "PlantExplorer/2.8"},
+            headers={"User-Agent": "PlantExplorer/3.0"},
             timeout=5
         ).json()
         for pid, page in res.get("query", {}).get("pages", {}).items():
@@ -720,7 +793,7 @@ with st.sidebar:
     st.markdown("---")
     st.markdown('''
     <div style="color:#3a6a48;font-size:0.78rem;line-height:1.8;">
-    🌿 <strong style="color:#5a9a68;">生態探索 v2.8</strong><br>
+    🌿 <strong style="color:#5a9a68;">生態探索 v3.0</strong><br>
     PlantNet + 維基百科 + GBIF
     </div>
     ''', unsafe_allow_html=True)
@@ -908,10 +981,8 @@ if st.session_state.get('show_results') and st.session_state.get('identification
                 st.rerun()
         
         if is_expanded:
-            # 詳情區塊開始
             st.markdown('<div class="detail-section">', unsafe_allow_html=True)
             
-            # ===== 名稱資訊區塊（整合所有名稱相關內容）=====
             has_alias = len(cn_list) > 1
             eng = [n for n in common if not has_chinese(n)][:3]
             has_eng = len(eng) > 0
@@ -919,7 +990,6 @@ if st.session_state.get('show_results') and st.session_state.get('identification
             if has_alias or has_eng or wiki_link:
                 name_html = '<div class="name-info-section">'
                 
-                # 別名
                 if has_alias:
                     name_html += '<div class="section-title">📖 所有別名</div>'
                     name_html += '<div class="alias-container">'
@@ -928,18 +998,15 @@ if st.session_state.get('show_results') and st.session_state.get('identification
                         name_html += f'<span class="badge">{star}{a}</span>'
                     name_html += '</div>'
                 
-                # 英文名
                 if has_eng:
                     name_html += f'<div class="english-names">英文名：{" · ".join(eng)}</div>'
                 
-                # 維基百科連結
                 if wiki_link:
                     name_html += f'<a href="{wiki_link}" target="_blank" class="wiki-link">📚 查看維基百科</a>'
                 
                 name_html += '</div>'
                 st.markdown(name_html, unsafe_allow_html=True)
             
-            # ===== 分類與照護 =====
             c1, c2 = st.columns(2, gap="medium")
             
             with c1:
@@ -960,7 +1027,6 @@ if st.session_state.get('show_results') and st.session_state.get('identification
                     html += f'<tr><td class="taxon-label">{lbl}</td><td class="taxon-value">{val}{zh_span}</td></tr>'
                 st.markdown(f'<table class="taxon-table">{html}</table>', unsafe_allow_html=True)
                 
-                # 植物簡介
                 wiki_title = cn_list[0] if cn_list else sci
                 extract = get_wiki_extract(wiki_title) or get_wiki_extract(sci)
                 if extract:
@@ -1004,7 +1070,6 @@ if st.session_state.get('show_results') and st.session_state.get('identification
         
         st.markdown("")
     
-    # ===== 匯出報告 =====
     st.markdown("---")
     st.markdown("### 📤 匯出報告")
     
@@ -1070,7 +1135,7 @@ if st.session_state.get('show_results') and st.session_state.get('identification
 st.markdown("---")
 st.markdown('''
 <div style="text-align:center;color:#2d5c3a;font-size:0.8rem;padding:1rem 0;line-height:2;">
-    🌿 <strong style="color:#4a7a56;">生態探索</strong> v2.8<br>
+    🌿 <strong style="color:#4a7a56;">生態探索</strong> v3.0<br>
     PlantNet AI + 維基百科 + GBIF<br>
     <span style="font-size:0.72rem;">僅供參考，鑑定請諮詢專家</span>
 </div>
