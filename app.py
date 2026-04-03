@@ -18,13 +18,12 @@ st.set_page_config(
 )
 
 # ==========================================
-# 1. CSS 樣式（強化修復版）
+# 1. CSS 樣式（優化版）
 # ==========================================
 st.markdown("""
 <style>
 /* ══════════════════════════════════════════
-   側邊欄展開按鈕 - 強化修復版
-   徹底隱藏 bubble_arrow_right 文字
+   側邊欄展開按鈕 - 美化版
    ══════════════════════════════════════════ */
 [data-testid="collapsedControl"] {
     position: fixed !important;
@@ -50,12 +49,6 @@ st.markdown("""
     align-items: center !important;
     justify-content: center !important;
     overflow: hidden !important;
-    
-    /* 強制隱藏文字 */
-    font-size: 0 !important;
-    color: transparent !important;
-    text-indent: -9999px !important;
-    line-height: 0 !important;
 }
 
 [data-testid="collapsedControl"]:hover {
@@ -68,56 +61,41 @@ st.markdown("""
         inset 0 1px 0 rgba(255,255,255,0.15) !important;
 }
 
-/* 隱藏所有子元素（包括文字節點） */
+[data-testid="collapsedControl"]:active {
+    transform: scale(1.02) !important;
+}
+
+/* 隱藏原始內容 */
 [data-testid="collapsedControl"] * {
-    font-size: 0 !important;
-    color: transparent !important;
     opacity: 0 !important;
-    visibility: hidden !important;
     width: 0 !important;
     height: 0 !important;
     position: absolute !important;
-    overflow: hidden !important;
-    text-indent: -9999px !important;
-    -webkit-text-fill-color: transparent !important;
 }
 
-[data-testid="collapsedControl"] svg {
-    display: none !important;
-}
-
-[data-testid="collapsedControl"] span {
-    display: none !important;
-}
-
-/* 自訂漢堡圖示 - 三條線 */
+/* 自訂漢堡圖示 - 三條線動畫效果 */
 [data-testid="collapsedControl"]::before {
     content: "" !important;
     position: absolute !important;
     width: 22px !important;
-    height: 3px !important;
-    background: #c8f0cc !important;
+    height: 2.5px !important;
+    background: linear-gradient(90deg, #a8e6b8, #c8f0cc) !important;
     border-radius: 2px !important;
     box-shadow: 
         0 -7px 0 0 #c8f0cc,
         0 7px 0 0 #c8f0cc !important;
     transition: all 0.3s ease !important;
-    text-indent: 0 !important;
-    font-size: 0 !important;
-    color: transparent !important;
-    visibility: visible !important;
-    opacity: 1 !important;
 }
 
 [data-testid="collapsedControl"]:hover::before {
-    background: #e0ffe8 !important;
+    background: linear-gradient(90deg, #c8f0cc, #e0ffe8) !important;
     box-shadow: 
         0 -8px 0 0 #e0ffe8,
         0 8px 0 0 #e0ffe8 !important;
 }
 
 /* ══════════════════════════════════════════
-   側邊欄關閉按鈕 - 強化修復版
+   側邊欄關閉按鈕 - 美化版
    ══════════════════════════════════════════ */
 [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"],
 [data-testid="stSidebar"] button[kind="header"],
@@ -143,12 +121,6 @@ st.markdown("""
         0 2px 8px rgba(0,0,0,0.3),
         inset 0 1px 0 rgba(255,255,255,0.05) !important;
     overflow: hidden !important;
-    
-    /* 強制隱藏文字 */
-    font-size: 0 !important;
-    color: transparent !important;
-    text-indent: -9999px !important;
-    line-height: 0 !important;
 }
 
 [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"]:hover,
@@ -156,23 +128,18 @@ st.markdown("""
     background: linear-gradient(145deg, #243828, #162018) !important;
     border-color: #5aa870 !important;
     transform: scale(1.05) !important;
+    box-shadow: 
+        0 4px 12px rgba(0,0,0,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.08) !important;
 }
 
-/* 隱藏所有子元素 */
+/* 隱藏原始內容 */
 [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"] *,
-[data-testid="stSidebar"] button[kind="header"] *,
-[data-testid="stSidebar"] [data-testid="baseButton-header"] * {
-    font-size: 0 !important;
-    color: transparent !important;
+[data-testid="stSidebar"] button[kind="header"] * {
     opacity: 0 !important;
-    visibility: hidden !important;
     width: 0 !important;
     height: 0 !important;
     position: absolute !important;
-    overflow: hidden !important;
-    text-indent: -9999px !important;
-    -webkit-text-fill-color: transparent !important;
-    display: none !important;
 }
 
 /* 自訂 X 圖示 */
@@ -181,15 +148,12 @@ st.markdown("""
 [data-testid="stSidebar"] [data-testid="baseButton-header"]::before {
     content: "" !important;
     position: absolute !important;
-    width: 18px !important;
-    height: 3px !important;
-    background: #8fd4a0 !important;
+    width: 16px !important;
+    height: 2.5px !important;
+    background: linear-gradient(90deg, #6ab87a, #8fd4a0) !important;
     border-radius: 2px !important;
     transform: rotate(45deg) !important;
     transition: all 0.3s ease !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    text-indent: 0 !important;
 }
 
 [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"]::after,
@@ -197,26 +161,23 @@ st.markdown("""
 [data-testid="stSidebar"] [data-testid="baseButton-header"]::after {
     content: "" !important;
     position: absolute !important;
-    width: 18px !important;
-    height: 3px !important;
-    background: #8fd4a0 !important;
+    width: 16px !important;
+    height: 2.5px !important;
+    background: linear-gradient(90deg, #6ab87a, #8fd4a0) !important;
     border-radius: 2px !important;
     transform: rotate(-45deg) !important;
     transition: all 0.3s ease !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    text-indent: 0 !important;
 }
 
 [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"]:hover::before,
 [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"]:hover::after,
 [data-testid="stSidebar"] button[kind="header"]:hover::before,
 [data-testid="stSidebar"] button[kind="header"]:hover::after {
-    background: #b0f0c0 !important;
+    background: linear-gradient(90deg, #8fd4a0, #b0f0c0) !important;
 }
 
 /* ══════════════════════════════════════════
-   手機端專用樣式 - 強化版
+   手機端專用樣式
    ══════════════════════════════════════════ */
 @media (max-width: 768px) {
     [data-testid="collapsedControl"] {
@@ -227,17 +188,11 @@ st.markdown("""
         min-width: 46px !important;
         min-height: 46px !important;
         border-radius: 10px !important;
-        
-        /* 手機端強化隱藏文字 */
-        font-size: 0 !important;
-        color: transparent !important;
-        text-indent: -9999px !important;
-        -webkit-text-fill-color: transparent !important;
     }
     
     [data-testid="collapsedControl"]::before {
         width: 20px !important;
-        height: 2.5px !important;
+        height: 2px !important;
         box-shadow: 
             0 -6px 0 0 #c8f0cc,
             0 6px 0 0 #c8f0cc !important;
@@ -252,41 +207,15 @@ st.markdown("""
         height: 38px !important;
         min-width: 38px !important;
         min-height: 38px !important;
-        
-        /* 手機端強化隱藏文字 */
-        font-size: 0 !important;
-        color: transparent !important;
-        text-indent: -9999px !important;
-        -webkit-text-fill-color: transparent !important;
     }
     
     [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"]::before,
     [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"]::after,
     [data-testid="stSidebar"] button[kind="header"]::before,
     [data-testid="stSidebar"] button[kind="header"]::after {
-        width: 16px !important;
-        height: 2.5px !important;
+        width: 14px !important;
+        height: 2px !important;
     }
-}
-
-/* ══════════════════════════════════════════
-   額外強制隱藏 Material Icons 文字
-   ══════════════════════════════════════════ */
-[data-testid="collapsedControl"] [data-testid="stIconMaterial"],
-[data-testid="stSidebar"] [data-testid="stIconMaterial"] {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    font-size: 0 !important;
-    width: 0 !important;
-    height: 0 !important;
-}
-
-/* 隱藏任何可能的文字內容 */
-[data-testid="collapsedControl"]::content,
-[data-testid="collapsedControl"] *::before,
-[data-testid="collapsedControl"] *::after {
-    content: none !important;
 }
 
 /* ══════════════════════════════════════════
@@ -395,6 +324,10 @@ st.markdown("""
         inset 0 1px 0 rgba(255,255,255,0.15) !important;
 }
 
+[data-testid="stFileUploaderDropzone"] button:active {
+    transform: translateY(-1px) !important;
+}
+
 /* 拖曳提示文字 */
 [data-testid="stFileUploaderDropzone"] small {
     display: block !important;
@@ -425,14 +358,54 @@ st.markdown("""
     padding: 0.2rem 0.5rem !important;
 }
 
-[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] button::before,
-[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] button::after {
-    content: none !important;
+[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] button:hover {
+    background: rgba(200, 100, 100, 0.3) !important;
 }
 
 /* 隱藏預設標籤 */
 [data-testid="stFileUploader"] label {
     display: none !important;
+}
+
+/* ══════════════════════════════════════════
+   上傳區自訂樣式
+   ══════════════════════════════════════════ */
+.upload-zone {
+    background: linear-gradient(145deg, #0f1f15, #0a1610);
+    border: 2px dashed #2d5c3a;
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.upload-zone:hover {
+    border-color: #4a9e5f;
+    background: linear-gradient(145deg, #122418, #0d1a12);
+}
+
+.upload-icon {
+    font-size: 3rem;
+    margin-bottom: 0.8rem;
+    display: block;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+.upload-text {
+    color: #6a9b72;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.upload-hint {
+    color: #3a6a48;
+    font-size: 0.78rem;
 }
 
 /* ══════════════════════════════════════════
@@ -498,6 +471,10 @@ h2, h3 {
     box-shadow: 
         0 8px 30px rgba(58,158,95,0.35),
         inset 0 1px 0 rgba(255,255,255,0.15) !important;
+}
+
+.main .stButton > button:active {
+    transform: translateY(-1px) !important;
 }
 
 .main .stButton > button:disabled {
@@ -738,11 +715,6 @@ hr {
     line-height: 1.6;
 }
 
-@keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-8px); }
-}
-
 /* 檔案資訊標籤 */
 .file-info {
     display: flex;
@@ -828,7 +800,7 @@ def has_chinese(text):
 @st.cache_data(ttl=3600, show_spinner=False)
 def search_wikipedia(scientific_name):
     url = "https://zh.wikipedia.org/w/api.php"
-    headers = {"User-Agent": "PlantExplorer/3.4"}
+    headers = {"User-Agent": "PlantExplorer/3.3"}
     try:
         res = requests.get(url, params={
             "action": "query", "list": "search",
@@ -886,7 +858,7 @@ def get_wiki_extract(title):
                 "exsentences": 3, "titles": title,
                 "format": "json", "utf8": 1, "redirects": 1
             },
-            headers={"User-Agent": "PlantExplorer/3.4"},
+            headers={"User-Agent": "PlantExplorer/3.3"},
             timeout=5
         ).json()
         for pid, page in res.get("query", {}).get("pages", {}).items():
@@ -1016,7 +988,7 @@ with st.sidebar:
     
     st.markdown('''
     <div style="color:#3a6a48;font-size:0.78rem;line-height:1.8;">
-    🌿 <strong style="color:#5a9a68;">生態探索 v3.4</strong><br>
+    🌿 <strong style="color:#5a9a68;">生態探索 v3.3</strong><br>
     PlantNet + 維基百科 + GBIF
     </div>
     ''', unsafe_allow_html=True)
@@ -1037,12 +1009,16 @@ if not API_READY:
     
     with st.expander("📖 如何取得並設定 API Key？"):
         st.markdown("""
-        1. 前往 [PlantNet API](https://my.plantnet.org/) 註冊
-        2. 建立 API Key
-        3. 在 Streamlit Cloud Settings → Secrets 加入：
-        ```
-        PLANTNET_API_KEY = "你的金鑰"
-        ```
+        ### 步驟 1：取得 API Key
+        1. 前往 [PlantNet API](https://my.plantnet.org/)
+        2. 點擊 **Sign up** 註冊帳號
+        3. 登入後，建立新的 API Key
+        4. 複製你的 API Key
+        
+        ### 步驟 2：設定 API Key
+        **Streamlit Cloud：** Settings → Secrets → 加入 `PLANTNET_API_KEY = "你的金鑰"`
+        
+        **本地開發：** 建立 `.streamlit/secrets.toml` 並加入上述內容
         """)
 
 col1, col2, col3 = st.columns(3)
@@ -1061,7 +1037,7 @@ with col3:
 st.markdown("---")
 
 # ==========================================
-# 7. 上傳區
+# 7. 上傳區（美化版）
 # ==========================================
 col_up, col_prev = st.columns([1, 1], gap="large")
 
@@ -1072,13 +1048,15 @@ with col_up:
     uploaded = st.file_uploader(
         "選擇檔案",
         type=["jpg", "jpeg", "png", "webp"],
-        label_visibility="collapsed"
+        label_visibility="collapsed",
+        help="建議上傳清晰的植物照片，特寫葉片、花朵或果實效果更佳"
     )
     
     if uploaded:
         kb = uploaded.size // 1024
         mb = kb / 1024
         size_str = f"{mb:.1f} MB" if mb >= 1 else f"{kb} KB"
+        
         st.markdown(f'''
         <div class="file-info">
             <span class="file-badge">📁 {uploaded.name}</span>
@@ -1135,22 +1113,25 @@ if start_btn and uploaded and image:
                 timeout=30
             )
             resp.raise_for_status()
+            
         except requests.exceptions.Timeout:
-            st.error("⏱️ 請求逾時")
+            st.error("⏱️ 請求逾時，請檢查網路連線後重試")
             st.stop()
         except requests.exceptions.ConnectionError:
-            st.error("🌐 無法連接伺服器")
+            st.error("🌐 無法連接伺服器，請檢查網路連線")
             st.stop()
         except requests.exceptions.HTTPError:
             if resp.status_code == 401:
-                st.error("🔑 API Key 無效")
+                st.error("🔑 API Key 無效或已過期")
+            elif resp.status_code == 403:
+                st.error("🚫 API 存取被拒絕，可能已超過配額")
             elif resp.status_code == 429:
-                st.error("⚠️ 請求過於頻繁")
+                st.error("⚠️ 請求過於頻繁，請稍後再試")
             else:
                 st.error(f"❌ HTTP 錯誤：{resp.status_code}")
             st.stop()
         except Exception as e:
-            st.error(f"❌ 錯誤：{e}")
+            st.error(f"❌ 發生錯誤：{e}")
             st.stop()
         
         try:
@@ -1161,7 +1142,7 @@ if start_btn and uploaded and image:
         
         all_results = result.get('results', [])
         if not all_results:
-            st.warning("🔍 未能辨識，請嘗試更清晰的照片")
+            st.warning("🔍 未能辨識此植物，請嘗試更清晰的照片")
             st.stop()
         
         st.session_state.identification_results = all_results[:top_n]
@@ -1174,6 +1155,7 @@ if start_btn and uploaded and image:
 if st.session_state.get('show_results') and st.session_state.get('identification_results'):
     st.markdown("---")
     st.markdown("## 🎯 辨識結果")
+    st.markdown('<p style="color:#4a7a56;font-size:0.85rem;text-align:center;">點擊按鈕展開詳細資訊</p>', unsafe_allow_html=True)
     
     top_results = st.session_state.identification_results
     
@@ -1205,52 +1187,61 @@ if st.session_state.get('show_results') and st.session_state.get('identification
         
         if idx == 0 and st.session_state.get('just_identified'):
             st.session_state.history.append({
-                'name': display, 'sci': sci, 'score': score,
-                'time': datetime.now().strftime("%H:%M"), 'emoji': '🌿'
+                'name': display,
+                'sci': sci,
+                'score': score,
+                'time': datetime.now().strftime("%H:%M"),
+                'emoji': '🌿'
             })
             st.session_state.total_identifications += 1
             st.session_state.just_identified = False
         
         card = "result-card-best" if idx == 0 else "result-card"
         badge = '<span class="badge badge-gold">✨ 最佳匹配</span>' if idx == 0 else f'<span class="badge">候選 #{idx+1}</span>'
+        genus_html = f"<span style='color:#4a7a56;font-size:0.85rem;'>🌱 屬：{genus}</span>" if genus else ""
+        family_html = f"<span style='color:#4a7a56;font-size:0.85rem;'>🌾 科：{family}</span>" if family else ""
         
         st.markdown(f'''
         <div class="{card}">
-            <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.5rem;">
                 <div>{badge} <span class="badge">{emoji_label} {label}</span></div>
                 <span style="color:#3a6a48;font-size:0.8rem;">{source}</span>
             </div>
             <div class="plant-name">{display}</div>
             <div class="scientific-name">{sci}</div>
+            <div style="display:flex;gap:1.5rem;flex-wrap:wrap;">{genus_html} {family_html}</div>
         </div>
         ''', unsafe_allow_html=True)
         
         st.markdown(f"**信心指標** {score:.2f}%")
         render_bar(score, color)
         
-        is_expanded = st.session_state.expanded_cards.get(idx, idx == 0)
+        card_key = idx
+        is_expanded = st.session_state.expanded_cards.get(card_key, idx == 0)
         
         col_btn1, col_btn2, col_btn3 = st.columns([1, 1, 1])
         with col_btn2:
-            btn_text = "🔼 收合" if is_expanded else "🔽 詳情"
+            btn_text = "🔼 收合詳情" if is_expanded else "🔽 查看詳情"
             if st.button(btn_text, key=f"toggle_{idx}", use_container_width=True):
-                st.session_state.expanded_cards[idx] = not is_expanded
+                st.session_state.expanded_cards[card_key] = not is_expanded
                 st.rerun()
         
         if is_expanded:
             has_alias = len(cn_list) > 1
             eng = [n for n in common if not has_chinese(n)][:3]
+            has_eng = len(eng) > 0
             
-            if has_alias or eng or wiki_link:
-                parts = []
+            if has_alias or has_eng or wiki_link:
+                name_parts = []
                 if has_alias:
-                    badges = ''.join([f'<span class="badge">{"⭐ " if i == 0 else ""}{a}</span>' for i, a in enumerate(cn_list)])
-                    parts.append(f'<div class="section-title">📖 所有別名</div><div class="alias-container">{badges}</div>')
-                if eng:
-                    parts.append(f'<div class="english-names">英文名：{" · ".join(eng)}</div>')
+                    alias_badges = ''.join([f'<span class="badge">{"⭐ " if i == 0 else ""}{a}</span>' for i, a in enumerate(cn_list)])
+                    name_parts.append(f'<div class="section-title">📖 所有別名</div><div class="alias-container">{alias_badges}</div>')
+                if has_eng:
+                    name_parts.append(f'<div class="english-names">英文名：{" · ".join(eng)}</div>')
                 if wiki_link:
-                    parts.append(f'<a href="{wiki_link}" target="_blank" class="wiki-link">📚 查看維基百科</a>')
-                st.markdown(f'<div class="name-info-section">{"".join(parts)}</div>', unsafe_allow_html=True)
+                    name_parts.append(f'<a href="{wiki_link}" target="_blank" class="wiki-link">📚 查看維基百科</a>')
+                name_content = ''.join(name_parts)
+                st.markdown(f'<div class="name-info-section">{name_content}</div>', unsafe_allow_html=True)
             
             c1, c2 = st.columns(2, gap="medium")
             
@@ -1260,12 +1251,12 @@ if st.session_state.get('show_results') and st.session_state.get('identification
                 rows = [("門", gbif.get("phylum", "—")), ("綱", gbif.get("class", "—")),
                         ("目", gbif.get("order", "—")), ("科", gbif.get("family", "—")),
                         ("屬", gbif.get("genus", "—")), ("種", gbif.get("species", sci))]
-                html = ""
+                table_html = ""
                 for lbl, val in rows:
                     zh = TAXON_ZH.get(val, "")
                     zh_span = f'<span class="taxon-cn">（{zh}）</span>' if zh else ""
-                    html += f'<tr><td class="taxon-label">{lbl}</td><td class="taxon-value">{val}{zh_span}</td></tr>'
-                st.markdown(f'<table class="taxon-table">{html}</table>', unsafe_allow_html=True)
+                    table_html += f'<tr><td class="taxon-label">{lbl}</td><td class="taxon-value">{val}{zh_span}</td></tr>'
+                st.markdown(f'<table class="taxon-table">{table_html}</table>', unsafe_allow_html=True)
                 
                 wiki_title = cn_list[0] if cn_list else sci
                 extract = get_wiki_extract(wiki_title) or get_wiki_extract(sci)
@@ -1282,11 +1273,13 @@ if st.session_state.get('show_results') and st.session_state.get('identification
                 st.markdown(f'''
                 <div style="margin-bottom:1rem;">
                     <span style="background:{dc}22;color:{dc};border:1px solid {dc}66;border-radius:20px;padding:0.35rem 1.1rem;font-weight:600;">{care.get("diff", "中等")}</span>
+                    <span style="color:#3a6a48;font-size:0.8rem;margin-left:0.5rem;">照護難度</span>
                 </div>
                 ''', unsafe_allow_html=True)
                 
                 st.markdown(f'''
                 <div class="char-card">
+                    <div style="color:#5a8a6a;font-size:0.78rem;margin-bottom:0.5rem;">🌡️ 氣候條件</div>
                     <div class="char-row"><span class="char-key">適合氣溫</span><span class="char-val">{care.get("temp", "—")}</span></div>
                     <div class="char-row"><span class="char-key">耐寒區間</span><span class="char-val">Zone {care.get("zone", "—")}</span></div>
                     <div class="char-row"><span class="char-key">光照需求</span><span class="char-val">{care.get("sun", "—")}</span></div>
@@ -1304,7 +1297,6 @@ if st.session_state.get('show_results') and st.session_state.get('identification
         
         st.markdown("")
     
-    # 匯出
     st.markdown("---")
     st.markdown("### 📤 匯出報告")
     
@@ -1314,13 +1306,21 @@ if st.session_state.get('show_results') and st.session_state.get('identification
     best_cn = [n for n in best.get('species', {}).get('commonNames', []) if has_chinese(n)]
     best_name = best_cn[0] if best_cn else best_sci
     
-    report = f"🌿 植物辨識報告\n{'='*40}\n時間：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n最佳匹配：{best_name}\n學名：{best_sci}\n信心：{best_score:.2f}%\n"
+    report = f"🌿 植物辨識報告\n{'='*40}\n時間：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n{'='*40}\n\n最佳匹配：{best_name}\n學名：{best_sci}\n信心：{best_score:.2f}%\n\n候選結果：\n"
+    for i, m in enumerate(top_results):
+        sn = m.get('species', {}).get('scientificNameWithoutAuthor', '')
+        sc = m.get('score', 0) * 100
+        cn = [n for n in m.get('species', {}).get('commonNames', []) if has_chinese(n)]
+        nm = cn[0] if cn else sn
+        report += f"{i+1}. {nm}（{sn}）{sc:.2f}%\n"
+    report += f"\n{'='*40}\nPlantNet + 維基百科 + GBIF"
+    
+    json_str = json.dumps({"time": datetime.now().isoformat(), "results": [{"rank": i+1, "name": m.get('species', {}).get('scientificNameWithoutAuthor', ''), "score": m.get('score', 0)} for i, m in enumerate(top_results)]}, ensure_ascii=False, indent=2)
     
     c1, c2 = st.columns(2)
     with c1:
-        st.download_button("📄 下載報告", report.encode("utf-8"), f"植物辨識_{datetime.now().strftime('%Y%m%d_%H%M')}.txt", "text/plain", use_container_width=True)
+        st.download_button("📄 下載文字報告", report.encode("utf-8"), f"植物辨識_{datetime.now().strftime('%Y%m%d_%H%M')}.txt", "text/plain", use_container_width=True)
     with c2:
-        json_str = json.dumps({"time": datetime.now().isoformat(), "results": [{"name": m.get('species', {}).get('scientificNameWithoutAuthor', ''), "score": m.get('score', 0)} for m in top_results]}, ensure_ascii=False, indent=2)
         st.download_button("📊 下載 JSON", json_str.encode("utf-8"), f"plant_{datetime.now().strftime('%Y%m%d_%H%M')}.json", "application/json", use_container_width=True)
 
 # ==========================================
@@ -1328,7 +1328,9 @@ if st.session_state.get('show_results') and st.session_state.get('identification
 # ==========================================
 st.markdown("---")
 st.markdown('''
-<div style="text-align:center;color:#2d5c3a;font-size:0.8rem;padding:1rem 0;">
-    🌿 <strong style="color:#4a7a56;">生態探索</strong> v3.4 | PlantNet + 維基百科 + GBIF
+<div style="text-align:center;color:#2d5c3a;font-size:0.8rem;padding:1rem 0;line-height:2;">
+    🌿 <strong style="color:#4a7a56;">生態探索</strong> v3.3<br>
+    PlantNet AI + 維基百科 + GBIF<br>
+    <span style="font-size:0.72rem;">僅供參考，鑑定請諮詢專家</span>
 </div>
 ''', unsafe_allow_html=True)
