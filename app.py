@@ -18,53 +18,84 @@ st.set_page_config(
 )
 
 # ==========================================
-# 1. CSS 樣式
+# 1. CSS 樣式（優化版）
 # ==========================================
 st.markdown("""
 <style>
 /* ══════════════════════════════════════════
-   電腦端 - 側邊欄展開按鈕
+   側邊欄展開按鈕 - 美化版
    ══════════════════════════════════════════ */
 [data-testid="collapsedControl"] {
     position: fixed !important;
     top: 14px !important;
     left: 14px !important;
     z-index: 999999 !important;
-    background: linear-gradient(135deg, #2d6e45, #1a4a2e) !important;
+    background: linear-gradient(145deg, #2d7a4a, #1a4a2e) !important;
     border: 2px solid #4a9e5f !important;
-    border-radius: 10px !important;
-    width: 48px !important;
-    height: 48px !important;
-    min-width: 48px !important;
-    min-height: 48px !important;
-    padding: 8px !important;
+    border-radius: 12px !important;
+    width: 52px !important;
+    height: 52px !important;
+    min-width: 52px !important;
+    min-height: 52px !important;
+    padding: 0 !important;
     margin: 0 !important;
     cursor: pointer !important;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.4), 0 0 20px rgba(74,158,95,0.3) !important;
-    transition: all 0.2s ease !important;
+    box-shadow: 
+        0 4px 15px rgba(0,0,0,0.4), 
+        0 0 20px rgba(74,158,95,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.1) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
 }
 
 [data-testid="collapsedControl"]:hover {
-    background: linear-gradient(135deg, #3a8a56, #245c38) !important;
+    background: linear-gradient(145deg, #3a9958, #245c38) !important;
     border-color: #7ec98a !important;
-    transform: scale(1.05) !important;
+    transform: scale(1.08) translateY(-2px) !important;
+    box-shadow: 
+        0 8px 25px rgba(0,0,0,0.5), 
+        0 0 30px rgba(74,158,95,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.15) !important;
 }
 
-[data-testid="collapsedControl"] svg {
-    stroke: #c8f0cc !important;
-    color: #c8f0cc !important;
-    width: 24px !important;
-    height: 24px !important;
+[data-testid="collapsedControl"]:active {
+    transform: scale(1.02) !important;
 }
 
-[data-testid="collapsedControl"] svg line,
-[data-testid="collapsedControl"] svg path,
-[data-testid="collapsedControl"] svg polyline {
-    stroke: #c8f0cc !important;
+/* 隱藏原始內容 */
+[data-testid="collapsedControl"] * {
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    position: absolute !important;
+}
+
+/* 自訂漢堡圖示 - 三條線動畫效果 */
+[data-testid="collapsedControl"]::before {
+    content: "" !important;
+    position: absolute !important;
+    width: 22px !important;
+    height: 2.5px !important;
+    background: linear-gradient(90deg, #a8e6b8, #c8f0cc) !important;
+    border-radius: 2px !important;
+    box-shadow: 
+        0 -7px 0 0 #c8f0cc,
+        0 7px 0 0 #c8f0cc !important;
+    transition: all 0.3s ease !important;
+}
+
+[data-testid="collapsedControl"]:hover::before {
+    background: linear-gradient(90deg, #c8f0cc, #e0ffe8) !important;
+    box-shadow: 
+        0 -8px 0 0 #e0ffe8,
+        0 8px 0 0 #e0ffe8 !important;
 }
 
 /* ══════════════════════════════════════════
-   電腦端 - 側邊欄關閉按鈕
+   側邊欄關閉按鈕 - 美化版
    ══════════════════════════════════════════ */
 [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"],
 [data-testid="stSidebar"] button[kind="header"],
@@ -73,40 +104,76 @@ st.markdown("""
     top: 12px !important;
     right: 12px !important;
     z-index: 9999 !important;
-    background: linear-gradient(135deg, #1a3020, #0e1a14) !important;
-    border: 1px solid #3a7a50 !important;
-    border-radius: 8px !important;
-    width: 36px !important;
-    height: 36px !important;
-    min-width: 36px !important;
-    min-height: 36px !important;
-    padding: 6px !important;
+    background: linear-gradient(145deg, #1a3525, #0e1a14) !important;
+    border: 1.5px solid #3a7a50 !important;
+    border-radius: 10px !important;
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+    padding: 0 !important;
     cursor: pointer !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    transition: all 0.2s ease !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 
+        0 2px 8px rgba(0,0,0,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.05) !important;
+    overflow: hidden !important;
 }
 
 [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"]:hover,
 [data-testid="stSidebar"] button[kind="header"]:hover {
-    background: linear-gradient(135deg, #243828, #162018) !important;
-    border-color: #4a9e5f !important;
+    background: linear-gradient(145deg, #243828, #162018) !important;
+    border-color: #5aa870 !important;
+    transform: scale(1.05) !important;
+    box-shadow: 
+        0 4px 12px rgba(0,0,0,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.08) !important;
 }
 
-[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"] svg,
-[data-testid="stSidebar"] button[kind="header"] svg {
-    stroke: #7ec98a !important;
-    color: #7ec98a !important;
-    width: 18px !important;
-    height: 18px !important;
+/* 隱藏原始內容 */
+[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"] *,
+[data-testid="stSidebar"] button[kind="header"] * {
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    position: absolute !important;
 }
 
-[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"] svg line,
-[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"] svg path,
-[data-testid="stSidebar"] button[kind="header"] svg line,
-[data-testid="stSidebar"] button[kind="header"] svg path {
-    stroke: #7ec98a !important;
+/* 自訂 X 圖示 */
+[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"]::before,
+[data-testid="stSidebar"] button[kind="header"]::before,
+[data-testid="stSidebar"] [data-testid="baseButton-header"]::before {
+    content: "" !important;
+    position: absolute !important;
+    width: 16px !important;
+    height: 2.5px !important;
+    background: linear-gradient(90deg, #6ab87a, #8fd4a0) !important;
+    border-radius: 2px !important;
+    transform: rotate(45deg) !important;
+    transition: all 0.3s ease !important;
+}
+
+[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"]::after,
+[data-testid="stSidebar"] button[kind="header"]::after,
+[data-testid="stSidebar"] [data-testid="baseButton-header"]::after {
+    content: "" !important;
+    position: absolute !important;
+    width: 16px !important;
+    height: 2.5px !important;
+    background: linear-gradient(90deg, #6ab87a, #8fd4a0) !important;
+    border-radius: 2px !important;
+    transform: rotate(-45deg) !important;
+    transition: all 0.3s ease !important;
+}
+
+[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"]:hover::before,
+[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"]:hover::after,
+[data-testid="stSidebar"] button[kind="header"]:hover::before,
+[data-testid="stSidebar"] button[kind="header"]:hover::after {
+    background: linear-gradient(90deg, #8fd4a0, #b0f0c0) !important;
 }
 
 /* ══════════════════════════════════════════
@@ -116,45 +183,19 @@ st.markdown("""
     [data-testid="collapsedControl"] {
         top: 10px !important;
         left: 10px !important;
-        width: 44px !important;
-        height: 44px !important;
-        min-width: 44px !important;
-        min-height: 44px !important;
-        padding: 0 !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        overflow: hidden !important;
-        font-size: 0 !important;
-        color: transparent !important;
+        width: 46px !important;
+        height: 46px !important;
+        min-width: 46px !important;
+        min-height: 46px !important;
+        border-radius: 10px !important;
     }
     
-    [data-testid="collapsedControl"] * {
-        font-size: 0 !important;
-        color: transparent !important;
-        -webkit-text-fill-color: transparent !important;
-    }
-    
-    [data-testid="collapsedControl"] svg {
-        display: none !important;
-        visibility: hidden !important;
-    }
-    
-    [data-testid="collapsedControl"]::after {
-        content: "☰" !important;
-        font-size: 1.6rem !important;
-        color: #c8f0cc !important;
-        -webkit-text-fill-color: #c8f0cc !important;
-        display: block !important;
-        visibility: visible !important;
-        position: absolute !important;
-        top: 50% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) !important;
-        pointer-events: none !important;
-        font-family: Arial, Helvetica, sans-serif !important;
-        line-height: 1 !important;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.3) !important;
+    [data-testid="collapsedControl"]::before {
+        width: 20px !important;
+        height: 2px !important;
+        box-shadow: 
+            0 -6px 0 0 #c8f0cc,
+            0 6px 0 0 #c8f0cc !important;
     }
     
     [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"],
@@ -162,51 +203,18 @@ st.markdown("""
     [data-testid="stSidebar"] [data-testid="baseButton-header"] {
         top: 10px !important;
         right: 10px !important;
-        width: 40px !important;
-        height: 40px !important;
-        min-width: 40px !important;
-        min-height: 40px !important;
-        padding: 0 !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        overflow: hidden !important;
-        font-size: 0 !important;
-        color: transparent !important;
+        width: 38px !important;
+        height: 38px !important;
+        min-width: 38px !important;
+        min-height: 38px !important;
     }
     
-    [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"] *,
-    [data-testid="stSidebar"] button[kind="header"] *,
-    [data-testid="stSidebar"] [data-testid="baseButton-header"] * {
-        font-size: 0 !important;
-        color: transparent !important;
-        -webkit-text-fill-color: transparent !important;
-    }
-    
-    [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"] svg,
-    [data-testid="stSidebar"] button[kind="header"] svg,
-    [data-testid="stSidebar"] [data-testid="baseButton-header"] svg {
-        display: none !important;
-        visibility: hidden !important;
-    }
-    
+    [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"]::before,
     [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"]::after,
-    [data-testid="stSidebar"] button[kind="header"]::after,
-    [data-testid="stSidebar"] [data-testid="baseButton-header"]::after {
-        content: "✕" !important;
-        font-size: 1.2rem !important;
-        color: #7ec98a !important;
-        -webkit-text-fill-color: #7ec98a !important;
-        display: block !important;
-        visibility: visible !important;
-        position: absolute !important;
-        top: 50% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) !important;
-        pointer-events: none !important;
-        font-family: Arial, Helvetica, sans-serif !important;
-        line-height: 1 !important;
-        font-weight: bold !important;
+    [data-testid="stSidebar"] button[kind="header"]::before,
+    [data-testid="stSidebar"] button[kind="header"]::after {
+        width: 14px !important;
+        height: 2px !important;
     }
 }
 
@@ -224,6 +232,180 @@ st.markdown("""
 
 [data-testid="stSidebar"] .stMarkdown {
     color: #7aab82 !important;
+}
+
+/* ══════════════════════════════════════════
+   檔案上傳區 - 美化版
+   ══════════════════════════════════════════ */
+[data-testid="stFileUploader"] {
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+}
+
+[data-testid="stFileUploader"] > div {
+    background: transparent !important;
+}
+
+[data-testid="stFileUploader"] section {
+    background: linear-gradient(145deg, #0f1f15, #0a1610) !important;
+    border: 2px dashed #2d5c3a !important;
+    border-radius: 16px !important;
+    padding: 0 !important;
+    transition: all 0.3s ease !important;
+}
+
+[data-testid="stFileUploader"] section:hover {
+    border-color: #4a9e5f !important;
+    background: linear-gradient(145deg, #122418, #0d1a12) !important;
+    box-shadow: 0 0 20px rgba(74, 158, 95, 0.15) !important;
+}
+
+[data-testid="stFileUploaderDropzone"] {
+    background: transparent !important;
+    padding: 2rem 1.5rem !important;
+}
+
+[data-testid="stFileUploaderDropzoneInstructions"] {
+    display: none !important;
+}
+
+[data-testid="stFileUploaderDropzone"] > div {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 0.8rem !important;
+}
+
+/* 上傳按鈕美化 */
+[data-testid="stFileUploaderDropzone"] button {
+    background: linear-gradient(145deg, #2d6e45, #1a4a2e) !important;
+    color: #c8f0cc !important;
+    border: 1.5px solid #3a7a50 !important;
+    border-radius: 12px !important;
+    padding: 0.8rem 1.8rem !important;
+    font-family: 'Noto Sans TC', sans-serif !important;
+    font-size: 0.95rem !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 
+        0 4px 15px rgba(45, 110, 69, 0.3),
+        inset 0 1px 0 rgba(255,255,255,0.1) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+[data-testid="stFileUploaderDropzone"] button::before {
+    content: "📁" !important;
+    font-size: 1.1rem !important;
+    margin-right: 0.3rem !important;
+}
+
+[data-testid="stFileUploaderDropzone"] button span {
+    font-size: 0 !important;
+}
+
+[data-testid="stFileUploaderDropzone"] button::after {
+    content: "選擇照片" !important;
+    font-size: 0.95rem !important;
+    font-weight: 500 !important;
+}
+
+[data-testid="stFileUploaderDropzone"] button:hover {
+    background: linear-gradient(145deg, #3a8a56, #245c38) !important;
+    border-color: #5aaa70 !important;
+    transform: translateY(-3px) !important;
+    box-shadow: 
+        0 8px 25px rgba(45, 110, 69, 0.4),
+        inset 0 1px 0 rgba(255,255,255,0.15) !important;
+}
+
+[data-testid="stFileUploaderDropzone"] button:active {
+    transform: translateY(-1px) !important;
+}
+
+/* 拖曳提示文字 */
+[data-testid="stFileUploaderDropzone"] small {
+    display: block !important;
+    color: #4a7a56 !important;
+    font-size: 0.82rem !important;
+    margin-top: 0.5rem !important;
+    opacity: 0.8 !important;
+}
+
+/* 已上傳檔案樣式 */
+[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] {
+    background: linear-gradient(145deg, #162820, #0e1a14) !important;
+    border: 1px solid #2d5c3a !important;
+    border-radius: 10px !important;
+    padding: 0.6rem 1rem !important;
+    margin-top: 0.8rem !important;
+}
+
+[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] > div {
+    color: #8fd4a0 !important;
+}
+
+[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] button {
+    background: rgba(200, 100, 100, 0.2) !important;
+    border: 1px solid #8a4a4a !important;
+    border-radius: 6px !important;
+    color: #e0a0a0 !important;
+    padding: 0.2rem 0.5rem !important;
+}
+
+[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] button:hover {
+    background: rgba(200, 100, 100, 0.3) !important;
+}
+
+/* 隱藏預設標籤 */
+[data-testid="stFileUploader"] label {
+    display: none !important;
+}
+
+/* ══════════════════════════════════════════
+   上傳區自訂樣式
+   ══════════════════════════════════════════ */
+.upload-zone {
+    background: linear-gradient(145deg, #0f1f15, #0a1610);
+    border: 2px dashed #2d5c3a;
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.upload-zone:hover {
+    border-color: #4a9e5f;
+    background: linear-gradient(145deg, #122418, #0d1a12);
+}
+
+.upload-icon {
+    font-size: 3rem;
+    margin-bottom: 0.8rem;
+    display: block;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+.upload-text {
+    color: #6a9b72;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.upload-hint {
+    color: #3a6a48;
+    font-size: 0.78rem;
 }
 
 /* ══════════════════════════════════════════
@@ -267,54 +449,43 @@ h2, h3 {
     font-weight: 300;
 }
 
-[data-testid="stFileUploader"] {
-    border: 2px dashed #2d5c3a !important;
-    border-radius: 16px !important;
-    background: #111f16 !important;
-    padding: 1.5rem !important;
-}
-
-[data-testid="stFileUploader"]:hover {
-    border-color: #4a9e5f !important;
-}
-
-[data-testid="stFileUploaderDropzone"] button {
-    background: transparent !important;
-    border: 1px solid #2d5c3a !important;
-    border-radius: 8px !important;
-    padding: 0.3rem 1.2rem !important;
-    color: #5a9a6a !important;
-}
-
-[data-testid="stFileUploader"] small,
-[data-testid="stFileUploader"] label {
-    display: none !important;
-}
-
+/* 主要按鈕 */
 .main .stButton > button {
-    background: linear-gradient(135deg, #2d6e45, #1a4a2e) !important;
+    background: linear-gradient(145deg, #2d6e45, #1a4a2e) !important;
     color: #c8f0cc !important;
-    border: 1px solid #3a7a50 !important;
-    border-radius: 12px !important;
+    border: 1.5px solid #3a7a50 !important;
+    border-radius: 14px !important;
     font-family: 'Noto Sans TC', sans-serif !important;
     font-size: 1rem !important;
     font-weight: 500 !important;
-    padding: 0.6rem 2.4rem !important;
-    transition: all 0.25s ease !important;
-    box-shadow: 0 4px 20px rgba(58,158,95,0.25) !important;
+    padding: 0.7rem 2.5rem !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 
+        0 4px 20px rgba(58,158,95,0.25),
+        inset 0 1px 0 rgba(255,255,255,0.1) !important;
 }
 
 .main .stButton > button:hover {
-    background: linear-gradient(135deg, #3a8a56, #245c38) !important;
-    transform: translateY(-2px) !important;
+    background: linear-gradient(145deg, #3a8a56, #245c38) !important;
+    transform: translateY(-3px) !important;
+    box-shadow: 
+        0 8px 30px rgba(58,158,95,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.15) !important;
+}
+
+.main .stButton > button:active {
+    transform: translateY(-1px) !important;
 }
 
 .main .stButton > button:disabled {
     opacity: 0.5 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
 }
 
+/* 側邊欄按鈕 */
 [data-testid="stSidebar"] .stButton > button {
-    background: linear-gradient(135deg, #2d6e45, #1a4a2e) !important;
+    background: linear-gradient(145deg, #2d6e45, #1a4a2e) !important;
     color: #c8f0cc !important;
     border: 1px solid #3a7a50 !important;
     border-radius: 10px !important;
@@ -323,6 +494,7 @@ h2, h3 {
     padding: 0.5rem 1rem !important;
 }
 
+/* 結果卡片 */
 .result-card {
     background: linear-gradient(145deg, #112018, #0e1a12);
     border: 1px solid #2d5c3a;
@@ -451,7 +623,6 @@ hr {
 
 .wiki-extract { background: #0c1810; border-left: 3px solid #2d6a40; border-radius: 0 10px 10px 0; padding: 0.9rem 1.2rem; color: #8ab898; font-size: 0.85rem; line-height: 1.8; margin: 0.8rem 0; }
 
-/* 名稱資訊區塊 - 修正樣式 */
 .name-info-section {
     background: #0c1810;
     border: 1px solid #1e3824;
@@ -514,11 +685,63 @@ hr {
     margin: 1rem 0;
 }
 
+/* 預覽區塊 */
+.preview-placeholder {
+    background: linear-gradient(145deg, #0a1410, #081210);
+    border: 2px dashed #1e3820;
+    border-radius: 16px;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 1rem;
+    transition: all 0.3s ease;
+}
+
+.preview-placeholder:hover {
+    border-color: #2d5c3a;
+}
+
+.preview-icon {
+    font-size: 4rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+.preview-text {
+    color: #2d5c3a;
+    font-size: 0.9rem;
+    text-align: center;
+    line-height: 1.6;
+}
+
+/* 檔案資訊標籤 */
+.file-info {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.8rem;
+    flex-wrap: wrap;
+}
+
+.file-badge {
+    background: linear-gradient(145deg, #1a3020, #0e1a14);
+    border: 1px solid #2d5c3a;
+    border-radius: 8px;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    color: #7ec98a;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
 @media (max-width: 768px) {
     .care-grid { grid-template-columns: 1fr; }
     .plant-name { font-size: 1.6rem; }
     h1 { font-size: 2rem !important; }
     .main .block-container { padding: 1.5rem 1rem 3rem; }
+    .preview-placeholder { height: 240px; }
+    .preview-icon { font-size: 3rem; }
 }
 </style>
 """, unsafe_allow_html=True)
@@ -577,7 +800,7 @@ def has_chinese(text):
 @st.cache_data(ttl=3600, show_spinner=False)
 def search_wikipedia(scientific_name):
     url = "https://zh.wikipedia.org/w/api.php"
-    headers = {"User-Agent": "PlantExplorer/3.1"}
+    headers = {"User-Agent": "PlantExplorer/3.3"}
     try:
         res = requests.get(url, params={
             "action": "query", "list": "search",
@@ -635,7 +858,7 @@ def get_wiki_extract(title):
                 "exsentences": 3, "titles": title,
                 "format": "json", "utf8": 1, "redirects": 1
             },
-            headers={"User-Agent": "PlantExplorer/3.1"},
+            headers={"User-Agent": "PlantExplorer/3.3"},
             timeout=5
         ).json()
         for pid, page in res.get("query", {}).get("pages", {}).items():
@@ -765,7 +988,7 @@ with st.sidebar:
     
     st.markdown('''
     <div style="color:#3a6a48;font-size:0.78rem;line-height:1.8;">
-    🌿 <strong style="color:#5a9a68;">生態探索 v3.2</strong><br>
+    🌿 <strong style="color:#5a9a68;">生態探索 v3.3</strong><br>
     PlantNet + 維基百科 + GBIF
     </div>
     ''', unsafe_allow_html=True)
@@ -814,44 +1037,60 @@ with col3:
 st.markdown("---")
 
 # ==========================================
-# 7. 上傳區
+# 7. 上傳區（美化版）
 # ==========================================
 col_up, col_prev = st.columns([1, 1], gap="large")
 
 with col_up:
     st.markdown("### 📸 上傳植物照片")
-    st.markdown('<p style="color:#4a7a56;font-size:0.85rem;">建議清晰拍攝葉片、花朵或果實</p>', unsafe_allow_html=True)
-    uploaded = st.file_uploader("選擇檔案", type=["jpg", "jpeg", "png", "webp"], label_visibility="collapsed")
+    st.markdown('<p style="color:#4a7a56;font-size:0.85rem;margin-bottom:1rem;">支援 JPG、PNG、WebP 格式</p>', unsafe_allow_html=True)
+    
+    uploaded = st.file_uploader(
+        "選擇檔案",
+        type=["jpg", "jpeg", "png", "webp"],
+        label_visibility="collapsed",
+        help="建議上傳清晰的植物照片，特寫葉片、花朵或果實效果更佳"
+    )
+    
     if uploaded:
         kb = uploaded.size // 1024
         mb = kb / 1024
         size_str = f"{mb:.1f} MB" if mb >= 1 else f"{kb} KB"
-        st.markdown(f'<div class="badge">📁 {uploaded.name}</div><div class="badge">📦 {size_str}</div>', unsafe_allow_html=True)
+        
+        st.markdown(f'''
+        <div class="file-info">
+            <span class="file-badge">📁 {uploaded.name}</span>
+            <span class="file-badge">📦 {size_str}</span>
+        </div>
+        ''', unsafe_allow_html=True)
 
 with col_prev:
     if uploaded:
         try:
             image = Image.open(uploaded)
             image = compress_image(image)
-            st.image(image, caption="📸 預覽", use_container_width=True)
+            st.image(image, caption="📸 照片預覽", use_container_width=True)
         except Exception as e:
             st.error(f"圖片載入失敗：{e}")
             image = None
     else:
         st.markdown('''
-        <div style="background:#0a1410;border:1px dashed #1e3820;border-radius:16px;
-                    height:280px;display:flex;align-items:center;justify-content:center;
-                    flex-direction:column;gap:1rem;">
-            <span style="font-size:4rem;">🍃</span>
-            <p style="color:#2d5c3a;font-size:0.9rem;text-align:center;">上傳照片後<br>預覽顯示於此</p>
+        <div class="preview-placeholder">
+            <span class="preview-icon">🌱</span>
+            <p class="preview-text">上傳照片後<br>預覽將顯示於此</p>
         </div>
         ''', unsafe_allow_html=True)
         image = None
 
 st.markdown("")
-btn_col, _ = st.columns([1, 3])
+btn_col, hint_col = st.columns([1, 2])
 with btn_col:
     start_btn = st.button("🔬 開始辨識", disabled=(uploaded is None or not API_READY), use_container_width=True)
+with hint_col:
+    if not API_READY:
+        st.markdown('<p style="color:#8a6a4a;font-size:0.82rem;padding-top:0.5rem;">⚠️ 請先設定 API Key</p>', unsafe_allow_html=True)
+    elif uploaded is None:
+        st.markdown('<p style="color:#4a7a56;font-size:0.82rem;padding-top:0.5rem;">💡 請先上傳植物照片</p>', unsafe_allow_html=True)
 
 # ==========================================
 # 8. 辨識邏輯
@@ -988,29 +1227,22 @@ if st.session_state.get('show_results') and st.session_state.get('identification
                 st.rerun()
         
         if is_expanded:
-            # 準備名稱資訊區塊的內容
             has_alias = len(cn_list) > 1
             eng = [n for n in common if not has_chinese(n)][:3]
             has_eng = len(eng) > 0
             
-            # 只有在有內容時才渲染名稱區塊
             if has_alias or has_eng or wiki_link:
                 name_parts = []
-                
                 if has_alias:
                     alias_badges = ''.join([f'<span class="badge">{"⭐ " if i == 0 else ""}{a}</span>' for i, a in enumerate(cn_list)])
                     name_parts.append(f'<div class="section-title">📖 所有別名</div><div class="alias-container">{alias_badges}</div>')
-                
                 if has_eng:
                     name_parts.append(f'<div class="english-names">英文名：{" · ".join(eng)}</div>')
-                
                 if wiki_link:
                     name_parts.append(f'<a href="{wiki_link}" target="_blank" class="wiki-link">📚 查看維基百科</a>')
-                
                 name_content = ''.join(name_parts)
                 st.markdown(f'<div class="name-info-section">{name_content}</div>', unsafe_allow_html=True)
             
-            # 分類與照護（使用 columns）
             c1, c2 = st.columns(2, gap="medium")
             
             with c1:
@@ -1065,7 +1297,6 @@ if st.session_state.get('show_results') and st.session_state.get('identification
         
         st.markdown("")
     
-    # 匯出報告
     st.markdown("---")
     st.markdown("### 📤 匯出報告")
     
@@ -1098,7 +1329,7 @@ if st.session_state.get('show_results') and st.session_state.get('identification
 st.markdown("---")
 st.markdown('''
 <div style="text-align:center;color:#2d5c3a;font-size:0.8rem;padding:1rem 0;line-height:2;">
-    🌿 <strong style="color:#4a7a56;">生態探索</strong> v3.2<br>
+    🌿 <strong style="color:#4a7a56;">生態探索</strong> v3.3<br>
     PlantNet AI + 維基百科 + GBIF<br>
     <span style="font-size:0.72rem;">僅供參考，鑑定請諮詢專家</span>
 </div>
