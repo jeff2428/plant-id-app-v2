@@ -6,6 +6,7 @@ import io
 import json
 from datetime import datetime
 from urllib.parse import quote
+from plant_database import get_daily_plant, get_plant_by_id, get_random_plants, search_plants
 
 # ==========================================
 # 0. 頁面設定
@@ -743,6 +744,189 @@ hr {
     .preview-placeholder { height: 240px; }
     .preview-icon { font-size: 3rem; }
 }
+/* ══════════════════════════════════════════
+   今日推薦植物樣式
+   ══════════════════════════════════════════ */
+.daily-plant-card {
+    background: linear-gradient(145deg, #0f1f15, #0a1610);
+    border: 1px solid #2d5c3a;
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.daily-plant-card:hover {
+    border-color: #4a9e5f;
+    box-shadow: 0 8px 30px rgba(74, 158, 95, 0.2);
+    transform: translateY(-5px);
+}
+
+.daily-plant-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.daily-plant-card:hover .daily-plant-image {
+    transform: scale(1.05);
+}
+
+.daily-plant-content {
+    padding: 1.2rem 1.5rem;
+}
+
+.daily-plant-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 1.5rem;
+    color: #8fd4a0;
+    margin-bottom: 0.3rem;
+}
+
+.daily-plant-sci {
+    font-style: italic;
+    color: #5a8a6a;
+    font-size: 0.9rem;
+    margin-bottom: 0.8rem;
+}
+
+.daily-plant-brief {
+    color: #90b898;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.flower-language {
+    background: linear-gradient(135deg, #1a3020, #0e1a14);
+    border: 1px solid #2d5c3a;
+    border-radius: 12px;
+    padding: 0.8rem 1rem;
+    margin-bottom: 1rem;
+}
+
+.flower-language-title {
+    color: #7ec98a;
+    font-size: 0.8rem;
+    margin-bottom: 0.4rem;
+}
+
+.flower-language-text {
+    color: #c8b864;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.daily-plant-tag {
+    display: inline-block;
+    background: #1d3d28;
+    color: #7ec98a;
+    border: 1px solid #2d5c3a;
+    border-radius: 15px;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.75rem;
+    margin: 0.15rem;
+}
+
+.view-detail-btn {
+    display: block;
+    width: 100%;
+    background: linear-gradient(145deg, #2d6e45, #1a4a2e);
+    color: #c8f0cc;
+    border: none;
+    border-radius: 10px;
+    padding: 0.7rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.view-detail-btn:hover {
+    background: linear-gradient(145deg, #3a8a56, #245c38);
+    transform: translateY(-2px);
+}
+
+/* 植物詳情彈窗 */
+.plant-detail-modal {
+    background: linear-gradient(145deg, #0a1410, #081210);
+    border: 1px solid #2d5c3a;
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+}
+
+.plant-detail-header {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.plant-detail-image {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid #2d5c3a;
+}
+
+.plant-detail-info h2 {
+    font-family: 'Noto Serif TC', serif;
+    color: #8fd4a0;
+    margin-bottom: 0.3rem;
+}
+
+.plant-detail-section {
+    background: #0c1810;
+    border: 1px solid #1e3824;
+    border-radius: 12px;
+    padding: 1.2rem;
+    margin: 1rem 0;
+}
+
+.plant-detail-section h4 {
+    color: #7ec98a;
+    margin-bottom: 0.8rem;
+    font-size: 1rem;
+}
+
+.plant-detail-section p {
+    color: #90b898;
+    line-height: 1.8;
+    white-space: pre-line;
+}
+
+.symbolism-box {
+    background: linear-gradient(135deg, #1a2820, #0e1a14);
+    border-left: 3px solid #c8b864;
+    border-radius: 0 10px 10px 0;
+    padding: 1rem 1.2rem;
+    margin: 1rem 0;
+}
+
+.symbolism-box p {
+    color: #d0c878;
+    font-style: italic;
+    line-height: 1.8;
+}
+
+@media (max-width: 768px) {
+    .plant-detail-header {
+        flex-direction: column;
+    }
+    
+    .plant-detail-image {
+        width: 100%;
+        height: 200px;
+    }
+    
+    .daily-plant-image {
+        height: 180px;
+    }
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -996,6 +1180,148 @@ with st.sidebar:
 # ==========================================
 # 6. 主頁面
 # ==========================================
+# ==========================================
+# 今日推薦植物
+# ==========================================
+st.markdown("---")
+st.markdown("## 🌸 今日推薦植物")
+
+# 取得今日推薦
+daily_plant = get_daily_plant()
+
+# 初始化顯示詳情狀態
+if "show_plant_detail" not in st.session_state:
+    st.session_state.show_plant_detail = False
+
+col_plant, col_info = st.columns([1, 1.5], gap="large")
+
+with col_plant:
+    # 植物卡片
+    st.markdown(f'''
+    <div class="daily-plant-card">
+        <img src="{daily_plant['image']}" class="daily-plant-image" alt="{daily_plant['name']}">
+        <div class="daily-plant-content">
+            <div class="daily-plant-title">{daily_plant['name']}</div>
+            <div class="daily-plant-sci">{daily_plant['scientific_name']}</div>
+            <div class="flower-language">
+                <div class="flower-language-title">💐 花語</div>
+                <div class="flower-language-text">{daily_plant['flower_language']}</div>
+            </div>
+            <div>
+                {"".join([f'<span class="daily-plant-tag">{tag}</span>' for tag in daily_plant.get('tags', [])[:4]])}
+            </div>
+        </div>
+    </div>
+    ''', unsafe_allow_html=True)
+    
+    # 查看詳情按鈕
+    if st.button("🔍 查看詳細介紹", key="view_daily_plant", use_container_width=True):
+        st.session_state.show_plant_detail = not st.session_state.show_plant_detail
+        st.rerun()
+
+with col_info:
+    st.markdown(f'''
+    <div style="padding: 0.5rem 0;">
+        <h3 style="color:#a8d8a8;margin-bottom:0.5rem;">📖 植物簡介</h3>
+        <p style="color:#90b898;line-height:1.8;font-size:0.95rem;">{daily_plant['brief']}</p>
+        
+        <div class="symbolism-box">
+            <div style="color:#c8b864;font-size:0.85rem;margin-bottom:0.3rem;">✨ 象徵寓意</div>
+            <p style="margin:0;">{daily_plant['symbolism']}</p>
+        </div>
+        
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem;">
+            <div style="flex:1;min-width:120px;">
+                <div style="color:#5a8a6a;font-size:0.8rem;">🌱 科屬</div>
+                <div style="color:#8fd4a0;font-size:0.9rem;">{daily_plant['family']} / {daily_plant['genus']}</div>
+            </div>
+            <div style="flex:1;min-width:120px;">
+                <div style="color:#5a8a6a;font-size:0.8rem;">🌍 原產地</div>
+                <div style="color:#8fd4a0;font-size:0.9rem;">{daily_plant['origin']}</div>
+            </div>
+            <div style="flex:1;min-width:120px;">
+                <div style="color:#5a8a6a;font-size:0.8rem;">🌺 花季</div>
+                <div style="color:#8fd4a0;font-size:0.9rem;">{" / ".join(daily_plant.get('seasons', ['四季']))}</div>
+            </div>
+        </div>
+    </div>
+    ''', unsafe_allow_html=True)
+
+# 顯示詳細介紹
+if st.session_state.show_plant_detail:
+    st.markdown("---")
+    st.markdown(f"## 🌿 {daily_plant['name']} 詳細介紹")
+    
+    # 關閉按鈕
+    if st.button("✕ 關閉詳細介紹", key="close_detail"):
+        st.session_state.show_plant_detail = False
+        st.rerun()
+    
+    detail_col1, detail_col2 = st.columns([1, 1], gap="medium")
+    
+    with detail_col1:
+        st.image(daily_plant['image'], caption=f"📸 {daily_plant['name']}", use_container_width=True)
+        
+        # 基本資訊
+        st.markdown(f'''
+        <div class="plant-detail-section">
+            <h4>📋 基本資訊</h4>
+            <table class="taxon-table">
+                <tr><td class="taxon-label">中文名</td><td class="taxon-value" style="font-style:normal;color:#8fd4a0;">{daily_plant['name']}</td></tr>
+                <tr><td class="taxon-label">學名</td><td class="taxon-value">{daily_plant['scientific_name']}</td></tr>
+                <tr><td class="taxon-label">科</td><td class="taxon-value">{daily_plant['family']}</td></tr>
+                <tr><td class="taxon-label">屬</td><td class="taxon-value">{daily_plant['genus']}</td></tr>
+                <tr><td class="taxon-label">原產地</td><td class="taxon-value" style="font-style:normal;">{daily_plant['origin']}</td></tr>
+            </table>
+        </div>
+        ''', unsafe_allow_html=True)
+        
+        # 花語與寓意
+        st.markdown(f'''
+        <div class="plant-detail-section">
+            <h4>💐 花語與寓意</h4>
+            <div style="margin-bottom:0.8rem;">
+                <span style="color:#5a8a6a;">花語：</span>
+                <span style="color:#c8b864;font-weight:500;">{daily_plant['flower_language']}</span>
+            </div>
+            <p style="color:#90b898;line-height:1.8;">{daily_plant['symbolism']}</p>
+        </div>
+        ''', unsafe_allow_html=True)
+    
+    with detail_col2:
+        # 詳細描述
+        st.markdown(f'''
+        <div class="plant-detail-section">
+            <h4>📖 詳細介紹</h4>
+            <p style="color:#90b898;line-height:1.9;font-size:0.9rem;">{daily_plant['description']}</p>
+        </div>
+        ''', unsafe_allow_html=True)
+        
+        # 照護指南
+        care = daily_plant.get('care', {})
+        st.markdown(f'''
+        <div class="plant-detail-section">
+            <h4>🌱 照護指南</h4>
+            <div style="margin-bottom:0.8rem;">
+                <span style="background:{'#3fcf6e22' if care.get('difficulty') == '容易' else '#c8b86422' if care.get('difficulty') == '中等' else '#c8646422'};
+                       color:{'#3fcf6e' if care.get('difficulty') == '容易' else '#c8b864' if care.get('difficulty') == '中等' else '#c86464'};
+                       padding:0.3rem 0.8rem;border-radius:15px;font-size:0.85rem;">
+                    照護難度：{care.get('difficulty', '中等')}
+                </span>
+            </div>
+            <div class="char-card" style="margin-top:0.8rem;">
+                <div class="char-row"><span class="char-key">☀️ 光照</span><span class="char-val">{care.get('sunlight', '—')}</span></div>
+                <div class="char-row"><span class="char-key">💧 澆水</span><span class="char-val">{care.get('water', '—')}</span></div>
+                <div class="char-row"><span class="char-key">🌡️ 溫度</span><span class="char-val">{care.get('temperature', '—')}</span></div>
+                <div class="char-row"><span class="char-key">💨 濕度</span><span class="char-val">{care.get('humidity', '—')}</span></div>
+                <div class="char-row"><span class="char-key">🌍 土壤</span><span class="char-val">{care.get('soil', '—')}</span></div>
+                <div class="char-row"><span class="char-key">🌿 施肥</span><span class="char-val">{care.get('fertilizer', '—')}</span></div>
+                <div class="char-row"><span class="char-key">✂️ 修剪</span><span class="char-val">{care.get('pruning', '—')}</span></div>
+            </div>
+        </div>
+        ''', unsafe_allow_html=True)
+
+st.markdown("---")
 st.markdown("# 🌿 生態探索")
 st.markdown('<p class="subtitle">植物智能辨識系統 Powered by PlantNet AI</p>', unsafe_allow_html=True)
 
