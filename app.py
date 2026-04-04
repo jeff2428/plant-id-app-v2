@@ -66,7 +66,6 @@ st.markdown("""
     transform: scale(1.02) !important;
 }
 
-/* 隱藏原始內容 */
 [data-testid="collapsedControl"] * {
     opacity: 0 !important;
     width: 0 !important;
@@ -74,7 +73,6 @@ st.markdown("""
     position: absolute !important;
 }
 
-/* 自訂漢堡圖示 - 三條線動畫效果 */
 [data-testid="collapsedControl"]::before {
     content: "" !important;
     position: absolute !important;
@@ -95,9 +93,6 @@ st.markdown("""
         0 8px 0 0 #e0ffe8 !important;
 }
 
-/* ══════════════════════════════════════════
-   側邊欄關閉按鈕 - 美化版
-   ══════════════════════════════════════════ */
 [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"],
 [data-testid="stSidebar"] button[kind="header"],
 [data-testid="stSidebar"] [data-testid="baseButton-header"] {
@@ -134,7 +129,6 @@ st.markdown("""
         inset 0 1px 0 rgba(255,255,255,0.08) !important;
 }
 
-/* 隱藏原始內容 */
 [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"] *,
 [data-testid="stSidebar"] button[kind="header"] * {
     opacity: 0 !important;
@@ -143,7 +137,6 @@ st.markdown("""
     position: absolute !important;
 }
 
-/* 自訂 X 圖示 */
 [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"]::before,
 [data-testid="stSidebar"] button[kind="header"]::before,
 [data-testid="stSidebar"] [data-testid="baseButton-header"]::before {
@@ -177,9 +170,6 @@ st.markdown("""
     background: linear-gradient(90deg, #8fd4a0, #b0f0c0) !important;
 }
 
-/* ══════════════════════════════════════════
-   手機端專用樣式
-   ══════════════════════════════════════════ */
 @media (max-width: 768px) {
     [data-testid="collapsedControl"] {
         top: 10px !important;
@@ -219,9 +209,6 @@ st.markdown("""
     }
 }
 
-/* ══════════════════════════════════════════
-   側邊欄主體樣式
-   ══════════════════════════════════════════ */
 [data-testid="stSidebar"] {
     background: linear-gradient(180deg, #0b1510 0%, #0a1210 100%) !important;
     border-right: 1px solid #1a3020 !important;
@@ -235,9 +222,6 @@ st.markdown("""
     color: #7aab82 !important;
 }
 
-/* ══════════════════════════════════════════
-   檔案上傳區 - 美化版
-   ══════════════════════════════════════════ */
 [data-testid="stFileUploader"] {
     border: none !important;
     background: transparent !important;
@@ -278,7 +262,6 @@ st.markdown("""
     gap: 0.8rem !important;
 }
 
-/* 上傳按鈕美化 */
 [data-testid="stFileUploaderDropzone"] button {
     background: linear-gradient(145deg, #2d6e45, #1a4a2e) !important;
     color: #c8f0cc !important;
@@ -329,7 +312,6 @@ st.markdown("""
     transform: translateY(-1px) !important;
 }
 
-/* 拖曳提示文字 */
 [data-testid="stFileUploaderDropzone"] small {
     display: block !important;
     color: #4a7a56 !important;
@@ -338,7 +320,6 @@ st.markdown("""
     opacity: 0.8 !important;
 }
 
-/* 已上傳檔案樣式 */
 [data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] {
     background: linear-gradient(145deg, #162820, #0e1a14) !important;
     border: 1px solid #2d5c3a !important;
@@ -363,14 +344,10 @@ st.markdown("""
     background: rgba(200, 100, 100, 0.3) !important;
 }
 
-/* 隱藏預設標籤 */
 [data-testid="stFileUploader"] label {
     display: none !important;
 }
 
-/* ══════════════════════════════════════════
-   相機拍照樣式
-   ══════════════════════════════════════════ */
 [data-testid="stCameraInput"] {
     border: none !important;
     background: transparent !important;
@@ -413,37 +390,6 @@ st.markdown("""
     display: none !important;
 }
 
-/* 拍照模式切換按鈕 */
-.mode-toggle-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: linear-gradient(145deg, #1a3828, #0e2018);
-    border: 1px solid #2d5c3a;
-    border-radius: 10px;
-    padding: 0.6rem 1.2rem;
-    color: #7ec98a;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-}
-
-.mode-toggle-btn:hover {
-    background: linear-gradient(145deg, #245038, #163028);
-    border-color: #4a9e5f;
-    transform: translateY(-2px);
-}
-
-.mode-toggle-btn.active {
-    background: linear-gradient(145deg, #2d6e45, #1a4a2e);
-    border-color: #4a9e5f;
-    color: #c8f0cc;
-}
-
-/* ══════════════════════════════════════════
-   上傳區自訂樣式
-   ══════════════════════════════════════════ */
 .upload-zone {
     background: linear-gradient(145deg, #0f1f15, #0a1610);
     border: 2px dashed #2d5c3a;
@@ -482,9 +428,6 @@ st.markdown("""
     font-size: 0.78rem;
 }
 
-/* ══════════════════════════════════════════
-   主要樣式
-   ══════════════════════════════════════════ */
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500&display=swap');
 
 html, body, [class*="css"] {
@@ -523,7 +466,6 @@ h2, h3 {
     font-weight: 300;
 }
 
-/* 主要按鈕 */
 .main .stButton > button {
     background: linear-gradient(145deg, #2d6e45, #1a4a2e) !important;
     color: #c8f0cc !important;
@@ -557,7 +499,6 @@ h2, h3 {
     transform: none !important;
 }
 
-/* 側邊欄按鈕 */
 [data-testid="stSidebar"] .stButton > button {
     background: linear-gradient(145deg, #2d6e45, #1a4a2e) !important;
     color: #c8f0cc !important;
@@ -568,7 +509,6 @@ h2, h3 {
     padding: 0.5rem 1rem !important;
 }
 
-/* 結果卡片 */
 .result-card {
     background: linear-gradient(145deg, #112018, #0e1a12);
     border: 1px solid #2d5c3a;
@@ -759,7 +699,6 @@ hr {
     margin: 1rem 0;
 }
 
-/* 預覽區塊 */
 .preview-placeholder {
     background: linear-gradient(145deg, #0a1410, #081210);
     border: 2px dashed #1e3820;
@@ -789,7 +728,6 @@ hr {
     line-height: 1.6;
 }
 
-/* 檔案資訊標籤 */
 .file-info {
     display: flex;
     gap: 0.5rem;
@@ -809,9 +747,6 @@ hr {
     gap: 0.3rem;
 }
 
-/* ══════════════════════════════════════════
-   今日推薦植物樣式
-   ══════════════════════════════════════════ */
 .daily-plant-card {
     background: linear-gradient(145deg, #0f1f15, #0a1610);
     border: 1px solid #2d5c3a;
@@ -856,13 +791,6 @@ hr {
     margin-bottom: 0.8rem;
 }
 
-.daily-plant-brief {
-    color: #90b898;
-    font-size: 0.9rem;
-    line-height: 1.6;
-    margin-bottom: 1rem;
-}
-
 .flower-language {
     background: linear-gradient(135deg, #1a3020, #0e1a14);
     border: 1px solid #2d5c3a;
@@ -894,76 +822,6 @@ hr {
     margin: 0.15rem;
 }
 
-.view-detail-btn {
-    display: block;
-    width: 100%;
-    background: linear-gradient(145deg, #2d6e45, #1a4a2e);
-    color: #c8f0cc;
-    border: none;
-    border-radius: 10px;
-    padding: 0.7rem;
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer;
-    text-align: center;
-    transition: all 0.3s ease;
-    text-decoration: none;
-}
-
-.view-detail-btn:hover {
-    background: linear-gradient(145deg, #3a8a56, #245c38);
-    transform: translateY(-2px);
-}
-
-/* 植物詳情彈窗 */
-.plant-detail-modal {
-    background: linear-gradient(145deg, #0a1410, #081210);
-    border: 1px solid #2d5c3a;
-    border-radius: 16px;
-    padding: 1.5rem;
-    margin: 1rem 0;
-}
-
-.plant-detail-header {
-    display: flex;
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.plant-detail-image {
-    width: 200px;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 12px;
-    border: 1px solid #2d5c3a;
-}
-
-.plant-detail-info h2 {
-    font-family: 'Noto Serif TC', serif;
-    color: #8fd4a0;
-    margin-bottom: 0.3rem;
-}
-
-.plant-detail-section {
-    background: #0c1810;
-    border: 1px solid #1e3824;
-    border-radius: 12px;
-    padding: 1.2rem;
-    margin: 1rem 0;
-}
-
-.plant-detail-section h4 {
-    color: #7ec98a;
-    margin-bottom: 0.8rem;
-    font-size: 1rem;
-}
-
-.plant-detail-section p {
-    color: #90b898;
-    line-height: 1.8;
-    white-space: pre-line;
-}
-
 .symbolism-box {
     background: linear-gradient(135deg, #1a2820, #0e1a14);
     border-left: 3px solid #c8b864;
@@ -978,6 +836,39 @@ hr {
     line-height: 1.8;
 }
 
+/* 推薦原由卡片 */
+.reason-card {
+    background: linear-gradient(135deg, #1a3020, #0e1a14);
+    border-left: 3px solid #4a9e5f;
+    border-radius: 0 10px 10px 0;
+    padding: 0.8rem 1rem;
+    margin: 0.6rem 0;
+}
+
+.reason-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.3rem;
+}
+
+.reason-icon {
+    font-size: 1.2rem;
+}
+
+.reason-title {
+    color: #7ec98a;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.reason-content {
+    color: #90b898;
+    font-size: 0.88rem;
+    line-height: 1.7;
+    margin: 0;
+}
+
 @media (max-width: 768px) {
     .care-grid { grid-template-columns: 1fr; }
     .plant-name { font-size: 1.6rem; }
@@ -985,19 +876,7 @@ hr {
     .main .block-container { padding: 1.5rem 1rem 3rem; }
     .preview-placeholder { height: 240px; }
     .preview-icon { font-size: 3rem; }
-    
-    .plant-detail-header {
-        flex-direction: column;
-    }
-    
-    .plant-detail-image {
-        width: 100%;
-        height: 200px;
-    }
-    
-    .daily-plant-image {
-        height: 180px;
-    }
+    .daily-plant-image { height: 180px; }
 }
 </style>
 """, unsafe_allow_html=True)
@@ -1027,7 +906,7 @@ if "show_results" not in st.session_state:
 if "just_identified" not in st.session_state:
     st.session_state.just_identified = False
 if "upload_mode" not in st.session_state:
-    st.session_state.upload_mode = "file"  # "file" 或 "camera"
+    st.session_state.upload_mode = "file"
 
 def validate_history():
     valid = []
@@ -1058,7 +937,7 @@ def has_chinese(text):
 @st.cache_data(ttl=3600, show_spinner=False)
 def search_wikipedia(scientific_name):
     url = "https://zh.wikipedia.org/w/api.php"
-    headers = {"User-Agent": "PlantExplorer/3.3"}
+    headers = {"User-Agent": "PlantExplorer/3.4"}
     try:
         res = requests.get(url, params={
             "action": "query", "list": "search",
@@ -1116,7 +995,7 @@ def get_wiki_extract(title):
                 "exsentences": 3, "titles": title,
                 "format": "json", "utf8": 1, "redirects": 1
             },
-            headers={"User-Agent": "PlantExplorer/3.3"},
+            headers={"User-Agent": "PlantExplorer/3.4"},
             timeout=5
         ).json()
         for pid, page in res.get("query", {}).get("pages", {}).items():
@@ -1246,31 +1125,25 @@ with st.sidebar:
     
     st.markdown('''
     <div style="color:#3a6a48;font-size:0.78rem;line-height:1.8;">
-    🌿 <strong style="color:#5a9a68;">生態探索 v3.4</strong><br>
+    🌿 <strong style="color:#5a9a68;">生態探索 v3.5</strong><br>
     PlantNet + 維基百科 + GBIF
     </div>
     ''', unsafe_allow_html=True)
 
 # ==========================================
-# 6. 主頁面
-# ==========================================
-# ==========================================
-# 今日推薦植物
+# 6. 主頁面 - 今日推薦植物
 # ==========================================
 st.markdown("---")
 st.markdown("## 🌸 今日推薦植物")
 
-# 取得今日推薦
 daily_plant = get_daily_plant()
 
-# 初始化顯示詳情狀態
 if "show_plant_detail" not in st.session_state:
     st.session_state.show_plant_detail = False
 
 col_plant, col_info = st.columns([1, 1.5], gap="large")
 
 with col_plant:
-    # 植物卡片
     tags_html = "".join([f'<span class="daily-plant-tag">{tag}</span>' for tag in daily_plant.get('tags', [])[:4]])
     
     st.markdown(f'''
@@ -1288,19 +1161,39 @@ with col_plant:
     </div>
     ''', unsafe_allow_html=True)
     
-    # 查看詳情按鈕
     if st.button("🔍 查看詳細介紹", key="view_daily_plant", use_container_width=True):
         st.session_state.show_plant_detail = not st.session_state.show_plant_detail
         st.rerun()
 
 with col_info:
-    # 植物簡介標題
-    st.markdown("### 📖 植物簡介")
+    # 推薦日期和星期
+    st.markdown(f'''
+    <div style="display:flex;align-items:center;gap:0.8rem;margin-bottom:1rem;">
+        <span style="color:#7ec98a;font-size:0.95rem;">📅 {daily_plant.get("recommendation_date", "")}</span>
+        <span style="color:#5a8a6a;font-size:0.9rem;">{daily_plant.get("weekday", "")}</span>
+    </div>
+    ''', unsafe_allow_html=True)
     
-    # 簡介文字
+    # 推薦原由
+    reasons = daily_plant.get("recommendation_reasons", [])
+    if reasons:
+        st.markdown("### 💡 今日推薦原由")
+        for reason in reasons[:2]:
+            st.markdown(f'''
+            <div class="reason-card">
+                <div class="reason-header">
+                    <span class="reason-icon">{reason['icon']}</span>
+                    <span class="reason-title">{reason['title']}</span>
+                </div>
+                <p class="reason-content">{reason['content']}</p>
+            </div>
+            ''', unsafe_allow_html=True)
+    
+    st.markdown("---")
+    
+    st.markdown("### 📖 植物簡介")
     st.markdown(f'<p style="color:#90b898;line-height:1.8;font-size:0.95rem;">{daily_plant["brief"]}</p>', unsafe_allow_html=True)
     
-    # 象徵寓意
     st.markdown(f'''
     <div class="symbolism-box">
         <div style="color:#c8b864;font-size:0.85rem;margin-bottom:0.3rem;">✨ 象徵寓意</div>
@@ -1308,7 +1201,6 @@ with col_info:
     </div>
     ''', unsafe_allow_html=True)
     
-    # 科屬資訊
     seasons_text = " / ".join(daily_plant.get('seasons', ['四季']))
     
     st.markdown(f'''
@@ -1333,7 +1225,6 @@ if st.session_state.show_plant_detail:
     st.markdown("---")
     st.markdown(f"## 🌿 {daily_plant['name']} 詳細介紹")
     
-    # 關閉按鈕
     if st.button("✕ 關閉詳細介紹", key="close_detail"):
         st.session_state.show_plant_detail = False
         st.rerun()
@@ -1343,7 +1234,6 @@ if st.session_state.show_plant_detail:
     with detail_col1:
         st.image(daily_plant['image'], caption=f"📸 {daily_plant['name']}", use_container_width=True)
         
-        # 基本資訊
         st.markdown("#### 📋 基本資訊")
         st.markdown(f'''
         <table class="taxon-table">
@@ -1355,7 +1245,6 @@ if st.session_state.show_plant_detail:
         </table>
         ''', unsafe_allow_html=True)
         
-        # 花語與寓意
         st.markdown("#### 💐 花語與寓意")
         st.markdown(f'''
         <div style="margin-bottom:0.8rem;">
@@ -1366,11 +1255,9 @@ if st.session_state.show_plant_detail:
         ''', unsafe_allow_html=True)
     
     with detail_col2:
-        # 詳細描述
         st.markdown("#### 📖 詳細介紹")
         st.markdown(f'<div style="color:#90b898;line-height:1.9;font-size:0.9rem;white-space:pre-line;">{daily_plant["description"]}</div>', unsafe_allow_html=True)
         
-        # 照護指南
         care = daily_plant.get('care', {})
         difficulty = care.get('difficulty', '中等')
         
@@ -1451,7 +1338,6 @@ st.markdown("---")
 # ==========================================
 st.markdown("### 📸 上傳植物照片")
 
-# 模式切換按鈕
 mode_col1, mode_col2, mode_col3 = st.columns([1, 1, 2])
 with mode_col1:
     if st.button("📁 選擇檔案", use_container_width=True, 
@@ -1475,7 +1361,6 @@ image = None
 
 with col_up:
     if st.session_state.upload_mode == "file":
-        # 檔案上傳模式
         st.markdown('<div style="margin-top:1rem;"></div>', unsafe_allow_html=True)
         uploaded = st.file_uploader(
             "選擇檔案",
@@ -1504,7 +1389,6 @@ with col_up:
                 image = None
     
     else:
-        # 相機拍照模式
         st.markdown('<div style="margin-top:1rem;"></div>', unsafe_allow_html=True)
         camera_image = st.camera_input(
             "拍攝照片",
@@ -1607,7 +1491,7 @@ if start_btn and image:
         st.session_state.just_identified = True
 
 # ==========================================
-# 9. 顯示結果（保持原有邏輯）
+# 9. 顯示結果
 # ==========================================
 if st.session_state.get('show_results') and st.session_state.get('identification_results'):
     st.markdown("---")
@@ -1786,7 +1670,7 @@ if st.session_state.get('show_results') and st.session_state.get('identification
 st.markdown("---")
 st.markdown('''
 <div style="text-align:center;color:#2d5c3a;font-size:0.8rem;padding:1rem 0;line-height:2;">
-    🌿 <strong style="color:#4a7a56;">生態探索</strong> v3.4<br>
+    🌿 <strong style="color:#4a7a56;">生態探索</strong> v3.5<br>
     PlantNet AI + 維基百科 + GBIF<br>
     <span style="font-size:0.72rem;">僅供參考，鑑定請諮詢專家</span>
 </div>
