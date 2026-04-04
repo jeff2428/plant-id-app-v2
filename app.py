@@ -736,14 +736,6 @@ hr {
     gap: 0.3rem;
 }
 
-@media (max-width: 768px) {
-    .care-grid { grid-template-columns: 1fr; }
-    .plant-name { font-size: 1.6rem; }
-    h1 { font-size: 2rem !important; }
-    .main .block-container { padding: 1.5rem 1rem 3rem; }
-    .preview-placeholder { height: 240px; }
-    .preview-icon { font-size: 3rem; }
-}
 /* ══════════════════════════════════════════
    今日推薦植物樣式
    ══════════════════════════════════════════ */
@@ -914,6 +906,13 @@ hr {
 }
 
 @media (max-width: 768px) {
+    .care-grid { grid-template-columns: 1fr; }
+    .plant-name { font-size: 1.6rem; }
+    h1 { font-size: 2rem !important; }
+    .main .block-container { padding: 1.5rem 1rem 3rem; }
+    .preview-placeholder { height: 240px; }
+    .preview-icon { font-size: 3rem; }
+    
     .plant-detail-header {
         flex-direction: column;
     }
@@ -1197,6 +1196,8 @@ col_plant, col_info = st.columns([1, 1.5], gap="large")
 
 with col_plant:
     # 植物卡片
+    tags_html = "".join([f'<span class="daily-plant-tag">{tag}</span>' for tag in daily_plant.get('tags', [])[:4]])
+    
     st.markdown(f'''
     <div class="daily-plant-card">
         <img src="{daily_plant['image']}" class="daily-plant-image" alt="{daily_plant['name']}">
@@ -1207,9 +1208,7 @@ with col_plant:
                 <div class="flower-language-title">💐 花語</div>
                 <div class="flower-language-text">{daily_plant['flower_language']}</div>
             </div>
-            <div>
-                {"".join([f'<span class="daily-plant-tag">{tag}</span>' for tag in daily_plant.get('tags', [])[:4]])}
-            </div>
+            <div>{tags_html}</div>
         </div>
     </div>
     ''', unsafe_allow_html=True)
@@ -1220,29 +1219,36 @@ with col_plant:
         st.rerun()
 
 with col_info:
+    # 植物簡介標題
+    st.markdown("### 📖 植物簡介")
+    
+    # 簡介文字
+    st.markdown(f'<p style="color:#90b898;line-height:1.8;font-size:0.95rem;">{daily_plant["brief"]}</p>', unsafe_allow_html=True)
+    
+    # 象徵寓意
     st.markdown(f'''
-    <div style="padding: 0.5rem 0;">
-        <h3 style="color:#a8d8a8;margin-bottom:0.5rem;">📖 植物簡介</h3>
-        <p style="color:#90b898;line-height:1.8;font-size:0.95rem;">{daily_plant['brief']}</p>
-        
-        <div class="symbolism-box">
-            <div style="color:#c8b864;font-size:0.85rem;margin-bottom:0.3rem;">✨ 象徵寓意</div>
-            <p style="margin:0;">{daily_plant['symbolism']}</p>
+    <div class="symbolism-box">
+        <div style="color:#c8b864;font-size:0.85rem;margin-bottom:0.3rem;">✨ 象徵寓意</div>
+        <p style="margin:0;color:#d0c878;font-style:italic;line-height:1.8;">{daily_plant["symbolism"]}</p>
+    </div>
+    ''', unsafe_allow_html=True)
+    
+    # 科屬資訊
+    seasons_text = " / ".join(daily_plant.get('seasons', ['四季']))
+    
+    st.markdown(f'''
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem;">
+        <div style="flex:1;min-width:120px;">
+            <div style="color:#5a8a6a;font-size:0.8rem;">🌱 科屬</div>
+            <div style="color:#8fd4a0;font-size:0.9rem;">{daily_plant["family"]} / {daily_plant["genus"]}</div>
         </div>
-        
-        <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem;">
-            <div style="flex:1;min-width:120px;">
-                <div style="color:#5a8a6a;font-size:0.8rem;">🌱 科屬</div>
-                <div style="color:#8fd4a0;font-size:0.9rem;">{daily_plant['family']} / {daily_plant['genus']}</div>
-            </div>
-            <div style="flex:1;min-width:120px;">
-                <div style="color:#5a8a6a;font-size:0.8rem;">🌍 原產地</div>
-                <div style="color:#8fd4a0;font-size:0.9rem;">{daily_plant['origin']}</div>
-            </div>
-            <div style="flex:1;min-width:120px;">
-                <div style="color:#5a8a6a;font-size:0.8rem;">🌺 花季</div>
-                <div style="color:#8fd4a0;font-size:0.9rem;">{" / ".join(daily_plant.get('seasons', ['四季']))}</div>
-            </div>
+        <div style="flex:1;min-width:120px;">
+            <div style="color:#5a8a6a;font-size:0.8rem;">🌍 原產地</div>
+            <div style="color:#8fd4a0;font-size:0.9rem;">{daily_plant["origin"]}</div>
+        </div>
+        <div style="flex:1;min-width:120px;">
+            <div style="color:#5a8a6a;font-size:0.8rem;">🌺 花季</div>
+            <div style="color:#8fd4a0;font-size:0.9rem;">{seasons_text}</div>
         </div>
     </div>
     ''', unsafe_allow_html=True)
@@ -1263,61 +1269,64 @@ if st.session_state.show_plant_detail:
         st.image(daily_plant['image'], caption=f"📸 {daily_plant['name']}", use_container_width=True)
         
         # 基本資訊
+        st.markdown("#### 📋 基本資訊")
         st.markdown(f'''
-        <div class="plant-detail-section">
-            <h4>📋 基本資訊</h4>
-            <table class="taxon-table">
-                <tr><td class="taxon-label">中文名</td><td class="taxon-value" style="font-style:normal;color:#8fd4a0;">{daily_plant['name']}</td></tr>
-                <tr><td class="taxon-label">學名</td><td class="taxon-value">{daily_plant['scientific_name']}</td></tr>
-                <tr><td class="taxon-label">科</td><td class="taxon-value">{daily_plant['family']}</td></tr>
-                <tr><td class="taxon-label">屬</td><td class="taxon-value">{daily_plant['genus']}</td></tr>
-                <tr><td class="taxon-label">原產地</td><td class="taxon-value" style="font-style:normal;">{daily_plant['origin']}</td></tr>
-            </table>
-        </div>
+        <table class="taxon-table">
+            <tr><td class="taxon-label">中文名</td><td class="taxon-value" style="font-style:normal;color:#8fd4a0;">{daily_plant['name']}</td></tr>
+            <tr><td class="taxon-label">學名</td><td class="taxon-value">{daily_plant['scientific_name']}</td></tr>
+            <tr><td class="taxon-label">科</td><td class="taxon-value">{daily_plant['family']}</td></tr>
+            <tr><td class="taxon-label">屬</td><td class="taxon-value">{daily_plant['genus']}</td></tr>
+            <tr><td class="taxon-label">原產地</td><td class="taxon-value" style="font-style:normal;">{daily_plant['origin']}</td></tr>
+        </table>
         ''', unsafe_allow_html=True)
         
         # 花語與寓意
+        st.markdown("#### 💐 花語與寓意")
         st.markdown(f'''
-        <div class="plant-detail-section">
-            <h4>💐 花語與寓意</h4>
-            <div style="margin-bottom:0.8rem;">
-                <span style="color:#5a8a6a;">花語：</span>
-                <span style="color:#c8b864;font-weight:500;">{daily_plant['flower_language']}</span>
-            </div>
-            <p style="color:#90b898;line-height:1.8;">{daily_plant['symbolism']}</p>
+        <div style="margin-bottom:0.8rem;">
+            <span style="color:#5a8a6a;">花語：</span>
+            <span style="color:#c8b864;font-weight:500;">{daily_plant['flower_language']}</span>
         </div>
+        <p style="color:#90b898;line-height:1.8;">{daily_plant['symbolism']}</p>
         ''', unsafe_allow_html=True)
     
     with detail_col2:
         # 詳細描述
-        st.markdown(f'''
-        <div class="plant-detail-section">
-            <h4>📖 詳細介紹</h4>
-            <p style="color:#90b898;line-height:1.9;font-size:0.9rem;">{daily_plant['description']}</p>
-        </div>
-        ''', unsafe_allow_html=True)
+        st.markdown("#### 📖 詳細介紹")
+        st.markdown(f'<div style="color:#90b898;line-height:1.9;font-size:0.9rem;white-space:pre-line;">{daily_plant["description"]}</div>', unsafe_allow_html=True)
         
         # 照護指南
         care = daily_plant.get('care', {})
+        difficulty = care.get('difficulty', '中等')
+        
+        if difficulty == '容易':
+            diff_bg = '#3fcf6e22'
+            diff_color = '#3fcf6e'
+        elif difficulty == '困難':
+            diff_bg = '#c8646422'
+            diff_color = '#c86464'
+        else:
+            diff_bg = '#c8b86422'
+            diff_color = '#c8b864'
+        
+        st.markdown("#### 🌱 照護指南")
         st.markdown(f'''
-        <div class="plant-detail-section">
-            <h4>🌱 照護指南</h4>
-            <div style="margin-bottom:0.8rem;">
-                <span style="background:{'#3fcf6e22' if care.get('difficulty') == '容易' else '#c8b86422' if care.get('difficulty') == '中等' else '#c8646422'};
-                       color:{'#3fcf6e' if care.get('difficulty') == '容易' else '#c8b864' if care.get('difficulty') == '中等' else '#c86464'};
-                       padding:0.3rem 0.8rem;border-radius:15px;font-size:0.85rem;">
-                    照護難度：{care.get('difficulty', '中等')}
-                </span>
-            </div>
-            <div class="char-card" style="margin-top:0.8rem;">
-                <div class="char-row"><span class="char-key">☀️ 光照</span><span class="char-val">{care.get('sunlight', '—')}</span></div>
-                <div class="char-row"><span class="char-key">💧 澆水</span><span class="char-val">{care.get('water', '—')}</span></div>
-                <div class="char-row"><span class="char-key">🌡️ 溫度</span><span class="char-val">{care.get('temperature', '—')}</span></div>
-                <div class="char-row"><span class="char-key">💨 濕度</span><span class="char-val">{care.get('humidity', '—')}</span></div>
-                <div class="char-row"><span class="char-key">🌍 土壤</span><span class="char-val">{care.get('soil', '—')}</span></div>
-                <div class="char-row"><span class="char-key">🌿 施肥</span><span class="char-val">{care.get('fertilizer', '—')}</span></div>
-                <div class="char-row"><span class="char-key">✂️ 修剪</span><span class="char-val">{care.get('pruning', '—')}</span></div>
-            </div>
+        <div style="margin-bottom:0.8rem;">
+            <span style="background:{diff_bg};color:{diff_color};padding:0.3rem 0.8rem;border-radius:15px;font-size:0.85rem;">
+                照護難度:{difficulty}
+            </span>
+        </div>
+        ''', unsafe_allow_html=True)
+        
+        st.markdown(f'''
+        <div class="char-card" style="margin-top:0.8rem;">
+            <div class="char-row"><span class="char-key">☀️ 光照</span><span class="char-val">{care.get('sunlight', '—')}</span></div>
+            <div class="char-row"><span class="char-key">💧 澆水</span><span class="char-val">{care.get('water', '—')}</span></div>
+            <div class="char-row"><span class="char-key">🌡️ 溫度</span><span class="char-val">{care.get('temperature', '—')}</span></div>
+            <div class="char-row"><span class="char-key">💨 濕度</span><span class="char-val">{care.get('humidity', '—')}</span></div>
+            <div class="char-row"><span class="char-key">🌍 土壤</span><span class="char-val">{care.get('soil', '—')}</span></div>
+            <div class="char-row"><span class="char-key">🌿 施肥</span><span class="char-val">{care.get('fertilizer', '—')}</span></div>
+            <div class="char-row"><span class="char-key">✂️ 修剪</span><span class="char-val">{care.get('pruning', '—')}</span></div>
         </div>
         ''', unsafe_allow_html=True)
 
@@ -1375,7 +1384,7 @@ with col_up:
         "選擇檔案",
         type=["jpg", "jpeg", "png", "webp"],
         label_visibility="collapsed",
-        help="建議上傳清晰的植物照片，特寫葉片、花朵或果實效果更佳"
+        help="建議上傳清晰的植物照片,特寫葉片、花朵或果實效果更佳"
     )
     
     if uploaded:
