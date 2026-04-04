@@ -428,10 +428,8 @@ def get_number_meaning(day, plant):
 def get_climate_reason(month, plant):
     """根據氣候給出推薦原由"""
     care = plant.get("care", {})
-    temp_range = care.get("temperature", "")
     
     climate_reasons = {
-        climate_reasons = {
         1: "寒冬時節",
         2: "早春回暖",
         3: "春暖花開",
