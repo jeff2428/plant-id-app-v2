@@ -369,6 +369,79 @@ st.markdown("""
 }
 
 /* ══════════════════════════════════════════
+   相機拍照樣式
+   ══════════════════════════════════════════ */
+[data-testid="stCameraInput"] {
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+}
+
+[data-testid="stCameraInput"] > div {
+    background: linear-gradient(145deg, #0f1f15, #0a1610) !important;
+    border: 2px dashed #2d5c3a !important;
+    border-radius: 16px !important;
+    padding: 1.5rem !important;
+    transition: all 0.3s ease !important;
+}
+
+[data-testid="stCameraInput"]:hover > div {
+    border-color: #4a9e5f !important;
+    background: linear-gradient(145deg, #122418, #0d1a12) !important;
+    box-shadow: 0 0 20px rgba(74, 158, 95, 0.15) !important;
+}
+
+[data-testid="stCameraInput"] button {
+    background: linear-gradient(145deg, #2d6e45, #1a4a2e) !important;
+    color: #c8f0cc !important;
+    border: 1.5px solid #3a7a50 !important;
+    border-radius: 12px !important;
+    padding: 0.8rem 1.8rem !important;
+    font-family: 'Noto Sans TC', sans-serif !important;
+    font-size: 0.95rem !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease !important;
+}
+
+[data-testid="stCameraInput"] button:hover {
+    background: linear-gradient(145deg, #3a8a56, #245c38) !important;
+    border-color: #5aaa70 !important;
+    transform: translateY(-3px) !important;
+}
+
+[data-testid="stCameraInput"] label {
+    display: none !important;
+}
+
+/* 拍照模式切換按鈕 */
+.mode-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(145deg, #1a3828, #0e2018);
+    border: 1px solid #2d5c3a;
+    border-radius: 10px;
+    padding: 0.6rem 1.2rem;
+    color: #7ec98a;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.mode-toggle-btn:hover {
+    background: linear-gradient(145deg, #245038, #163028);
+    border-color: #4a9e5f;
+    transform: translateY(-2px);
+}
+
+.mode-toggle-btn.active {
+    background: linear-gradient(145deg, #2d6e45, #1a4a2e);
+    border-color: #4a9e5f;
+    color: #c8f0cc;
+}
+
+/* ══════════════════════════════════════════
    上傳區自訂樣式
    ══════════════════════════════════════════ */
 .upload-zone {
@@ -953,6 +1026,8 @@ if "show_results" not in st.session_state:
     st.session_state.show_results = False
 if "just_identified" not in st.session_state:
     st.session_state.just_identified = False
+if "upload_mode" not in st.session_state:
+    st.session_state.upload_mode = "file"  # "file" 或 "camera"
 
 def validate_history():
     valid = []
@@ -1171,7 +1246,7 @@ with st.sidebar:
     
     st.markdown('''
     <div style="color:#3a6a48;font-size:0.78rem;line-height:1.8;">
-    🌿 <strong style="color:#5a9a68;">生態探索 v3.3</strong><br>
+    🌿 <strong style="color:#5a9a68;">生態探索 v3.4</strong><br>
     PlantNet + 維基百科 + GBIF
     </div>
     ''', unsafe_allow_html=True)
@@ -1313,7 +1388,7 @@ if st.session_state.show_plant_detail:
         st.markdown(f'''
         <div style="margin-bottom:0.8rem;">
             <span style="background:{diff_bg};color:{diff_color};padding:0.3rem 0.8rem;border-radius:15px;font-size:0.85rem;">
-                照護難度:{difficulty}
+                照護難度：{difficulty}
             </span>
         </div>
         ''', unsafe_allow_html=True)
@@ -1372,65 +1447,112 @@ with col3:
 st.markdown("---")
 
 # ==========================================
-# 7. 上傳區（美化版）
+# 7. 上傳區（新增相機模式）
 # ==========================================
+st.markdown("### 📸 上傳植物照片")
+
+# 模式切換按鈕
+mode_col1, mode_col2, mode_col3 = st.columns([1, 1, 2])
+with mode_col1:
+    if st.button("📁 選擇檔案", use_container_width=True, 
+                 type="primary" if st.session_state.upload_mode == "file" else "secondary"):
+        st.session_state.upload_mode = "file"
+        st.rerun()
+
+with mode_col2:
+    if st.button("📷 相機拍照", use_container_width=True,
+                 type="primary" if st.session_state.upload_mode == "camera" else "secondary"):
+        st.session_state.upload_mode = "camera"
+        st.rerun()
+
+st.markdown('<p style="color:#4a7a56;font-size:0.85rem;margin:0.8rem 0;">支援 JPG、PNG、WebP 格式 | 建議拍攝清晰的葉片、花朵或果實</p>', unsafe_allow_html=True)
+
 col_up, col_prev = st.columns([1, 1], gap="large")
 
+uploaded = None
+camera_image = None
+image = None
+
 with col_up:
-    st.markdown("### 📸 上傳植物照片")
-    st.markdown('<p style="color:#4a7a56;font-size:0.85rem;margin-bottom:1rem;">支援 JPG、PNG、WebP 格式</p>', unsafe_allow_html=True)
-    
-    uploaded = st.file_uploader(
-        "選擇檔案",
-        type=["jpg", "jpeg", "png", "webp"],
-        label_visibility="collapsed",
-        help="建議上傳清晰的植物照片,特寫葉片、花朵或果實效果更佳"
-    )
-    
-    if uploaded:
-        kb = uploaded.size // 1024
-        mb = kb / 1024
-        size_str = f"{mb:.1f} MB" if mb >= 1 else f"{kb} KB"
+    if st.session_state.upload_mode == "file":
+        # 檔案上傳模式
+        st.markdown('<div style="margin-top:1rem;"></div>', unsafe_allow_html=True)
+        uploaded = st.file_uploader(
+            "選擇檔案",
+            type=["jpg", "jpeg", "png", "webp"],
+            label_visibility="collapsed",
+            help="建議上傳清晰的植物照片，特寫葉片、花朵或果實效果更佳"
+        )
         
-        st.markdown(f'''
-        <div class="file-info">
-            <span class="file-badge">📁 {uploaded.name}</span>
-            <span class="file-badge">📦 {size_str}</span>
-        </div>
-        ''', unsafe_allow_html=True)
+        if uploaded:
+            kb = uploaded.size // 1024
+            mb = kb / 1024
+            size_str = f"{mb:.1f} MB" if mb >= 1 else f"{kb} KB"
+            
+            st.markdown(f'''
+            <div class="file-info">
+                <span class="file-badge">📁 {uploaded.name}</span>
+                <span class="file-badge">📦 {size_str}</span>
+            </div>
+            ''', unsafe_allow_html=True)
+            
+            try:
+                image = Image.open(uploaded)
+                image = compress_image(image)
+            except Exception as e:
+                st.error(f"圖片載入失敗：{e}")
+                image = None
+    
+    else:
+        # 相機拍照模式
+        st.markdown('<div style="margin-top:1rem;"></div>', unsafe_allow_html=True)
+        camera_image = st.camera_input(
+            "拍攝照片",
+            label_visibility="collapsed",
+            help="點擊拍照按鈕進行拍攝"
+        )
+        
+        if camera_image:
+            st.markdown(f'''
+            <div class="file-info">
+                <span class="file-badge">📷 即時拍攝</span>
+                <span class="file-badge">✅ 已捕捉</span>
+            </div>
+            ''', unsafe_allow_html=True)
+            
+            try:
+                image = Image.open(camera_image)
+                image = compress_image(image)
+            except Exception as e:
+                st.error(f"照片載入失敗：{e}")
+                image = None
 
 with col_prev:
-    if uploaded:
-        try:
-            image = Image.open(uploaded)
-            image = compress_image(image)
-            st.image(image, caption="📸 照片預覽", use_container_width=True)
-        except Exception as e:
-            st.error(f"圖片載入失敗：{e}")
-            image = None
+    if image:
+        st.image(image, caption="📸 照片預覽", use_container_width=True)
     else:
         st.markdown('''
         <div class="preview-placeholder">
             <span class="preview-icon">🌱</span>
-            <p class="preview-text">上傳照片後<br>預覽將顯示於此</p>
+            <p class="preview-text">上傳照片或拍照後<br>預覽將顯示於此</p>
         </div>
         ''', unsafe_allow_html=True)
-        image = None
 
 st.markdown("")
 btn_col, hint_col = st.columns([1, 2])
 with btn_col:
-    start_btn = st.button("🔬 開始辨識", disabled=(uploaded is None or not API_READY), use_container_width=True)
+    start_btn = st.button("🔬 開始辨識", disabled=(image is None or not API_READY), use_container_width=True)
 with hint_col:
     if not API_READY:
         st.markdown('<p style="color:#8a6a4a;font-size:0.82rem;padding-top:0.5rem;">⚠️ 請先設定 API Key</p>', unsafe_allow_html=True)
-    elif uploaded is None:
-        st.markdown('<p style="color:#4a7a56;font-size:0.82rem;padding-top:0.5rem;">💡 請先上傳植物照片</p>', unsafe_allow_html=True)
+    elif image is None:
+        mode_text = "拍攝" if st.session_state.upload_mode == "camera" else "上傳"
+        st.markdown(f'<p style="color:#4a7a56;font-size:0.82rem;padding-top:0.5rem;">💡 請先{mode_text}植物照片</p>', unsafe_allow_html=True)
 
 # ==========================================
 # 8. 辨識邏輯
 # ==========================================
-if start_btn and uploaded and image:
+if start_btn and image:
     if not API_READY:
         st.error("❌ API Key 未設定")
         st.stop()
@@ -1485,7 +1607,7 @@ if start_btn and uploaded and image:
         st.session_state.just_identified = True
 
 # ==========================================
-# 9. 顯示結果
+# 9. 顯示結果（保持原有邏輯）
 # ==========================================
 if st.session_state.get('show_results') and st.session_state.get('identification_results'):
     st.markdown("---")
@@ -1664,7 +1786,7 @@ if st.session_state.get('show_results') and st.session_state.get('identification
 st.markdown("---")
 st.markdown('''
 <div style="text-align:center;color:#2d5c3a;font-size:0.8rem;padding:1rem 0;line-height:2;">
-    🌿 <strong style="color:#4a7a56;">生態探索</strong> v3.3<br>
+    🌿 <strong style="color:#4a7a56;">生態探索</strong> v3.4<br>
     PlantNet AI + 維基百科 + GBIF<br>
     <span style="font-size:0.72rem;">僅供參考，鑑定請諮詢專家</span>
 </div>
