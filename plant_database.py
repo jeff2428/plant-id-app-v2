@@ -326,14 +326,14 @@ def get_recommendation_reason(date, plant):
     return reasons
 
 def get_season(month):
-    """根據月份判斷季節"""
+    """根據月份判斷季節（台灣氣象季節）"""
     if month in [3, 4, 5]:
         return "春季"
     elif month in [6, 7, 8]:
         return "夏季"
     elif month in [9, 10, 11]:
         return "秋季"
-    else:
+    else:  # 12, 1, 2
         return "冬季"
 
 def check_special_day(month, day):
