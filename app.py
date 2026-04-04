@@ -1137,22 +1137,7 @@ st.markdown("---")
 st.markdown("## 🌸 今日推薦植物")
 
 daily_plant = get_daily_plant()
-# ========== 調試區塊 - 檢查資料 ==========
-st.write("### 🔍 調試資訊（測試用）")
-st.write("包含的欄位:", list(daily_plant.keys()))
-st.write("推薦日期:", daily_plant.get("recommendation_date", "❌ 沒有"))
-st.write("星期:", daily_plant.get("weekday", "❌ 沒有"))
-st.write("推薦原由數量:", len(daily_plant.get("recommendation_reasons", [])))
 
-# 顯示推薦原由內容
-reasons = daily_plant.get("recommendation_reasons", [])
-if reasons:
-    st.write("推薦原由內容:")
-    for i, reason in enumerate(reasons):
-        st.write(f"{i+1}. {reason}")
-else:
-    st.error("❌ 沒有推薦原由資料！")
-# ========== 調試區塊結束 ==========
 if "show_plant_detail" not in st.session_state:
     st.session_state.show_plant_detail = False
 
