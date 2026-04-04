@@ -24,7 +24,7 @@ def get_wikipedia_image(plant_name, scientific_name=None):
                 "action": "query",
                 "list": "search",
                 "srsearch": search_term,
-                "srnamespace": "0",  # 只搜尋主命名空間
+                "srnamespace": "0",
                 "srlimit": "3",
                 "format": "json",
                 "utf8": 1
@@ -38,24 +38,21 @@ def get_wikipedia_image(plant_name, scientific_name=None):
             for result in search_results:
                 page_title = result.get("title", "")
                 
-                # 驗證頁面標題是否相關
                 if not is_relevant_page(page_title, plant_name, scientific_name):
                     continue
                 
-                # 步驟2: 獲取頁面的主要圖片
                 image_url = get_page_main_image(page_title)
                 
                 if image_url and is_valid_plant_image(image_url):
                     print(f"✓ 找到圖片: {page_title} -> {image_url[:80]}...")
                     return image_url
                 
-                # 步驟3: 如果沒有主圖，嘗試 Infobox 中的圖片
                 infobox_image = get_infobox_image(page_title)
                 if infobox_image and is_valid_plant_image(infobox_image):
                     print(f"✓ 找到 Infobox 圖片: {page_title} -> {infobox_image[:80]}...")
                     return infobox_image
             
-            time.sleep(0.5)  # 避免請求過快
+            time.sleep(0.5)
         
         print(f"✗ 未找到合適圖片: {plant_name}")
         return None
@@ -68,16 +65,13 @@ def is_relevant_page(page_title, plant_name, scientific_name):
     """判斷頁面是否與植物相關"""
     page_title_lower = page_title.lower()
     
-    # 排除不相關的頁面
     exclude_keywords = ['列表', '分類', '消歧義', 'disambig', 'list of', 'category']
     if any(keyword in page_title_lower for keyword in exclude_keywords):
         return False
     
-    # 檢查是否包含植物名稱
     if plant_name in page_title:
         return True
     
-    # 檢查是否包含學名
     if scientific_name and scientific_name.lower() in page_title_lower:
         return True
     
@@ -88,7 +82,6 @@ def get_page_main_image(page_title):
     try:
         base_url = "https://zh.wikipedia.org/w/api.php"
         
-        # 使用 pageimages API 獲取主圖
         params = {
             "action": "query",
             "titles": page_title,
@@ -119,7 +112,6 @@ def get_infobox_image(page_title):
     try:
         base_url = "https://zh.wikipedia.org/w/api.php"
         
-        # 獲取頁面的解析內容
         params = {
             "action": "parse",
             "page": page_title,
@@ -133,8 +125,7 @@ def get_infobox_image(page_title):
         
         images = data.get("parse", {}).get("images", [])
         
-        # 尋找第一張看起來是植物照片的圖片
-        for image_name in images[:5]:  # 只檢查前5張
+        for image_name in images[:5]:
             if is_likely_plant_photo(image_name):
                 image_url = get_image_url(image_name)
                 if image_url:
@@ -150,17 +141,14 @@ def is_likely_plant_photo(filename):
     """判斷檔案名是否像是植物照片"""
     filename_lower = filename.lower()
     
-    # 必須是圖片格式
     if not any(ext in filename_lower for ext in ['.jpg', '.jpeg', '.png']):
         return False
     
-    # 排除圖標、圖表等
     exclude = ['icon', 'logo', 'symbol', 'map', 'chart', 'diagram', 
                'graph', 'flag', 'coat', 'emblem', 'signature']
     if any(word in filename_lower for word in exclude):
         return False
     
-    # 優先選擇包含這些關鍵詞的
     prefer = ['flower', 'plant', 'tree', 'leaf', 'blossom', 
               '花', '植物', '樹', '葉']
     if any(word in filename_lower for word in prefer):
@@ -204,33 +192,27 @@ def is_valid_plant_image(url):
     
     url_lower = url.lower()
     
-    # 必須是圖片
     if not any(ext in url_lower for ext in ['.jpg', '.jpeg', '.png']):
         return False
     
-    # 排除明顯不是植物照片的
     exclude = ['icon', 'logo', 'symbol', 'commons-logo', 'wiki']
     if any(word in url_lower for word in exclude):
         return False
     
     return True
 
-# ==========================================
-# 備用：使用 Wikimedia Commons 搜尋
-# ==========================================
 def search_commons_image(plant_name, scientific_name=None):
     """從 Wikimedia Commons 搜尋植物圖片"""
     try:
         base_url = "https://commons.wikimedia.org/w/api.php"
         
-        # 優先使用學名搜尋
         search_term = scientific_name if scientific_name else plant_name
         
         params = {
             "action": "query",
             "list": "search",
             "srsearch": search_term,
-            "srnamespace": "6",  # File 命名空間
+            "srnamespace": "6",
             "srlimit": "5",
             "format": "json",
             "utf8": 1
@@ -282,6 +264,210 @@ def get_commons_image_url(title):
         
     except Exception as e:
         return None
+
+# ==========================================
+# 推薦原由系統
+# ==========================================
+def get_recommendation_reason(date, plant):
+    """根據日期生成推薦原由"""
+    month = date.month
+    day = date.day
+    weekday = date.weekday()  # 0=週一, 6=週日
+    season = get_season(month)
+    
+    reasons = []
+    
+    # 1. 特殊節日推薦
+    special_day = check_special_day(month, day)
+    if special_day:
+        reasons.append({
+            "icon": "🎉",
+            "title": "特殊節日",
+            "content": special_day
+        })
+    
+    # 2. 季節推薦
+    if season in plant.get("seasons", []):
+        season_reason = {
+            "春季": f"現在是{season}，正是{plant['name']}的最佳觀賞期，花朵盛開，生機勃勃",
+            "夏季": f"{season}時節，{plant['name']}在陽光下綻放，展現其最燦爛的姿態",
+            "秋季": f"進入{season}，{plant['name']}依然美麗，為秋日增添一抹亮色",
+            "冬季": f"{season}中的{plant['name']}別有韻味，在寒冷中展現堅韌之美"
+        }
+        reasons.append({
+            "icon": "🌸",
+            "title": "當季推薦",
+            "content": season_reason.get(season, f"適合{season}種植觀賞")
+        })
+    
+    # 3. 週間推薦
+    weekday_reasons = get_weekday_reason(weekday, plant)
+    if weekday_reasons:
+        reasons.append(weekday_reasons)
+    
+    # 4. 數字吉祥寓意
+    number_reason = get_number_meaning(day, plant)
+    if number_reason:
+        reasons.append(number_reason)
+    
+    # 5. 氣候適宜性
+    climate_reason = get_climate_reason(month, plant)
+    if climate_reason:
+        reasons.append(climate_reason)
+    
+    # 如果沒有特別原由，添加通用推薦
+    if not reasons:
+        reasons.append({
+            "icon": "✨",
+            "title": "今日推薦",
+            "content": f"{plant['name']}以其{plant['flower_language']}的花語，為您的一天帶來美好祝福"
+        })
+    
+    return reasons
+
+def get_season(month):
+    """根據月份判斷季節"""
+    if month in [3, 4, 5]:
+        return "春季"
+    elif month in [6, 7, 8]:
+        return "夏季"
+    elif month in [9, 10, 11]:
+        return "秋季"
+    else:
+        return "冬季"
+
+def check_special_day(month, day):
+    """檢查特殊節日"""
+    special_days = {
+        (1, 1): "元旦新年，萬象更新，適合以花卉迎接新的開始",
+        (2, 14): "情人節，用花朵傳遞愛意與浪漫",
+        (3, 8): "婦女節，以花朵致敬每一位女性",
+        (3, 12): "植樹節，一起關注綠色生態",
+        (4, 5): "清明時節，春意盎然，正是賞花好時光",
+        (5, 1): "勞動節，用美麗的植物犒賞辛勤的自己",
+        (5, 14): "母親節，用花朵表達對母親的感恩",
+        (6, 1): "兒童節，讓孩子認識大自然的美好",
+        (7, 7): "七夕情人節，以花傳情，浪漫滿分",
+        (8, 8): "父親節，用植物的堅韌象徵父愛",
+        (9, 10): "教師節，以花朵感謝師恩",
+        (10, 1): "國慶日，舉國同慶，花開盛世",
+        (10, 31): "萬聖節，感受大自然的神秘魅力",
+        (11, 1): "植物保護日，認識並珍惜每一種植物",
+        (12, 25): "聖誕節，用綠色植物裝點節日氛圍"
+    }
+    return special_days.get((month, day))
+
+def get_weekday_reason(weekday, plant):
+    """根據星期幾生成推薦原由"""
+    weekday_meanings = {
+        0: {  # 週一
+            "icon": "💪",
+            "title": "週一能量",
+            "content": f"週一需要正能量！{plant['name']}的{plant['flower_language']}，為新的一週注入活力"
+        },
+        1: {  # 週二
+            "icon": "🌱",
+            "title": "持續成長",
+            "content": f"週二繼續努力，{plant['name']}的生長過程提醒我們堅持不懈"
+        },
+        2: {  # 週三
+            "icon": "⚖️",
+            "title": "週中平衡",
+            "content": f"週三過半，用{plant['name']}的美麗平衡工作與生活"
+        },
+        3: {  # 週四
+            "icon": "🎯",
+            "title": "即將收穫",
+            "content": f"週四將至週末，{plant['name']}象徵著即將到來的美好"
+        },
+        4: {  # 週五
+            "icon": "🎊",
+            "title": "週五驚喜",
+            "content": f"週五到了！用{plant['name']}的芬芳迎接週末時光"
+        },
+        5: {  # 週六
+            "icon": "🌈",
+            "title": "週末悠閒",
+            "content": f"週末好時光，適合欣賞{plant['name']}，享受愜意生活"
+        },
+        6: {  # 週日
+            "icon": "☀️",
+            "title": "週日陽光",
+            "content": f"週日休息日，{plant['name']}陪伴您度過美好的一天"
+        }
+    }
+    return weekday_meanings.get(weekday)
+
+def get_number_meaning(day, plant):
+    """根據日期數字生成寓意"""
+    special_numbers = {
+        1: "一心一意",
+        2: "好事成雙",
+        3: "三陽開泰",
+        5: "五福臨門",
+        6: "六六大順",
+        8: "發發發，好運連連",
+        9: "長長久久",
+        10: "十全十美",
+        13: "一生",
+        14: "一世",
+        20: "愛您",
+        21: "愛您一生",
+        25: "聖誕快樂",
+        28: "發發發"
+    }
+    
+    if day in special_numbers:
+        return {
+            "icon": "🎲",
+            "title": f"吉祥數字 {day}",
+            "content": f"今天是{day}號，{special_numbers[day]}，{plant['name']}為您帶來好運"
+        }
+    return None
+
+def get_climate_reason(month, plant):
+    """根據氣候給出推薦原由"""
+    care = plant.get("care", {})
+    temp_range = care.get("temperature", "")
+    
+    climate_reasons = {
+        1: "寒冬時節",
+        2: "春寒料峭",
+        3: "春暖花開",
+        4: "春意盎然",
+        5: "初夏時光",
+        6: "盛夏驕陽",
+        7: "炎炎夏日",
+        8: "夏末秋初",
+        9: "秋高氣爽",
+        10: "金秋十月",
+        11: "深秋時節",
+        12: "寒冬臘月"
+    }
+    
+    if month in climate_reasons:
+        return {
+            "icon": "🌡️",
+            "title": "氣候適宜",
+            "content": f"{climate_reasons[month]}，{plant['name']}在此氣候下{get_growth_status(month, plant)}"
+        }
+    return None
+
+def get_growth_status(month, plant):
+    """獲取植物在當前月份的生長狀態"""
+    seasons = plant.get("seasons", [])
+    season = get_season(month)
+    
+    if season in seasons:
+        return "正值生長旺季，美不勝收"
+    elif season == "春季":
+        return "開始萌發新芽，充滿生機"
+    elif season == "夏季":
+        return "需要細心呵護，回報以繁茂"
+    elif season == "秋季":
+        return "展現成熟之美，韻味獨特"
+    else:
+        return "進入休眠期，靜待來年綻放"
 
 # ==========================================
 # 植物資料庫
@@ -506,19 +692,15 @@ def get_plant_data(plant_id):
     
     plant = PLANT_DATABASE[plant_id].copy()
     
-    # 如果沒有圖片，從維基百科獲取
     if not plant.get("image"):
         cache_key = f"{plant['name']}_{plant['scientific_name']}"
         
-        # 檢查快取
         if cache_key in IMAGE_CACHE:
             plant["image"] = IMAGE_CACHE[cache_key]
             print(f"✓ 使用快取圖片: {plant['name']}")
         else:
-            # 先嘗試中文維基
             wiki_image = get_wikipedia_image(plant["name"], plant["scientific_name"])
             
-            # 如果中文維基沒有，嘗試 Commons
             if not wiki_image:
                 print(f"→ 嘗試從 Commons 搜尋: {plant['name']}")
                 wiki_image = search_commons_image(plant["name"], plant["scientific_name"])
@@ -527,20 +709,27 @@ def get_plant_data(plant_id):
                 plant["image"] = wiki_image
                 IMAGE_CACHE[cache_key] = wiki_image
             else:
-                # 備用圖片
                 plant["image"] = f"https://via.placeholder.com/400x300/2d5c3a/ffffff?text={quote(plant['name'])}"
                 print(f"✗ 使用備用圖片: {plant['name']}")
     
     return plant
 
 # ==========================================
-# 今日推薦植物
+# 今日推薦植物（含推薦原由）
 # ==========================================
 def get_daily_plant():
-    """根據日期返回每日推薦植物"""
+    """根據日期返回每日推薦植物，並生成推薦原由"""
     today = datetime.now()
     plant_id = (today.timetuple().tm_yday % len(PLANT_DATABASE)) + 1
-    return get_plant_data(plant_id)
+    plant = get_plant_data(plant_id)
+    
+    if plant:
+        # 添加推薦原由
+        plant["recommendation_reasons"] = get_recommendation_reason(today, plant)
+        plant["recommendation_date"] = today.strftime("%Y年%m月%d日")
+        plant["weekday"] = ["週一", "週二", "週三", "週四", "週五", "週六", "週日"][today.weekday()]
+    
+    return plant
 
 # ==========================================
 # 根據 ID 獲取植物
