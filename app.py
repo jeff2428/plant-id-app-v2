@@ -20,9 +20,15 @@ st.set_page_config(
 )
 
 # ==========================================
-# 1. CSS 樣式（優化版）
+# 1. 外部樣式
 # ==========================================
-st.markdown("""
+import os
+css_path = os.path.join(os.path.dirname(__file__), "styles.css")
+if os.path.exists(css_path):
+    with open(css_path, "r", encoding="utf-8") as f:
+        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+else:
+    st.markdown("""
 <style>
 /* ══════════════════════════════════════════
    側邊欄展開按鈕 - 美化版
