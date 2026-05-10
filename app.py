@@ -4,6 +4,7 @@ import re
 from PIL import Image
 import io
 import json
+import time
 from datetime import datetime
 from urllib.parse import quote
 from plant_database import get_daily_plant, get_plant_by_id, get_random_plants, search_plants
@@ -907,6 +908,31 @@ if "just_identified" not in st.session_state:
     st.session_state.just_identified = False
 if "upload_mode" not in st.session_state:
     st.session_state.upload_mode = "file"
+if "my_garden" not in st.session_state:
+    st.session_state.my_garden = []
+if "show_garden" not in st.session_state:
+    st.session_state.show_garden = False
+
+def add_to_garden(plant_name, scientific_name, family, score):
+    """將植物加入花園"""
+    plant = {
+        'name': plant_name,
+        'scientific_name': scientific_name,
+        'family': family,
+        'score': score,
+        'added_date': datetime.now().strftime("%Y-%m-%d"),
+        'id': len(st.session_state.my_garden) + 1
+    }
+    # 避免重複加入
+    for existing in st.session_state.my_garden:
+        if existing['scientific_name'] == scientific_name:
+            return False
+    st.session_state.my_garden.append(plant)
+    return True
+
+def remove_from_garden(plant_id):
+    """從花園移除植物"""
+    st.session_state.my_garden = [p for p in st.session_state.my_garden if p['id'] != plant_id]
 
 def validate_history():
     valid = []
@@ -1106,6 +1132,31 @@ with st.sidebar:
     
     st.markdown("---")
     
+    # 🌺 我的花園
+    st.markdown("## 🌺 我的花園")
+    
+    if not st.session_state.my_garden:
+        st.markdown('<p style="color:#3a6a48;font-size:0.85rem;">尚無收藏植物</p>', unsafe_allow_html=True)
+    else:
+        st.markdown(f'<p style="color:#7ec98a;font-size:0.85rem;">🌿 {len(st.session_state.my_garden)} 種植物</p>', unsafe_allow_html=True)
+        for g in st.session_state.my_garden:
+            st.markdown(f'''
+            <div class="history-item">
+                <span style="font-size:1.2rem;">🌱</span>
+                <div>
+                    <div style="font-size:0.88rem;color:#a0d0a8;font-weight:500;">{g['name']}</div>
+                    <div style="font-size:0.72rem;color:#4a7a56;">{g['added_date']}</div>
+                </div>
+            </div>
+            ''', unsafe_allow_html=True)
+    
+    if st.session_state.my_garden:
+        if st.button("🗑️ 清空花園", use_container_width=True):
+            st.session_state.my_garden = []
+            st.rerun()
+    
+    st.markdown("---")
+    
     if st.session_state.history:
         if st.button("🗑️ 清除歷史", use_container_width=True):
             st.session_state.history = []
@@ -1131,7 +1182,31 @@ with st.sidebar:
     ''', unsafe_allow_html=True)
 
 # ==========================================
-# 6. 主頁面 - 今日推薦植物
+# 6. 主頁面 - 我的花園
+# ==========================================
+if st.session_state.my_garden:
+    st.markdown("---")
+    st.markdown("## 🌺 我的花園")
+    st.markdown('<p style="color:#4a7a56;font-size:0.85rem;">您收藏的植物</p>', unsafe_allow_html=True)
+    
+    # 顯示花園中的植物
+    garden_cols = st.columns(3)
+    for idx, plant in enumerate(st.session_state.my_garden):
+        with garden_cols[idx % 3]:
+            st.markdown(f'''
+            <div class="result-card" style="padding:1rem;">
+                <div style="font-size:1.2rem;margin-bottom:0.3rem;">🌱 {plant['name']}</div>
+                <div style="font-size:0.85rem;color:#5a8a6a;font-style:italic;">{plant['scientific_name']}</div>
+                <div style="font-size:0.8rem;color:#4a7a56;margin-top:0.5rem;">🏠 {plant.get('family', '未知')}</div>
+                <div style="font-size:0.75rem;color:#3a6a48;margin-top:0.3rem;">加入日期：{plant['added_date']}</div>
+            </div>
+            ''', unsafe_allow_html=True)
+            if st.button(f"🗑️ 移除", key=f"remove_garden_{plant['id']}", use_container_width=True):
+                remove_from_garden(plant['id'])
+                st.rerun()
+
+# ==========================================
+# 7. 主頁面 - 今日推薦植物
 # ==========================================
 st.markdown("---")
 st.markdown("## 🌸 今日推薦植物")
@@ -1442,11 +1517,26 @@ if start_btn and image:
         st.stop()
     
     st.session_state.expanded_cards = {0: True}
-    with st.spinner("🌱 AI 辨識中..."):
-        buf = io.BytesIO()
-        image.save(buf, format='JPEG', quality=85)
-        
+    
+    # 載入進度指示
+    progress_bar = st.progress(0)
+    status_text = st.empty()
+    
+    status_text.markdown("📤 上傳圖片中...")
+    progress_bar.progress(20)
+    
+    buf = io.BytesIO()
+    image.save(buf, format='JPEG', quality=85)
+    buf.seek(0)
+    
+    status_text.markdown("🔍 連接 PlantNet API...")
+    progress_bar.progress(40)
+    
+    with st.spinner("🌱 AI 辨識中，請稍候..."):
         try:
+            status_text.markdown("🤖 AI 分析中...")
+            progress_bar.progress(60)
+            
             resp = requests.post(
                 API_ENDPOINT,
                 files={'images': ('image.jpg', buf.getvalue(), 'image/jpeg')},
@@ -1456,35 +1546,107 @@ if start_btn and image:
             resp.raise_for_status()
             
         except requests.exceptions.Timeout:
-            st.error("⏱️ 請求逾時，請檢查網路連線後重試")
+            progress_bar.empty()
+            status_text.empty()
+            st.error("""
+            ⏱️ **請求逾時**
+            
+            請檢查您的網路連線後重試。如果問題持續，可能是伺服器忙碌，請稍後再嘗試。
+            
+            💡 **建議**：嘗試上傳較小的圖片或選擇網路較穩定的環境。
+            """)
             st.stop()
         except requests.exceptions.ConnectionError:
-            st.error("🌐 無法連接伺服器，請檢查網路連線")
+            progress_bar.empty()
+            status_text.empty()
+            st.error("""
+            🌐 **無法連接伺服器**
+            
+            請檢查您的網路連線，並確認防火牆或代理伺服器允許此應用程式存取網路。
+            
+            💡 **建議**：檢查網路設定後重新嘗試。
+            """)
             st.stop()
-        except requests.exceptions.HTTPError:
+        except requests.exceptions.HTTPError as e:
+            progress_bar.empty()
+            status_text.empty()
             if resp.status_code == 401:
-                st.error("🔑 API Key 無效或已過期")
+                st.error("""
+                🔑 **API Key 無效或已過期**
+                
+                您的 PlantNet API Key 可能已過期或無效。請前往 [PlantNet官網](https://my.plantnet.org/) 取得新的 API Key。
+                
+                💡 **解決方案**：更新 .streamlit/secrets.toml 中的 PLANTNET_API_KEY。
+                """)
             elif resp.status_code == 403:
-                st.error("🚫 API 存取被拒絕，可能已超過配額")
+                st.error("""
+                🚫 **API 存取被拒絕**
+                
+                可能原因：
+                - API 配額已用完
+                - API Key 未啟用
+                
+                💡 **解決方案**：前往 PlantNet 官網檢查您的 API 配額。
+                """)
             elif resp.status_code == 429:
-                st.error("⚠️ 請求過於頻繁，請稍後再試")
+                st.error("""
+                ⚠️ **請求過於頻繁**
+                
+                您在短時間內發送太多請求。請稍後再試。
+                
+                💡 **建議**：等待 1-2 分鐘後再嘗試辨識。
+                """)
             else:
-                st.error(f"❌ HTTP 錯誤：{resp.status_code}")
+                st.error(f"❌ HTTP 錯誤 {resp.status_code}，請稍後再試")
             st.stop()
         except Exception as e:
-            st.error(f"❌ 發生錯誤：{e}")
+            progress_bar.empty()
+            status_text.empty()
+            st.error(f"""
+            ❌ **發生錯誤**：{e}
+            
+            請檢查您的網路連線後重試。如果問題持續，請回報問題。
+            """)
             st.stop()
         
         try:
+            status_text.markdown("📊 處理結果中...")
+            progress_bar.progress(80)
             result = resp.json()
         except:
-            st.error("回應格式錯誤")
+            progress_bar.empty()
+            status_text.empty()
+            st.error("""
+            ⚠️ **回應格式錯誤**
+            
+            伺服器回應的資料格式無法解析。這可能是暫時性問題，請稍後重試。
+            """)
             st.stop()
         
         all_results = result.get('results', [])
         if not all_results:
-            st.warning("🔍 未能辨識此植物，請嘗試更清晰的照片")
+            progress_bar.empty()
+            status_text.empty()
+            st.warning("""
+            🔍 **未能辨識此植物**
+            
+            系統無法識別您上傳的植物照片。可能原因：
+            - 照片不夠清晰
+            - 照片中植物主體不夠明顯
+            - 植物不在資料庫中
+            
+            💡 **建議**：
+            - 嘗試更近距離拍攝植物
+            - 確保葉片、花朵或果實清晰可見
+            - 避免背景過於複雜
+            """)
             st.stop()
+        
+        progress_bar.progress(100)
+        status_text.markdown("✅ 辨識完成！")
+        time.sleep(0.5)
+        progress_bar.empty()
+        status_text.empty()
         
         st.session_state.identification_results = all_results[:top_n]
         st.session_state.show_results = True
@@ -1560,7 +1722,23 @@ if st.session_state.get('show_results') and st.session_state.get('identification
         card_key = idx
         is_expanded = st.session_state.expanded_cards.get(card_key, idx == 0)
         
+        # 新增花園按鈕 (僅最佳匹配顯示)
         col_btn1, col_btn2, col_btn3 = st.columns([1, 1, 1])
+        
+        with col_btn1:
+            if idx == 0:
+                # 檢查是否已加入花園
+                already_in_garden = any(p['scientific_name'] == sci for p in st.session_state.my_garden)
+                if already_in_garden:
+                    st.markdown('<span style="color:#7ec98a;font-size:0.85rem;">✅ 已加入花園</span>', unsafe_allow_html=True)
+                else:
+                    if st.button("🌺 加入花園", key=f"add_garden_{idx}", use_container_width=True):
+                        if add_to_garden(display, sci, family, score):
+                            st.success(f"🌿 {display} 已加入花園！")
+                            st.rerun()
+                        else:
+                            st.warning("此植物已在花園中")
+        
         with col_btn2:
             btn_text = "🔼 收合詳情" if is_expanded else "🔽 查看詳情"
             if st.button(btn_text, key=f"toggle_{idx}", use_container_width=True):
